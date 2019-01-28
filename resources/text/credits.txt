@@ -3,7 +3,7 @@ Hakkard is based off of the Hakkard RPG world, originally for D&D 5e.
 Concept: Dev-Osmium (Muirrum)
 Project Lead/Maintainer: Dev-Osmium (Muirrum)
 
-HakkardMUSH is run on the CoffeeMud engine, which is under the Apache License
+HakkardMUSH is run on the CoffeeMud engine, which is under the Apache License. HakkardMud and all derivations fall under the GPL v3 license. 
 
 CoffeeMud is an all-Java server application 
 (C) 2000-2018 by Bo Zimmerman
