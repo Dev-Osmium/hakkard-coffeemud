@@ -3,4 +3,4 @@ greet_prog 100
 
     mpecho $i says "Hakkard is a world with a long and storied history."
 
-    mpecho $i says "Muirrum needs to write this up more.
+    mpecho $i says "Muirrum needs to write this up more."
