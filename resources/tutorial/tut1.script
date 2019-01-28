@@ -1,0 +1,5 @@
+greet_prog 100
+    mpecho $i says "Welcome to Hakkard, $n! My name is Elbethorn, and I'm here to guide you into the world. If you want to continue with the tutorial, go to the ^Deast^N, where I will fill you in more about the world and its lore.
+
+    mpecho $i says "If you don't want to complete the tutorial (which is fine), simply enter the portal behind you with ^Henter portal^N, and you'll be deposited in Lennar.
+    mpwalkto Tutorial#1

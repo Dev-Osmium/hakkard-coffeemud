@@ -1,0 +1,6 @@
+greet_prog 100
+    mpecho $i says "Welcome $n! I know much about Hakkard, and when I'm done, you will too!" \n
+
+    mpecho $i says "Hakkard is a world with a long and storied history."
+
+    mpecho $i says "Muirrum needs to write this up more.
