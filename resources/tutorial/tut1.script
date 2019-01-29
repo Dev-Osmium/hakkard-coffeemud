@@ -1,5 +1,8 @@
 greet_prog 100
-    mpecho $i says "Welcome to Hakkard, $n! My name is Elbethorn, and I'm here to guide you into the world. If you want to continue with the tutorial, go to the ^Deast^N, where I will fill you in more about the world and its lore.
+    mpecho $i says "Welcome to Hakkard, $n! My name is Elbethorn, and I'm here to guide you into the world. If you want to continue with the tutorial, go to the ^Deast^N, where I will fill you in more about the world and its lore.\n
 
-    mpecho $i says "If you don't want to complete the tutorial (which is fine), simply enter the portal behind you with ^Henter portal^N, and you'll be deposited in Lennar.
-    mpwalkto Tutorial#1
+    mpecho $i says "If you don't want to complete the tutorial (which is fine), simply enter the portal behind you with ^Henter portal^N, and you'll be deposited in Lennar.\n
+
+    mpecho $i says "To go east, just utter the word ^Heast^N, and you will travel to that room."\n
+
+    mpecho $i points to the east, and settles down in front of the fireplace.
