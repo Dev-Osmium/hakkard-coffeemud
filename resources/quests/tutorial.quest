@@ -1,0 +1,100 @@
+
+set name tutorial
+set display Tutorial
+set author Muirrum
+
+set wait 1
+set interval 1
+quiet
+
+set area "Tutorial"
+set room Tutorial#0
+set mobgroup
+set mob "Proctor Elbethorn"
+give stat keyplayer true
+give script LOAD=tutorial_announcer.script
+
+set duration 0
+
+<?xml version="1.0"?>
+<FILE><NAME>tutorial_announcer.script</NAME>
+<DATA>
+ALL_GREET_PROG 100
+IF QUESTSCRIPTED($n *)
+if var($n tutorial_KILLED >= 1)
+if EVAL('100' != '')
+mpexp $n 100
+endif
+if EVAL('' != '')
+mpfaction $n  
+endif
+if EVAL('YES' == 'YES') AND !QUESTWINNER($n *)
+mpoload QuestPoint
+give "a quest point" "$n"
+endif
+if EVAL('50' != '') AND EVAL('50' > 0)
+mpoload 50
+give 50 "$n"
+endif
+mpquestwin $n *
+sayto $n Congratulations! You`ve completed the tutorial. You can do it again, or you can go through the portal.
+mpendquest $n
+mpqset * STATISTICS SUCCESS
+endif
+else
+if ISLIKE($n '+ANYCLASS') and ISPC($n) and !QUESTSCRIPTED($n *)
+if EVAL('NO' == 'YES') OR !QUESTWINNER($n *)
+sayto "$n"  -- just say 'i accept Tutorial' to take on this quest.
+endif
+endif
+endif
+~
+
+SPEECH_PROG p i accept Tutorial
+if ISLIKE($n '+ANYCLASS') and ISPC($n) and !QUESTSCRIPTED($n *)
+if  EVAL('NO' == 'YES') OR !QUESTWINNER($n *)
+mpqset * STATISTICS ACCEPTED
+sayto "$n" 
+mpscript $n INDIVIDUAL SAVABLE LOAD=tutorial_playertrack.script
+endif
+endif
+~
+</DATA></FILE>
+<FILE><NAME>tutorial_playertrack.script</NAME>
+<DATA>
+ONCE_PROG 100
+mpsetvar $i INSTRUCTIONS 
+~
+
+GREET_PROG 100
+if EVAL('NO-USE-DEFAULT_BEHAVIOR' == 'YES-ATTACK-ON-SIGHT')
+if ISLIKE($n )
+mpforce $n kill $i
+endif
+endif
+~
+
+ENTRY_PROG 100
+if INROOM($i == $g)
+for $0 = 1 to '$%NUMMOBSROOM(*)%'
+if ISLIKE('$%ROOMMOB($0)%' )
+mpforce '$%ROOMMOB($0)%' sayto "$i" 
+if EVAL('NO-USE-DEFAULT_BEHAVIOR' == 'YES-ATTACK-ON-SIGHT')
+mpforce '$%ROOMMOB($0)%' kill $i
+endif
+endif
+next
+endif
+~
+
+EXECMSG_PROG STO=DEATH ALL
+if ISNPC($n) AND ISLIKE($n )
+mpsetvar $i tutorial_KILLED ++;
+if EVAL(1 > 1)
+mpechoat $i Killed $<$i tutorial_KILLED>/1
+else
+endif
+mpsetvar $i PROGRESS Killed $<$i tutorial_KILLED>/1
+endif
+~
+</DATA></FILE>
