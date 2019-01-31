@@ -1,0 +1,13 @@
+greet_prog 100
+    mpecho $i says "Welcome! I'm going to teach you about certain commands you can use in Hakkard to check things out and learn more about the world."\n
+
+    mpecho $i says "First things first, the ^Hlook^N command. You can use this to give things a closer look. Try it by looking at me with ^Hlook at professor^N."\n
+~
+
+look_prog all
+    mpecho $i says "Great work! There are a few more things to do first. You can look at yourself with ^Hlook at self^T, view your inventory with ^Hinventory^N, and view your stats with ^Hscore^N."\n
+
+    mpecho $i says "You can continue on to the next room, where you'll go over combat basics."\n
+
+    mpecho $i turns back to the door, and waits expectantly for the next person.
+~

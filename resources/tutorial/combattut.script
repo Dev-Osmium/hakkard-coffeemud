@@ -1,0 +1,13 @@
+greet_prog 100
+    mpecho $i says "Well well, about time you showed up. I've been waiting here for ages."\n
+
+    mpecho $i says "I'm supposed to teach you how to fight, but Coris knows you'll try my patience. Let's see, take that shortsword in front of you. Just say ^Hget sword^N."\n
+
+    mpecho $i tosses a ^Ishortsword^N onto the ground.
+
+    mpoloadroom Shortsword
+
+    mpecho $i says "Now, to kill something, all you need to do is say ^Hkill <target>^N. Try it on this dummy here. Just say ^Hkill zombie^N
+
+exit_prog 100
+    mprejuv room
