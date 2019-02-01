@@ -1,0 +1,100 @@
+
+set name rats_sewer_lennar
+set display Rats in the floor
+set author Muirrum
+
+set wait 1
+set interval 1
+quiet
+
+set area "Lennar Manor"
+set room "Reception Hall"
+set mobgroup
+set mob "Lord Everett Elma"
+give stat keyplayer true
+give script LOAD=rats_sewer_lennar_announcer.script
+
+set duration 0
+
+<?xml version="1.0"?>
+<FILE><NAME>rats_sewer_lennar_announcer.script</NAME>
+<DATA>
+ALL_GREET_PROG 100
+IF QUESTSCRIPTED($n *)
+if var($n rats_sewer_lennar_KILLED >= 6)
+if EVAL('150%' != '')
+mpexp $n 150%
+endif
+if EVAL('alignment.ini' != '')
+mpfaction $n alignment.ini 1000
+endif
+if EVAL('YES' == 'YES') AND !QUESTWINNER($n *)
+mpoload QuestPoint
+give "a quest point" "$n"
+endif
+if EVAL('1000' != '') AND EVAL('1000' > 0)
+mpoload 1000
+give 1000 "$n"
+endif
+mpquestwin $n *
+sayto $n Praise be to Coris! They`re dead! Good work to you!
+mpendquest $n
+mpqset * STATISTICS SUCCESS
+endif
+else
+if ISLIKE($n '') and ISPC($n) and !QUESTSCRIPTED($n *)
+if EVAL('NO' == 'YES') OR !QUESTWINNER($n *)
+sayto "$n" Ah, thank Coris you`ve come! I`ve got a task for you. You up for it? -- just say 'i accept Rats in the floor' to take on this quest.
+endif
+endif
+endif
+~
+
+SPEECH_PROG p i accept Rats in the floor
+if ISLIKE($n '') and ISPC($n) and !QUESTSCRIPTED($n *)
+if  EVAL('NO' == 'YES') OR !QUESTWINNER($n *)
+mpqset * STATISTICS ACCEPTED
+sayto "$n" Down in the sewers, there`s a gang of Kobolds causing trouble. I need you to wipe them out.
+mpscript $n INDIVIDUAL SAVABLE LOAD=rats_sewer_lennar_playertrack.script
+endif
+endif
+~
+</DATA></FILE>
+<FILE><NAME>rats_sewer_lennar_playertrack.script</NAME>
+<DATA>
+ONCE_PROG 100
+mpsetvar $i INSTRUCTIONS Down in the sewers, there`s a gang of Kobolds causing trouble. I need you to wipe them out.
+~
+
+GREET_PROG 100
+if EVAL('YES-ATTACK-ON-SIGHT' == 'YES-ATTACK-ON-SIGHT')
+if ISLIKE($n -NAMES +"King Erodi" +kobold)
+mpforce $n kill $i
+endif
+endif
+~
+
+ENTRY_PROG 100
+if INROOM($i == $g)
+for $0 = 1 to '$%NUMMOBSROOM(*)%'
+if ISLIKE('$%ROOMMOB($0)%' -NAMES +"King Erodi" +kobold)
+mpforce '$%ROOMMOB($0)%' sayto "$i" So, you've come for me.  Come and get me.
+if EVAL('YES-ATTACK-ON-SIGHT' == 'YES-ATTACK-ON-SIGHT')
+mpforce '$%ROOMMOB($0)%' kill $i
+endif
+endif
+next
+endif
+~
+
+EXECMSG_PROG STO=DEATH ALL
+if ISNPC($n) AND ISLIKE($n -NAMES +"King Erodi" +kobold)
+mpsetvar $i rats_sewer_lennar_KILLED ++;
+if EVAL(6 > 1)
+mpechoat $i Killed $<$i rats_sewer_lennar_KILLED>/6
+else
+endif
+mpsetvar $i PROGRESS Killed $<$i rats_sewer_lennar_KILLED>/6
+endif
+~
+</DATA></FILE>
