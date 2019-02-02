@@ -6,3 +6,4 @@ greet_prog 100
     mpecho $i says "To go east, just utter the word ^Heast^N, and you will travel to that room."\n
 
     mpecho $i points to the east, and settles down in front of the fireplace.
+~
