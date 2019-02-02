@@ -88,7 +88,7 @@ endif
 ~
 
 EXECMSG_PROG STO=DEATH ALL
-if ISNPC($n) AND ISLIKE($n -NAMES +"King Erodi" +kobold)
+if ISNPC($n) AND ISLIKE($n -SUBNAMES +Erodi +kobold)
 mpsetvar $i rats_sewer_lennar_KILLED ++;
 if EVAL(6 > 1)
 mpechoat $i Killed $<$i rats_sewer_lennar_KILLED>/6
