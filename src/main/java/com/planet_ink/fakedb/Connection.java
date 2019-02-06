@@ -83,6 +83,7 @@ public class Connection implements java.sql.Connection
 			if (backend == null)
 			{
 				backend = new Backend();
+				System.out.println(path);
 				if (!backend.open(new java.io.File(path)))
 					throw new java.sql.SQLException("unable to open database");
 				databases.put(path, new WeakReference(backend));

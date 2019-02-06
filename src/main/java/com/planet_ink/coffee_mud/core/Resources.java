@@ -385,8 +385,8 @@ public class Resources
 	public static final String buildResourcePath(final String path)
 	{
 		if((path==null)||(path.length()==0))
-			return "resources/";
-		return "resources/"+path+"/";
+			return "src/main/resources/";
+		return "src/main/resources/"+path+"/";
 	}
 
 	/**

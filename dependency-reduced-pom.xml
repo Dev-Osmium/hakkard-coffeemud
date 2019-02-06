@@ -30,10 +30,11 @@
         <configuration>
           <includeProjectDependencies>true</includeProjectDependencies>
           <includePluginDependencies>true</includePluginDependencies>
-          <mainClass>com.planet_ink.coffee_mud.application.MUD</mainClass>
+          <mainClass>${java.mainClass}</mainClass>
           <arguments>
             <argument>"Hakkard"</argument>
           </arguments>
+          <workingDirectory>${basedir}/src/main/java/com/planet_ink/coffee_mud/application</workingDirectory>
         </configuration>
       </plugin>
       <plugin>
@@ -48,7 +49,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.planet_ink.coffee_mud.application.MUD</mainClass>
+                  <mainClass>${java.mainClass}</mainClass>
                 </transformer>
               </transformers>
               <filters>
@@ -64,6 +65,14 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.version}</version>
+        <configuration>
+          <java />
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -88,6 +97,8 @@
     </dependency>
   </dependencies>
   <properties>
+    <java.mainClass>com.planet_ink.coffee_mud.application.MUD</java.mainClass>
+    <spotless.version>1.17.0</spotless.version>
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
