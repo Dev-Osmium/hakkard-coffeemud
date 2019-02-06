@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2afd562c-08bb-4cff-8631-c4fcaea33f78" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/coffeemud.iml" beforeDir="false" afterPath="$PROJECT_DIR$/coffeemud.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coffeemud.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/coffeemud.ipr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/coffeemud.iws" beforeDir="false" afterPath="$PROJECT_DIR$/coffeemud.iws" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/achievements.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/achievements.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/chat.dat" beforeDir="false" afterPath="$PROJECT_DIR$/resources/chat.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/examples/FindRawMaterial.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/examples/FindRawMaterial.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/examples/Lemming.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/examples/Lemming.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/examples/ObjectCounter.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/examples/ObjectCounter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/examples/areareaction.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/examples/areareaction.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/examples/factiontemplate.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/examples/factiontemplate.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/examples/namereaction.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/examples/namereaction.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/examples/racereaction.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/examples/racereaction.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/examples/reputation.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/examples/reputation.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/examples/rplists.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/examples/rplists.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/factions/alignment.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/factions/alignment.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/help/accts.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/help/accts.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/help/arc_behaviors.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/help/arc_behaviors.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/help/arc_help.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/help/arc_help.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/help/arc_help.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/help/arc_help.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/help/arc_misc.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/help/arc_misc.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/help/help.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/help/help.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/help/help.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/help/help.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/help/misc_help.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/help/misc_help.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/help/zappermasks.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/help/zappermasks.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/ipblock.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/ipblock.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/laws.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/laws.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lawtoc.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lawtoc.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lists.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lists.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/movingroom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/movingroom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/mxp_images.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/mxp_images.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/autoplayer/autoplay.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/autoplayer/autoplay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/autoplayer/inc_stringfuncs.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/autoplayer/inc_stringfuncs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/blackjack.script" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/blackjack.script" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/bugreport.script" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/bugreport.script" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/chardesc.script" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/chardesc.script" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/clearChannelQue.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/clearChannelQue.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/craps.script" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/craps.script" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/everyoneIsHome.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/everyoneIsHome.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/everyoneIsTicking.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/everyoneIsTicking.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/heresy.script" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/heresy.script" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/knucklebones.script" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/knucklebones.script" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/maxItemsRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/maxItemsRoom.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/mrinfo.script" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/mrinfo.script" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/scriptableTest.script" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/scriptableTest.script" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/progs/strangetrader.script" beforeDir="false" afterPath="$PROJECT_DIR$/resources/progs/strangetrader.script" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_capture1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_capture1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_capture2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_capture2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_capture3.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_capture3.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_collect1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_collect1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_collect2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_collect2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_collect3.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_collect3.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_collect4.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_collect4.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_delivery1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_delivery1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_delivery2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_delivery2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_dispel1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_dispel1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_escort1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_escort1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_escort2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_escort2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_invasion1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_invasion1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_invasion2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_invasion2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_killer1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_killer1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_killer2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_killer2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_mystery1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_mystery1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_mystery2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_mystery2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_travel1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_travel1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/competitive_travel2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/competitive_travel2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/normal_capture1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/normal_capture1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/normal_collect1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/normal_collect1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/normal_collect2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/normal_collect2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/normal_delivery1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/normal_delivery1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/normal_delivery2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/normal_delivery2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/normal_killer1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/normal_killer1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/normal_travel1.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/normal_travel1.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/quests/templates/normal_travel2.quest" beforeDir="false" afterPath="$PROJECT_DIR$/resources/quests/templates/normal_travel2.quest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/desert.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/desert.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/example.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/example.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/forest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/forest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/inc_adjectives.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/inc_adjectives.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/inc_common.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/inc_common.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/inc_dungeonblurbs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/inc_dungeonblurbs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/inc_fantasynames.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/inc_fantasynames.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/inc_roomruns.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/inc_roomruns.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/inc_streetnames.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/inc_streetnames.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/jungle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/jungle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/lair.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/lair.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/mountains.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/mountains.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/oceanfloor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/oceanfloor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/plains.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/plains.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/planet.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/planet.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/prison.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/prison.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/rats.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/rats.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/snow.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/snow.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/swamp.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/swamp.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/randareas/town.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/randareas/town.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/alchemy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/alchemy.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/bake.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/bake.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/blacksmith.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/blacksmith.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/boatwright.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/boatwright.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/carpentry.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/carpentry.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/construction.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/construction.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/drugs.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/drugs.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/dyeing.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/dyeing.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/excavation.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/excavation.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/expertises.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/expertises.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/fishing.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/fishing.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/floristry.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/floristry.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/foodprep.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/foodprep.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/gaolfood.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/gaolfood.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/glassblowing.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/glassblowing.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/herbology.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/herbology.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/hunting.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/hunting.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/insultd.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/insultd.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/insulto.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/insulto.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/irrigation.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/irrigation.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/lacquering" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/lacquering" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/lacquering.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/lacquering.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/landscaping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/landscaping.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/leatherworking.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/leatherworking.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/legendaryweaponsmith.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/legendaryweaponsmith.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/liquors.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/liquors.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/masonry.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/masonry.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/masterleatherworking.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/masterleatherworking.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/masterweaponsmith.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/masterweaponsmith.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/papermaking.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/papermaking.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/planesofexistence.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/planesofexistence.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/pottery.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/pottery.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/scribing.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/scribing.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/scrimshaw.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/scrimshaw.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/sculpting.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/sculpting.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/shapeshift.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/shapeshift.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/shipbuilding.cmare" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/shipbuilding.cmare" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/siegecraft.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/siegecraft.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/songlyrics.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/songlyrics.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/taxidermy.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/taxidermy.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/textiling.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/textiling.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/skills/weaponsmith.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/skills/weaponsmith.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/alignment.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/alignment.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/blocked.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/blocked.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/classes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/classes.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/connblocked.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/connblocked.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/credits.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/credits.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/doneacct.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/doneacct.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/down.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/down.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/email.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/email.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/intro.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/intro.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/mxp.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/mxp.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/newacct.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/newacct.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/newchar.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/newchar.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/newchardone.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/newchardone.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/nologins.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/nologins.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/offline.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/offline.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/races.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/races.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/rules.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/rules.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/selchar.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/selchar.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/stats.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/stats.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/text/themes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/resources/text/themes.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/titles.ini" beforeDir="false" afterPath="$PROJECT_DIR$/resources/titles.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/core/CMClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/core/CMClass.java" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/make.bat">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="3" column="61" selection-start-line="3" selection-start-column="61" selection-end-line="3" selection-end-column="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="442">
+              <caret line="97" column="37" lean-forward="true" selection-start-line="97" selection-start-column="37" selection-end-line="97" selection-end-column="37" />
+              <folding>
+                <element signature="n#repositories#0;n#project#0;n#!!top" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mud.bat">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/core/CMClass.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="2722" column="26" selection-start-line="2722" selection-start-column="26" selection-end-line="2722" selection-end-column="26" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#100859#100860#0" expanded="true" />
+                <element signature="e#100887#100888#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/application/MUD.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="377">
+              <caret line="1933" column="10" selection-start-line="1933" selection-start-column="10" selection-end-line="1933" selection-end-column="10" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/Libraries/interfaces/DatabaseEngine.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="61" column="26" selection-start-line="61" selection-start-column="26" selection-end-line="61" selection-end-column="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="11" selection-start-column="11" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>main</find>
+      <find>main(</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/core/CMClass.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="10" />
+    <option name="y" value="20" />
+    <option name="width" value="1346" />
+    <option name="height" value="688" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="coffeemud" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hakkard-coffeemud" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="coffeemud" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hakkard-coffeemud" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="coffeemud" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hakkard-coffeemud" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="coffeemud" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hakkard-coffeemud" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="coffeemud" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hakkard-coffeemud" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="coffeemud" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hakkard-coffeemud" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="planet_ink" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="coffeemud" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hakkard-coffeemud" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="planet_ink" type="462c0819:PsiDirectoryNode" />
+              <item name="coffee_mud" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="coffeemud" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hakkard-coffeemud" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="planet_ink" type="462c0819:PsiDirectoryNode" />
+              <item name="coffee_mud" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="coffeemud" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hakkard-coffeemud" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="planet_ink" type="462c0819:PsiDirectoryNode" />
+              <item name="coffee_mud" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="coffeemud" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hakkard-coffeemud" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="planet_ink" type="462c0819:PsiDirectoryNode" />
+              <item name="coffee_mud" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+              <item name="database" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1549458991009" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Oatma\Documents\git\hakkard-coffeemud" />
+      <recent name="C:\Users\Oatma\Documents\git\hakkard-coffeemud\src\main" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2afd562c-08bb-4cff-8631-c4fcaea33f78" name="Default Changelist" comment="" />
+      <created>1549404072792</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1549404072792</updated>
+      <workItem from="1549404075283" duration="1543000" />
+      <workItem from="1549406543420" duration="1846000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="3389000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25340393" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.3289689" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Theme Preview" order="4" />
+      <window_info anchor="right" id="Maven" order="5" />
+      <window_info anchor="right" id="Capture Analysis" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Database" order="8" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="11" selection-start-column="11" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/make.bat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="61" selection-start-line="3" selection-start-column="61" selection-end-line="3" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/RHINO.LICENSE">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-13830">
+          <caret line="9" column="17" lean-forward="true" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mud.bat">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/core/database/DBConnection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="37" column="13" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/core/CMClass.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="2722" column="26" selection-start-line="2722" selection-start-column="26" selection-end-line="2722" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#100859#100860#0" expanded="true" />
+            <element signature="e#100887#100888#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/application/MUD.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="1933" column="10" selection-start-line="1933" selection-start-column="10" selection-end-line="1933" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/core/CMLib.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="97" column="26" selection-start-line="97" selection-start-column="26" selection-end-line="97" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/application/VFShell.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="21" column="47" selection-start-line="21" selection-start-column="47" selection-end-line="21" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/planet_ink/coffee_mud/Libraries/interfaces/DatabaseEngine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="61" column="26" selection-start-line="61" selection-start-column="26" selection-end-line="61" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="97" column="37" lean-forward="true" selection-start-line="97" selection-start-column="37" selection-end-line="97" selection-end-column="37" />
+          <folding>
+            <element signature="n#repositories#0;n#project#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>11.0.1</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>coffeemud</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>11.0.1</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: com.jcraft.jzlib:jzlib:1.0.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
