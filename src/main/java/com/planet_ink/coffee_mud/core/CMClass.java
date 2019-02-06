@@ -2714,7 +2714,11 @@ public class CMClass extends ClassLoader
 			final Context X=Context.enter();
 			final JScriptLib jlib=new JScriptLib();
 			X.initStandardObjects(jlib);
-			jlib.defineFunctionProperties(JScriptLib.functions, JScriptLib.class, ScriptableObject.DONTENUM);
+			try {
+				jlib.defineFunctionProperties(JScriptLib.functions, JScriptLib.class, ScriptableObject.DONTENUM);
+			} catch(PropertyException e) {
+				e.printStackTrace();
+			}
 			final CompilerEnvirons ce = new CompilerEnvirons();
 			ce.initFromContext(X);
 			final ClassCompiler cc = new ClassCompiler(ce);
