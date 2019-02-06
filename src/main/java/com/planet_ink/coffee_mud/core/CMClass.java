@@ -2799,7 +2799,7 @@ public class CMClass extends ClassLoader
 		}
 		try
 		{
-			final String prefix="com/planet_ink/coffee_mud/";
+			final String prefix="src/main/java/com/planet_ink/coffee_mud/";
 			debugging=CMSecurity.isDebugging(CMSecurity.DbgFlag.CLASSLOADER);
 
 			c.libraries=loadVectorListToObj(prefix+"Libraries/",page.getStr("LIBRARY"),CMObjectType.LIBRARY.ancestorName);
