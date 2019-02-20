@@ -1,0 +1,458 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Libraries.interfaces;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Libraries.CMMap;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Libraries.CoffeeUtensils;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.Libraries.Sense;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.io.IOException;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.util.*;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>/*<a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Copyright 2005-2018 Bo Zimmerman<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.25"></a>
+<span class="sourceLineNo">026</span>   you may not use this file except in compliance with the License.<a name="line.26"></a>
+<span class="sourceLineNo">027</span>   You may obtain a copy of the License at<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.29"></a>
+<span class="sourceLineNo">030</span><a name="line.30"></a>
+<span class="sourceLineNo">031</span>   Unless required by applicable law or agreed to in writing, software<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>   See the License for the specific language governing permissions and<a name="line.34"></a>
+<span class="sourceLineNo">035</span>   limitations under the License.<a name="line.35"></a>
+<span class="sourceLineNo">036</span>*/<a name="line.36"></a>
+<span class="sourceLineNo">037</span>/**<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * The MiscUtils (Miscellaneous Utilities) library should not exist.<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * Its purpose is to expose universal functionality that doesn't<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * seem to fit anywhere else.  Usually, however, it does fit<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * elsewhere just fine, but the elsewhere felt too crowded already<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * to receive it.  I'm sure this library will always exist, but the<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * interface is definitely subject to change.<a name="line.43"></a>
+<span class="sourceLineNo">044</span> * <a name="line.44"></a>
+<span class="sourceLineNo">045</span> * @author Bo Zimmerman<a name="line.45"></a>
+<span class="sourceLineNo">046</span> */<a name="line.46"></a>
+<span class="sourceLineNo">047</span>public interface CMMiscUtils extends CMLibrary<a name="line.47"></a>
+<span class="sourceLineNo">048</span>{<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        /**<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         * Checks the given player mob for the format of their prompt in<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         * their playerstats and generates a fully formed prompt, complete<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         * with all variables filled in.<a name="line.52"></a>
+<span class="sourceLineNo">053</span>         * @param mob the mob to build a prompt for<a name="line.53"></a>
+<span class="sourceLineNo">054</span>         * @param prompt TODO<a name="line.54"></a>
+<span class="sourceLineNo">055</span>         * @return the fully filled in customized prompt string<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         */<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        public String builtPrompt(MOB mob, String prompt);<a name="line.57"></a>
+<span class="sourceLineNo">058</span><a name="line.58"></a>
+<span class="sourceLineNo">059</span>        /**<a name="line.59"></a>
+<span class="sourceLineNo">060</span>         * Returns the current mud-month-day-year for the object, depending<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         * on the timeclock where the environmental is located.<a name="line.61"></a>
+<span class="sourceLineNo">062</span>         * @param E the object curious about the date<a name="line.62"></a>
+<span class="sourceLineNo">063</span>         * @return the date string<a name="line.63"></a>
+<span class="sourceLineNo">064</span>         */<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        public String getFormattedDate(Environmental E);<a name="line.65"></a>
+<span class="sourceLineNo">066</span><a name="line.66"></a>
+<span class="sourceLineNo">067</span>        /**<a name="line.67"></a>
+<span class="sourceLineNo">068</span>         * Returns a rediculous best guess on the amount of memory used<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         * by the given environmental.  <a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * @param E the object to check for a footprint of<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * @param number the accuracy -- higher is better<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * @return the amount of memory used, very approximately<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         */<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        public double memoryUse ( Environmental E, int number );<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>        /**<a name="line.76"></a>
+<span class="sourceLineNo">077</span>         * Nice english comma-delimited list, with oxford commas<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * and trailing "and" or "or" at the end.  If the list is<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         * of environmental, it will use the name, otherwise, it <a name="line.79"></a>
+<span class="sourceLineNo">080</span>         * casts everything as a string and lists it.<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * @param V the objects to list<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         * @param andTOrF true for trailing and, false for trailing or<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         * @return the readable comma list.<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         */<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        public String niceCommaList(List&lt;?&gt; V, boolean andTOrF);<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>        /**<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         * This strange method takes a list of space-delimited expressions of the<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         * form [CONDITION]number number number number, etc. E.G.: &amp;gt;1 3 2 5 3 2.<a name="line.89"></a>
+<span class="sourceLineNo">090</span>         * Each list must contain the given num of digits. If the condition falls<a name="line.90"></a>
+<span class="sourceLineNo">091</span>         * within the given start of range and end of range, then the condition<a name="line.91"></a>
+<span class="sourceLineNo">092</span>         * range of entries in the returned array is populated with the values on<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         * that row.<a name="line.93"></a>
+<span class="sourceLineNo">094</span>         * @param condV the list of fully expressions<a name="line.94"></a>
+<span class="sourceLineNo">095</span>         * @param numDigits the min number of digits in each expression<a name="line.95"></a>
+<span class="sourceLineNo">096</span>         * @param startOfRange the starting range to return<a name="line.96"></a>
+<span class="sourceLineNo">097</span>         * @param endOfRange the ending range to return &amp;gt; startOfRange<a name="line.97"></a>
+<span class="sourceLineNo">098</span>         * @return the list of number lists<a name="line.98"></a>
+<span class="sourceLineNo">099</span>         */<a name="line.99"></a>
+<span class="sourceLineNo">100</span>        public long[][] compileConditionalRange(List&lt;String&gt; condV, int numDigits, final int startOfRange, final int endOfRange);<a name="line.100"></a>
+<span class="sourceLineNo">101</span><a name="line.101"></a>
+<span class="sourceLineNo">102</span>        /**<a name="line.102"></a>
+<span class="sourceLineNo">103</span>         * Outfits the given mob with the list of given items.  If the mob<a name="line.103"></a>
+<span class="sourceLineNo">104</span>         * does not have an item with the same name as one on the list, it <a name="line.104"></a>
+<span class="sourceLineNo">105</span>         * is given to them magically.  If they can, they will then wear it.<a name="line.105"></a>
+<span class="sourceLineNo">106</span>         * @param mob the mob to outfit<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         * @param items the items to outfit the mob with<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         */<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        public void outfit(MOB mob, List&lt;Item&gt; items);<a name="line.109"></a>
+<span class="sourceLineNo">110</span><a name="line.110"></a>
+<span class="sourceLineNo">111</span>        /**<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         * Returns the language being spoke by the given object (mob, usually).<a name="line.112"></a>
+<span class="sourceLineNo">113</span>         * A null return usually means Common. <a name="line.113"></a>
+<span class="sourceLineNo">114</span>         * @param P the mob to check<a name="line.114"></a>
+<span class="sourceLineNo">115</span>         * @return the language being spoken.<a name="line.115"></a>
+<span class="sourceLineNo">116</span>         */<a name="line.116"></a>
+<span class="sourceLineNo">117</span>        public Language getLanguageSpoken(Physical P);<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>        /**<a name="line.119"></a>
+<span class="sourceLineNo">120</span>         * Returns whether the given Item is reachable by the given mob.<a name="line.120"></a>
+<span class="sourceLineNo">121</span>         * It may not be reachable if the mob is riding something, and the<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         * item is on the ground, etc.  If the object given is not an<a name="line.122"></a>
+<span class="sourceLineNo">123</span>         * item, or null, true is always returned.<a name="line.123"></a>
+<span class="sourceLineNo">124</span>         * @param mob the mob who wants to reach<a name="line.124"></a>
+<span class="sourceLineNo">125</span>         * @param E the Item to reach for<a name="line.125"></a>
+<span class="sourceLineNo">126</span>         * @return true, or false if it's unreachable<a name="line.126"></a>
+<span class="sourceLineNo">127</span>         */<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        public boolean reachableItem(MOB mob, Environmental E);<a name="line.128"></a>
+<span class="sourceLineNo">129</span><a name="line.129"></a>
+<span class="sourceLineNo">130</span>        /**<a name="line.130"></a>
+<span class="sourceLineNo">131</span>         * Recursively extinguishes everything from the given target on down.<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         * If a room is given, everything in the room, including the room,<a name="line.132"></a>
+<span class="sourceLineNo">133</span>         * is extinguished.   Ordinary fires and torches also go out.  <a name="line.133"></a>
+<span class="sourceLineNo">134</span>         * The mundane flag is to prevent extinguishing elementals and magic<a name="line.134"></a>
+<span class="sourceLineNo">135</span>         * flame spells.<a name="line.135"></a>
+<span class="sourceLineNo">136</span>         * @param source the mob doing the extinguishing<a name="line.136"></a>
+<span class="sourceLineNo">137</span>         * @param target the thing to extinguish<a name="line.137"></a>
+<span class="sourceLineNo">138</span>         * @param mundane true to skip magic and elemental targets<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         */<a name="line.139"></a>
+<span class="sourceLineNo">140</span>        public void extinguish(MOB source, Physical target, boolean mundane);<a name="line.140"></a>
+<span class="sourceLineNo">141</span><a name="line.141"></a>
+<span class="sourceLineNo">142</span>        /**<a name="line.142"></a>
+<span class="sourceLineNo">143</span>         * Given the allowedArmorLevel code and the mob, this method returns<a name="line.143"></a>
+<span class="sourceLineNo">144</span>         * whether the given mob is only wearing permitted items on the<a name="line.144"></a>
+<span class="sourceLineNo">145</span>         * applicable armor slots.  <a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * @see CharClass#ARMOR_DESCS<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         * @param mob the mob to check<a name="line.147"></a>
+<span class="sourceLineNo">148</span>         * @param allowedArmorLevel the allowed armor level<a name="line.148"></a>
+<span class="sourceLineNo">149</span>         * @return true if the mob is good to go, false otherwise<a name="line.149"></a>
+<span class="sourceLineNo">150</span>         */<a name="line.150"></a>
+<span class="sourceLineNo">151</span>        public boolean armorCheck(MOB mob, int allowedArmorLevel);<a name="line.151"></a>
+<span class="sourceLineNo">152</span><a name="line.152"></a>
+<span class="sourceLineNo">153</span>        /**<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         * Given the allowedArmorLevel code and the mob, this method returns<a name="line.154"></a>
+<span class="sourceLineNo">155</span>         * whether the given mob is permitted to wear the given item is<a name="line.155"></a>
+<span class="sourceLineNo">156</span>         * applicable armor slots given the armor level code.  <a name="line.156"></a>
+<span class="sourceLineNo">157</span>         * @see CharClass#ARMOR_DESCS<a name="line.157"></a>
+<span class="sourceLineNo">158</span>         * @param mob the mob to check<a name="line.158"></a>
+<span class="sourceLineNo">159</span>         * @param I the item to check<a name="line.159"></a>
+<span class="sourceLineNo">160</span>         * @param allowedArmorLevel the allowed armor level<a name="line.160"></a>
+<span class="sourceLineNo">161</span>         * @return true if the mob is good to go for that item, false otherwise<a name="line.161"></a>
+<span class="sourceLineNo">162</span>         */<a name="line.162"></a>
+<span class="sourceLineNo">163</span>        public boolean armorCheck(MOB mob, Item I, int allowedArmorLevel);<a name="line.163"></a>
+<span class="sourceLineNo">164</span><a name="line.164"></a>
+<span class="sourceLineNo">165</span>        /**<a name="line.165"></a>
+<span class="sourceLineNo">166</span>         * Drops all items from the given mob into the given room which are inside the given<a name="line.166"></a>
+<span class="sourceLineNo">167</span>         * container (or are the given item).  The bodyFlag ensures that the contents are<a name="line.167"></a>
+<span class="sourceLineNo">168</span>         * not marked for cleanup.  This method does the deed, but does not generate any<a name="line.168"></a>
+<span class="sourceLineNo">169</span>         * new messages.  It also does not recover the state of the mob.<a name="line.169"></a>
+<span class="sourceLineNo">170</span>         * @param mob the mob who is dropping<a name="line.170"></a>
+<span class="sourceLineNo">171</span>         * @param room the room where it's being dropped<a name="line.171"></a>
+<span class="sourceLineNo">172</span>         * @param thisContainer the item or container where the items must be<a name="line.172"></a>
+<span class="sourceLineNo">173</span>         * @param bodyFlag true if the container is a body, false otherwise<a name="line.173"></a>
+<span class="sourceLineNo">174</span>         */<a name="line.174"></a>
+<span class="sourceLineNo">175</span>        public void recursiveDropMOB(MOB mob, Room room, Item thisContainer, boolean bodyFlag);<a name="line.175"></a>
+<span class="sourceLineNo">176</span><a name="line.176"></a>
+<span class="sourceLineNo">177</span>        /**<a name="line.177"></a>
+<span class="sourceLineNo">178</span>         * Returns a copy of the given item/container and a copy of every item in that<a name="line.178"></a>
+<span class="sourceLineNo">179</span>         * container, recursively.<a name="line.179"></a>
+<span class="sourceLineNo">180</span>         * @param theContainer the container or item to copy<a name="line.180"></a>
+<span class="sourceLineNo">181</span>         * @return a list of copies of all the contents<a name="line.181"></a>
+<span class="sourceLineNo">182</span>         */<a name="line.182"></a>
+<span class="sourceLineNo">183</span>        public List&lt;Item&gt; deepCopyOf(Item theContainer);<a name="line.183"></a>
+<span class="sourceLineNo">184</span><a name="line.184"></a>
+<span class="sourceLineNo">185</span>        /**<a name="line.185"></a>
+<span class="sourceLineNo">186</span>         * This method removes all equipment from the mob and quickly attempt to re-wear/hold/wield<a name="line.186"></a>
+<span class="sourceLineNo">187</span>         * it all where it originally was by issueing wear messages which are previewed and executed.<a name="line.187"></a>
+<span class="sourceLineNo">188</span>         * In the end, the mob will be wearing everything that the system will let them wear.<a name="line.188"></a>
+<span class="sourceLineNo">189</span>         * Moreover, this is all done silently.<a name="line.189"></a>
+<span class="sourceLineNo">190</span>         * @param mob the mob to confirm the equipment of<a name="line.190"></a>
+<span class="sourceLineNo">191</span>         */<a name="line.191"></a>
+<span class="sourceLineNo">192</span>        public void confirmWearability(MOB mob);<a name="line.192"></a>
+<span class="sourceLineNo">193</span><a name="line.193"></a>
+<span class="sourceLineNo">194</span>        /**<a name="line.194"></a>
+<span class="sourceLineNo">195</span>         * Assumes that every inventory item, equipped item, and store inventory<a name="line.195"></a>
+<span class="sourceLineNo">196</span>         * are for an NPC mob, where "rejuv" doesn't really matter.  In those cases,<a name="line.196"></a>
+<span class="sourceLineNo">197</span>         * the "rejuv" stat is, for non-rivalrous items, a pct chance of it being<a name="line.197"></a>
+<span class="sourceLineNo">198</span>         * retained on this mob.  For rivalrous items (two wielded swords, for example),<a name="line.198"></a>
+<span class="sourceLineNo">199</span>         * it is a weighted chance of being selected.  Electronics items also have their<a name="line.199"></a>
+<span class="sourceLineNo">200</span>         * random stats determined at this time. <a name="line.200"></a>
+<span class="sourceLineNo">201</span>         * @param mob the npc mob to process variable equipment on<a name="line.201"></a>
+<span class="sourceLineNo">202</span>         * @return 0 for success, -1 if an admin is in the room, so nothing could be done.<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         */<a name="line.203"></a>
+<span class="sourceLineNo">204</span>        public int processVariableEquipment(MOB mob);<a name="line.204"></a>
+<span class="sourceLineNo">205</span><a name="line.205"></a>
+<span class="sourceLineNo">206</span>        /**<a name="line.206"></a>
+<span class="sourceLineNo">207</span>         * Creates one of the deprecated traps depending on what sort of object is passed<a name="line.207"></a>
+<span class="sourceLineNo">208</span>         * in, whether it has a lid or a lock, etc.<a name="line.208"></a>
+<span class="sourceLineNo">209</span>         * @param unlockThis the exit, container, room, whatever<a name="line.209"></a>
+<span class="sourceLineNo">210</span>         * @return the trap to add to the physical thing, or null<a name="line.210"></a>
+<span class="sourceLineNo">211</span>         */<a name="line.211"></a>
+<span class="sourceLineNo">212</span>        public Trap makeADeprecatedTrap(Physical unlockThis);<a name="line.212"></a>
+<span class="sourceLineNo">213</span>        <a name="line.213"></a>
+<span class="sourceLineNo">214</span>        /**<a name="line.214"></a>
+<span class="sourceLineNo">215</span>         * Creates and sets a deprecated trap on the given exit, room,<a name="line.215"></a>
+<span class="sourceLineNo">216</span>         * container, or whatever.<a name="line.216"></a>
+<span class="sourceLineNo">217</span>         * @see CMMiscUtils#makeADeprecatedTrap(Physical)<a name="line.217"></a>
+<span class="sourceLineNo">218</span>         * @see CMMiscUtils#setTrapped(Physical, Trap)<a name="line.218"></a>
+<span class="sourceLineNo">219</span>         * @see CMMiscUtils#fetchMyTrap(Physical)<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         * @param myThang the thing to set the trap on.<a name="line.220"></a>
+<span class="sourceLineNo">221</span>         */<a name="line.221"></a>
+<span class="sourceLineNo">222</span>        public void setTrapped(Physical myThang);<a name="line.222"></a>
+<span class="sourceLineNo">223</span>        <a name="line.223"></a>
+<span class="sourceLineNo">224</span>        /**<a name="line.224"></a>
+<span class="sourceLineNo">225</span>         * Sets the given deprecated trap on the given exit, room,<a name="line.225"></a>
+<span class="sourceLineNo">226</span>         * container, or whatever.<a name="line.226"></a>
+<span class="sourceLineNo">227</span>         * @see CMMiscUtils#makeADeprecatedTrap(Physical)<a name="line.227"></a>
+<span class="sourceLineNo">228</span>         * @see CMMiscUtils#setTrapped(Physical)<a name="line.228"></a>
+<span class="sourceLineNo">229</span>         * @param myThang the thing to set the trap on.<a name="line.229"></a>
+<span class="sourceLineNo">230</span>         * @param theTrap the deprecated trap to set on it<a name="line.230"></a>
+<span class="sourceLineNo">231</span>         */<a name="line.231"></a>
+<span class="sourceLineNo">232</span>        public void setTrapped(Physical myThang, Trap theTrap);<a name="line.232"></a>
+<span class="sourceLineNo">233</span>        <a name="line.233"></a>
+<span class="sourceLineNo">234</span>        /**<a name="line.234"></a>
+<span class="sourceLineNo">235</span>         * Returns any trap found on the given thing, or null.<a name="line.235"></a>
+<span class="sourceLineNo">236</span>         * @see CMMiscUtils#makeADeprecatedTrap(Physical)<a name="line.236"></a>
+<span class="sourceLineNo">237</span>         * @param myThang the thing to check for a trap<a name="line.237"></a>
+<span class="sourceLineNo">238</span>         * @return the trap found, or null<a name="line.238"></a>
+<span class="sourceLineNo">239</span>         */<a name="line.239"></a>
+<span class="sourceLineNo">240</span>        public Trap fetchMyTrap(Physical myThang);<a name="line.240"></a>
+<span class="sourceLineNo">241</span><a name="line.241"></a>
+<span class="sourceLineNo">242</span>        /**<a name="line.242"></a>
+<span class="sourceLineNo">243</span>         * If any mob (probably a player) is possessing the<a name="line.243"></a>
+<span class="sourceLineNo">244</span>         * given mob, this will return that mob, or null<a name="line.244"></a>
+<span class="sourceLineNo">245</span>         * @param mob the mob to check for possession<a name="line.245"></a>
+<span class="sourceLineNo">246</span>         * @return the mob possessing the given mob<a name="line.246"></a>
+<span class="sourceLineNo">247</span>         */<a name="line.247"></a>
+<span class="sourceLineNo">248</span>        public MOB getMobPossessingAnother(MOB mob);<a name="line.248"></a>
+<span class="sourceLineNo">249</span><a name="line.249"></a>
+<span class="sourceLineNo">250</span>        /**<a name="line.250"></a>
+<span class="sourceLineNo">251</span>         * Normally just sends the message to the room by calling<a name="line.251"></a>
+<span class="sourceLineNo">252</span>         * Room.send.  However, if the target of the message is <a name="line.252"></a>
+<span class="sourceLineNo">253</span>         * an exit, then the several exits involved would also<a name="line.253"></a>
+<span class="sourceLineNo">254</span>         * informed by having executeMsg called on them.<a name="line.254"></a>
+<span class="sourceLineNo">255</span>         * @param msg the message to send<a name="line.255"></a>
+<span class="sourceLineNo">256</span>         * @param room the room to send the message to<a name="line.256"></a>
+<span class="sourceLineNo">257</span>         * @param dirCode if known, the direction of the target exit<a name="line.257"></a>
+<span class="sourceLineNo">258</span>         */<a name="line.258"></a>
+<span class="sourceLineNo">259</span>        public void roomAffectFully(CMMsg msg, Room room, int dirCode);<a name="line.259"></a>
+<span class="sourceLineNo">260</span><a name="line.260"></a>
+<span class="sourceLineNo">261</span>        /**<a name="line.261"></a>
+<span class="sourceLineNo">262</span>         * Returns any corpses found in the given container, recursively.<a name="line.262"></a>
+<span class="sourceLineNo">263</span>         * @param container the container that possibly has corpses<a name="line.263"></a>
+<span class="sourceLineNo">264</span>         * @return a list of any corpses found, or an empty list<a name="line.264"></a>
+<span class="sourceLineNo">265</span>         */<a name="line.265"></a>
+<span class="sourceLineNo">266</span>        public List&lt;DeadBody&gt; getDeadBodies(Environmental container);<a name="line.266"></a>
+<span class="sourceLineNo">267</span><a name="line.267"></a>
+<span class="sourceLineNo">268</span>        /**<a name="line.268"></a>
+<span class="sourceLineNo">269</span>         * Resurrects the given body according to all system rules.<a name="line.269"></a>
+<span class="sourceLineNo">270</span>         * <a name="line.270"></a>
+<span class="sourceLineNo">271</span>         * @param tellMob if the corpse could not be resurrected, tell this mob.<a name="line.271"></a>
+<span class="sourceLineNo">272</span>         * @param corpseRoom room to bring the mob to after resurrection, probably same as body's location<a name="line.272"></a>
+<span class="sourceLineNo">273</span>         * @param body the corpse to resurrect<a name="line.273"></a>
+<span class="sourceLineNo">274</span>         * @param XPLevel if &amp;gt; 0, and rules allow, bonus xp restored<a name="line.274"></a>
+<span class="sourceLineNo">275</span>         * @return true if the resurrection happened, false otherwise<a name="line.275"></a>
+<span class="sourceLineNo">276</span>         */<a name="line.276"></a>
+<span class="sourceLineNo">277</span>        public boolean resurrect(MOB tellMob, Room corpseRoom, DeadBody body, int XPLevel);<a name="line.277"></a>
+<span class="sourceLineNo">278</span><a name="line.278"></a>
+<span class="sourceLineNo">279</span>        /**<a name="line.279"></a>
+<span class="sourceLineNo">280</span>         * This method parses the item ruinning rules and possibly ruins the given item<a name="line.280"></a>
+<span class="sourceLineNo">281</span>         * by returning the ruined version.  Or it might do nothing<a name="line.281"></a>
+<span class="sourceLineNo">282</span>         * and just return the item.<a name="line.282"></a>
+<span class="sourceLineNo">283</span>         * @param mob the mob to get ruin policies for<a name="line.283"></a>
+<span class="sourceLineNo">284</span>         * @param I the item to potentially ruin<a name="line.284"></a>
+<span class="sourceLineNo">285</span>         * @return the ruined item, or the original item, depending<a name="line.285"></a>
+<span class="sourceLineNo">286</span>         */<a name="line.286"></a>
+<span class="sourceLineNo">287</span>        public Item isRuinedLoot(MOB mob, Item I);<a name="line.287"></a>
+<span class="sourceLineNo">288</span><a name="line.288"></a>
+<span class="sourceLineNo">289</span>        /**<a name="line.289"></a>
+<span class="sourceLineNo">290</span>         * Always converts the given item into the Ruined version<a name="line.290"></a>
+<span class="sourceLineNo">291</span>         * @see CMMiscUtils#isRuinedLoot(MOB, Item)<a name="line.291"></a>
+<span class="sourceLineNo">292</span>         * @param I the item to ruin<a name="line.292"></a>
+<span class="sourceLineNo">293</span>         * @return the new, ruined version<a name="line.293"></a>
+<span class="sourceLineNo">294</span>         */<a name="line.294"></a>
+<span class="sourceLineNo">295</span>        public Item ruinItem(Item I);<a name="line.295"></a>
+<span class="sourceLineNo">296</span><a name="line.296"></a>
+<span class="sourceLineNo">297</span>        /**<a name="line.297"></a>
+<span class="sourceLineNo">298</span>         * Iterates through every mob and player in the game, replacing the old race<a name="line.298"></a>
+<span class="sourceLineNo">299</span>         * object with the new one.<a name="line.299"></a>
+<span class="sourceLineNo">300</span>         * @see CMMiscUtils#reloadCharClasses(CharClass)<a name="line.300"></a>
+<span class="sourceLineNo">301</span>         * @param newR the new race object<a name="line.301"></a>
+<span class="sourceLineNo">302</span>         * @param oldR the old race object<a name="line.302"></a>
+<span class="sourceLineNo">303</span>         */<a name="line.303"></a>
+<span class="sourceLineNo">304</span>        public void swapRaces(Race newR, Race oldR);<a name="line.304"></a>
+<span class="sourceLineNo">305</span><a name="line.305"></a>
+<span class="sourceLineNo">306</span>        /**<a name="line.306"></a>
+<span class="sourceLineNo">307</span>         * Iterates through every mob and player in the game, replacing the old char class<a name="line.307"></a>
+<span class="sourceLineNo">308</span>         * object given with the new one of the same ID from CMClass.<a name="line.308"></a>
+<span class="sourceLineNo">309</span>         * @see CMMiscUtils#swapRaces(Race, Race)<a name="line.309"></a>
+<span class="sourceLineNo">310</span>         * @param oldC the old charclass object<a name="line.310"></a>
+<span class="sourceLineNo">311</span>         */<a name="line.311"></a>
+<span class="sourceLineNo">312</span>        public void reloadCharClasses(CharClass oldC);<a name="line.312"></a>
+<span class="sourceLineNo">313</span><a name="line.313"></a>
+<span class="sourceLineNo">314</span>        /**<a name="line.314"></a>
+<span class="sourceLineNo">315</span>         * Returns whether the given item can be destroyed by the given mob, probably magically.<a name="line.315"></a>
+<span class="sourceLineNo">316</span>         * This is a recursive check if the item is a container.<a name="line.316"></a>
+<span class="sourceLineNo">317</span>         * @param mob the mob who wants to destroy the item<a name="line.317"></a>
+<span class="sourceLineNo">318</span>         * @param I the item to destroy<a name="line.318"></a>
+<span class="sourceLineNo">319</span>         * @param ignoreBodies true to ignore corpse checks, false otherwise<a name="line.319"></a>
+<span class="sourceLineNo">320</span>         * @param ignoreWeight TODO<a name="line.320"></a>
+<span class="sourceLineNo">321</span>         * @return true if the item can be destroyed, false otherwise<a name="line.321"></a>
+<span class="sourceLineNo">322</span>         */<a name="line.322"></a>
+<span class="sourceLineNo">323</span>        public boolean canBePlayerDestroyed(final MOB mob, final Item I, final boolean ignoreBodies, boolean ignoreWeight);<a name="line.323"></a>
+<span class="sourceLineNo">324</span><a name="line.324"></a>
+<span class="sourceLineNo">325</span>        /**<a name="line.325"></a>
+<span class="sourceLineNo">326</span>         * Calls unInvoke on all effects on the given environmental.  <a name="line.326"></a>
+<span class="sourceLineNo">327</span>         * This may not cause the effects to disappear, depending on the<a name="line.327"></a>
+<span class="sourceLineNo">328</span>         * behavior of each effect.<a name="line.328"></a>
+<span class="sourceLineNo">329</span>         * @param E the object to diseffect<a name="line.329"></a>
+<span class="sourceLineNo">330</span>         * @return true if the item still exists, false if it was destroyed<a name="line.330"></a>
+<span class="sourceLineNo">331</span>         */<a name="line.331"></a>
+<span class="sourceLineNo">332</span>        public boolean disInvokeEffects(Environmental E);<a name="line.332"></a>
+<span class="sourceLineNo">333</span><a name="line.333"></a>
+<span class="sourceLineNo">334</span>        /**<a name="line.334"></a>
+<span class="sourceLineNo">335</span>         * Removes magical effects from wands, and other spell holders,<a name="line.335"></a>
+<span class="sourceLineNo">336</span>         * deletes any effects after attempting to uninvoke.  This method<a name="line.336"></a>
+<span class="sourceLineNo">337</span>         * probably needs more thought, since not all effects are<a name="line.337"></a>
+<span class="sourceLineNo">338</span>         * magic (though they usually are)<a name="line.338"></a>
+<span class="sourceLineNo">339</span>         * <a name="line.339"></a>
+<span class="sourceLineNo">340</span>         * The return value is a very strange number: 0 if the item is <a name="line.340"></a>
+<span class="sourceLineNo">341</span>         * destroyed, -999 if nothing done, or the item level minus the <a name="line.341"></a>
+<span class="sourceLineNo">342</span>         * magic value of what was done to it.<a name="line.342"></a>
+<span class="sourceLineNo">343</span>         * @param target the object to disenchant.<a name="line.343"></a>
+<span class="sourceLineNo">344</span>         * @return a bizarre number <a name="line.344"></a>
+<span class="sourceLineNo">345</span>         */<a name="line.345"></a>
+<span class="sourceLineNo">346</span>        public int disenchantItem(Item target);<a name="line.346"></a>
+<span class="sourceLineNo">347</span>        <a name="line.347"></a>
+<span class="sourceLineNo">348</span>        /**<a name="line.348"></a>
+<span class="sourceLineNo">349</span>         * Absolutely returns the correct race when mixing races of the<a name="line.349"></a>
+<span class="sourceLineNo">350</span>         * two given IDs.  Applies system rules to the generation.<a name="line.350"></a>
+<span class="sourceLineNo">351</span>         * <a name="line.351"></a>
+<span class="sourceLineNo">352</span>         * @param race1 the mother race<a name="line.352"></a>
+<span class="sourceLineNo">353</span>         * @param race2 the father race<a name="line.353"></a>
+<span class="sourceLineNo">354</span>         * @param ignoreRules TODO<a name="line.354"></a>
+<span class="sourceLineNo">355</span>         * @return the mixed race<a name="line.355"></a>
+<span class="sourceLineNo">356</span>         */<a name="line.356"></a>
+<span class="sourceLineNo">357</span>        public Race getMixedRace(String race1, String race2, boolean ignoreRules);<a name="line.357"></a>
+<span class="sourceLineNo">358</span>        <a name="line.358"></a>
+<span class="sourceLineNo">359</span>        /**<a name="line.359"></a>
+<span class="sourceLineNo">360</span>         * Breaks apart a given generic mixed race ID to figure<a name="line.360"></a>
+<span class="sourceLineNo">361</span>         * out which races were combined to make it up.<a name="line.361"></a>
+<span class="sourceLineNo">362</span>         * @param raceID the raceID to break apart<a name="line.362"></a>
+<span class="sourceLineNo">363</span>         * @return a list of constituant races, or empty.<a name="line.363"></a>
+<span class="sourceLineNo">364</span>         */<a name="line.364"></a>
+<span class="sourceLineNo">365</span>        public List&lt;Race&gt; getConstituantRaces(final String raceID);<a name="line.365"></a>
+<span class="sourceLineNo">366</span>        <a name="line.366"></a>
+<span class="sourceLineNo">367</span>        /**<a name="line.367"></a>
+<span class="sourceLineNo">368</span>         * Returns a list of worn equipment at the top layer, where it can be<a name="line.368"></a>
+<span class="sourceLineNo">369</span>         * seen.  An optional wornMask can narrow the locations allowed.<a name="line.369"></a>
+<span class="sourceLineNo">370</span>         * The require list is the item, plus the worn location.<a name="line.370"></a>
+<span class="sourceLineNo">371</span>         * <a name="line.371"></a>
+<span class="sourceLineNo">372</span>         * @param mob the mob to get equipment from<a name="line.372"></a>
+<span class="sourceLineNo">373</span>         * @param wornMask 0, or a bitmap of allowed wear locations<a name="line.373"></a>
+<span class="sourceLineNo">374</span>         * @return the list of items and wear locations<a name="line.374"></a>
+<span class="sourceLineNo">375</span>         */<a name="line.375"></a>
+<span class="sourceLineNo">376</span>        public PairList&lt;Item, Long&gt; getSeenEquipment(final MOB mob, final long wornMask);<a name="line.376"></a>
+<span class="sourceLineNo">377</span>        <a name="line.377"></a>
+<span class="sourceLineNo">378</span>        /**<a name="line.378"></a>
+<span class="sourceLineNo">379</span>         * Does its best to come up with a specially encoded unsubscribe url for <a name="line.379"></a>
+<span class="sourceLineNo">380</span>         * a particular user.  The url will be unique to the user, but is man-in-the-<a name="line.380"></a>
+<span class="sourceLineNo">381</span>         * middle attackable, as it is a simple hash.<a name="line.381"></a>
+<span class="sourceLineNo">382</span>         * @param name the account or player name<a name="line.382"></a>
+<span class="sourceLineNo">383</span>         * @return the full web url with http and everything<a name="line.383"></a>
+<span class="sourceLineNo">384</span>         */<a name="line.384"></a>
+<span class="sourceLineNo">385</span>        public String getUnsubscribeURL(final String name);<a name="line.385"></a>
+<span class="sourceLineNo">386</span>}<a name="line.386"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Abilities.Traps;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/*<a name="line.20"></a>
+<span class="sourceLineNo">021</span>   Copyright 2003-2018 Bo Zimmerman<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.23"></a>
+<span class="sourceLineNo">024</span>   you may not use this file except in compliance with the License.<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   You may obtain a copy of the License at<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>   Unless required by applicable law or agreed to in writing, software<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   See the License for the specific language governing permissions and<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   limitations under the License.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>*/<a name="line.34"></a>
+<span class="sourceLineNo">035</span>public class Trap_CrushingRoom extends StdTrap<a name="line.35"></a>
+<span class="sourceLineNo">036</span>{<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        @Override<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        public String ID()<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        {<a name="line.39"></a>
+<span class="sourceLineNo">040</span>                return "Trap_CrushingRoom";<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        }<a name="line.41"></a>
+<span class="sourceLineNo">042</span><a name="line.42"></a>
+<span class="sourceLineNo">043</span>        private final static String     localizedName   = CMLib.lang().L("crushing room");<a name="line.43"></a>
+<span class="sourceLineNo">044</span><a name="line.44"></a>
+<span class="sourceLineNo">045</span>        @Override<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        public String name()<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        {<a name="line.47"></a>
+<span class="sourceLineNo">048</span>                return localizedName;<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        }<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>        @Override<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        protected int canAffectCode()<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        {<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                return Ability.CAN_ROOMS;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        }<a name="line.55"></a>
+<span class="sourceLineNo">056</span><a name="line.56"></a>
+<span class="sourceLineNo">057</span>        @Override<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        protected int canTargetCode()<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        {<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                return 0;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        }<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>        @Override<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        protected int trapLevel()<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        {<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                return 24;<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        }<a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>        @Override<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        public String requiresToSet()<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        {<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                return "100 pounds of stone";<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        }<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>        @Override<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        public int baseRejuvTime(int level)<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                return 16;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        }<a name="line.79"></a>
+<span class="sourceLineNo">080</span><a name="line.80"></a>
+<span class="sourceLineNo">081</span>        @Override<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        public Trap setTrap(MOB mob, Physical P, int trapBonus, int qualifyingClassLevel, boolean perm)<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        {<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                if(P==null)<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                        return null;<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                if(mob!=null)<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                {<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                        final Item I=findMostOfMaterial(mob.location(),RawMaterial.MATERIAL_ROCK);<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                        if(I!=null)<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                                super.destroyResources(mob.location(),I.material(),100);<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                }<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                return super.setTrap(mob,P,trapBonus,qualifyingClassLevel,perm);<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        }<a name="line.93"></a>
+<span class="sourceLineNo">094</span><a name="line.94"></a>
+<span class="sourceLineNo">095</span>        @Override<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        public List&lt;Item&gt; getTrapComponents()<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        {<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                final List&lt;Item&gt; V=new Vector&lt;Item&gt;();<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                for(int i=0;i&lt;100;i++)<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                        V.add(CMLib.materials().makeItemResource(RawMaterial.RESOURCE_STONE));<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                return V;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        }<a name="line.102"></a>
+<span class="sourceLineNo">103</span><a name="line.103"></a>
+<span class="sourceLineNo">104</span>        @Override<a name="line.104"></a>
+<span class="sourceLineNo">105</span>        public boolean canSetTrapOn(MOB mob, Physical P)<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        {<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                if(!super.canSetTrapOn(mob,P))<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                        return false;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                if(mob!=null)<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                {<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                        final RawMaterial I=findMostOfMaterial(mob.location(),RawMaterial.MATERIAL_ROCK);<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                        if((I==null)<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                        ||(super.findNumberOfResource(mob.location(),I)&lt;100))<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                        {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                                mob.tell(L("You'll need to set down at least 100 pounds of stone first."));<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                                return false;<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                        }<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                }<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                if(P instanceof Room)<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                {<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                        final Room R=(Room)P;<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                        if((R.domainType()&amp;Room.INDOORS)==0)<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                        {<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                                if(mob!=null)<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                                        mob.tell(L("You can only set this trap indoors."));<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                                return false;<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                        }<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                }<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                return true;<a name="line.129"></a>
+<span class="sourceLineNo">130</span>        }<a name="line.130"></a>
+<span class="sourceLineNo">131</span><a name="line.131"></a>
+<span class="sourceLineNo">132</span>        @Override<a name="line.132"></a>
+<span class="sourceLineNo">133</span>        public boolean okMessage(final Environmental myHost, final CMMsg msg)<a name="line.133"></a>
+<span class="sourceLineNo">134</span>        {<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                if((sprung)<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                &amp;&amp;(affected!=null)<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                &amp;&amp;(!disabled())<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                &amp;&amp;(tickDown&gt;=0))<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                {<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                        if(((msg.targetMinor()==CMMsg.TYP_LEAVE)<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                                ||(msg.targetMinor()==CMMsg.TYP_FLEE))<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                           &amp;&amp;(msg.amITarget(affected)))<a name="line.142"></a>
+<span class="sourceLineNo">143</span>                        {<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                                msg.source().tell(L("The exits are blocked! You can't get out!"));<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                                return false;<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                        }<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                        else<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                        if((msg.targetMinor()==CMMsg.TYP_ENTER)<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                           &amp;&amp;(msg.amITarget(affected)))<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                        {<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                                msg.source().tell(L("The entry to that room is blocked!"));<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                                return false;<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                        }<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                }<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                return super.okMessage(myHost,msg);<a name="line.155"></a>
+<span class="sourceLineNo">156</span>        }<a name="line.156"></a>
+<span class="sourceLineNo">157</span><a name="line.157"></a>
+<span class="sourceLineNo">158</span>        @Override<a name="line.158"></a>
+<span class="sourceLineNo">159</span>        public boolean tick(final Tickable ticking, final int tickID)<a name="line.159"></a>
+<span class="sourceLineNo">160</span>        {<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                if((tickID==Tickable.TICKID_TRAP_RESET)&amp;&amp;(getReset()&gt;0))<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                {<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                        if((sprung)<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                        &amp;&amp;(affected instanceof Room)<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                        &amp;&amp;(!disabled())<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                        &amp;&amp;(tickDown&gt;=0))<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                        {<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                                final Room R=(Room)affected;<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                                if(tickDown&gt;13)<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                                        R.showHappens(CMMsg.MSG_OK_VISUAL,L("The walls start closing in around you!"));<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                                else<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                                if(tickDown&gt;4)<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                                {<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                                        for(int i=0;i&lt;R.numInhabitants();i++)<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                                        {<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                                                final MOB M=R.fetchInhabitant(i);<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                                                if((M!=null)&amp;&amp;(M!=invoker()))<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                                                {<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                                                        if(invoker().mayIFight(M))<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                                                        {<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                                                                final int damage=CMLib.dice().roll(trapLevel()+abilityCode(),30,1);<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                                                                CMLib.combat().postDamage(invoker(),M,this,damage,CMMsg.MASK_MALICIOUS|CMMsg.MASK_ALWAYS|CMMsg.TYP_JUSTICE,Weapon.TYPE_BASHING,L("The crushing walls &lt;DAMAGE&gt; &lt;T-NAME&gt;!"));<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                                                        }<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                                                }<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                                        }<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                                }<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                                else<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                                {<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                                        R.showHappens(CMMsg.MSG_OK_VISUAL,L("The walls begin retracting..."));<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                                }<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                        }<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                }<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                return super.tick(ticking,tickID);<a name="line.193"></a>
+<span class="sourceLineNo">194</span>        }<a name="line.194"></a>
+<span class="sourceLineNo">195</span><a name="line.195"></a>
+<span class="sourceLineNo">196</span>        @Override<a name="line.196"></a>
+<span class="sourceLineNo">197</span>        public void spring(MOB target)<a name="line.197"></a>
+<span class="sourceLineNo">198</span>        {<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                if((target!=invoker())&amp;&amp;(target.location()!=null))<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                {<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                        if((doesSaveVsTraps(target))<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                        ||(invoker().getGroupMembers(new HashSet&lt;MOB&gt;()).contains(target)))<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                                target.location().show(target,null,null,CMMsg.MASK_ALWAYS|CMMsg.MSG_NOISE,L("&lt;S-NAME&gt; avoid(s) setting off a trap!"));<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                        else<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                        if(target.location().show(target,target,this,CMMsg.MASK_ALWAYS|CMMsg.MSG_NOISE,L("&lt;S-NAME&gt; trigger(s) a trap!")))<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                        {<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                                super.spring(target);<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                                target.location().showHappens(CMMsg.MSG_OK_VISUAL,L("The exits are blocked off! The walls start closing in!"));<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                        }<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                }<a name="line.210"></a>
+<span class="sourceLineNo">211</span>        }<a name="line.211"></a>
+<span class="sourceLineNo">212</span>}<a name="line.212"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

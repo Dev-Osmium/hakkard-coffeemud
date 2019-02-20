@@ -1,0 +1,688 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Races.interfaces;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>/*<a name="line.19"></a>
+<span class="sourceLineNo">020</span>   Copyright 2001-2018 Bo Zimmerman<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.22"></a>
+<span class="sourceLineNo">023</span>   you may not use this file except in compliance with the License.<a name="line.23"></a>
+<span class="sourceLineNo">024</span>   You may obtain a copy of the License at<a name="line.24"></a>
+<span class="sourceLineNo">025</span><a name="line.25"></a>
+<span class="sourceLineNo">026</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>   Unless required by applicable law or agreed to in writing, software<a name="line.28"></a>
+<span class="sourceLineNo">029</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   See the License for the specific language governing permissions and<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   limitations under the License.<a name="line.32"></a>
+<span class="sourceLineNo">033</span>*/<a name="line.33"></a>
+<span class="sourceLineNo">034</span>/**<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * A, well, Race<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * @author Bo Zimmerman<a name="line.36"></a>
+<span class="sourceLineNo">037</span> */<a name="line.37"></a>
+<span class="sourceLineNo">038</span>public interface Race extends Tickable, StatsAffecting, MsgListener, CMObject, Modifiable<a name="line.38"></a>
+<span class="sourceLineNo">039</span>{<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        /**<a name="line.40"></a>
+<span class="sourceLineNo">041</span>         * Return a nice, displayable name for this race<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         * @return the races name<a name="line.42"></a>
+<span class="sourceLineNo">043</span>         */<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        @Override<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        public String name();<a name="line.45"></a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span>        /**<a name="line.47"></a>
+<span class="sourceLineNo">048</span>         * Which racial category this race falls in.<a name="line.48"></a>
+<span class="sourceLineNo">049</span>         * @return racial category<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         */<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        public String racialCategory();<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>        /**<a name="line.53"></a>
+<span class="sourceLineNo">054</span>         * Returns one or a combination of the Area.THEME_*<a name="line.54"></a>
+<span class="sourceLineNo">055</span>         * constants from the Area interface.  This bitmap<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         * then describes the types of areas, skills, and<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * classes which can interact.<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * This bitmap is also used to to tell whether<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         * the race is available for selection by users<a name="line.59"></a>
+<span class="sourceLineNo">060</span>         * at char creation time, whether they can<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         * change to this race via spells, or whether<a name="line.61"></a>
+<span class="sourceLineNo">062</span>         * the race is utterly unavailable to them.<a name="line.62"></a>
+<span class="sourceLineNo">063</span>         * @see com.planet_ink.coffee_mud.Areas.interfaces.Area<a name="line.63"></a>
+<span class="sourceLineNo">064</span>         * @return the availability/theme of this race<a name="line.64"></a>
+<span class="sourceLineNo">065</span>         */<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        public int availabilityCode();<a name="line.66"></a>
+<span class="sourceLineNo">067</span><a name="line.67"></a>
+<span class="sourceLineNo">068</span>        /**<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         * After a mob is set or changed to a new race, this method<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * should be called to finalize or initialize any settings<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * from this race.<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * The verify flag is almost always true, unless the mob<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * is a new player being created, in which case false is sent.<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         * @param mob the mob or player being set to this race<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         * @param verifyOnly true flag unless this is a new player character<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         */<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        public void startRacing(MOB mob, boolean verifyOnly);<a name="line.77"></a>
+<span class="sourceLineNo">078</span><a name="line.78"></a>
+<span class="sourceLineNo">079</span>        /**<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         * Typically called when a mob gains a level with this base-race, to allow the race to<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * assign any new skills.  Can also be called just to populate a mob with race skills,<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         * so it should also confirm any lower level skills also.<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         * @see com.planet_ink.coffee_mud.MOBS.interfaces.MOB#addAbility(Ability)<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         * @param mob the mob to give abilities to.<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         * @param isBorrowedRace whether the skills are savable (false) or temporary (true)<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         */<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        public void grantAbilities(MOB mob, boolean isBorrowedRace);<a name="line.87"></a>
+<span class="sourceLineNo">088</span><a name="line.88"></a>
+<span class="sourceLineNo">089</span>        /**<a name="line.89"></a>
+<span class="sourceLineNo">090</span>         * Will initialize a player or mobs height and weight based<a name="line.90"></a>
+<span class="sourceLineNo">091</span>         * on this races parameters.<a name="line.91"></a>
+<span class="sourceLineNo">092</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.PhyStats<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         * @param stats the PhyStats object to change<a name="line.93"></a>
+<span class="sourceLineNo">094</span>         * @param gender the mobs gender 'M' or 'F'<a name="line.94"></a>
+<span class="sourceLineNo">095</span>         */<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        public void setHeightWeight(PhyStats stats, char gender);<a name="line.96"></a>
+<span class="sourceLineNo">097</span><a name="line.97"></a>
+<span class="sourceLineNo">098</span>        /**<a name="line.98"></a>
+<span class="sourceLineNo">099</span>         * The minimum height of males of this race.<a name="line.99"></a>
+<span class="sourceLineNo">100</span>         * @return minimum height of males in inches<a name="line.100"></a>
+<span class="sourceLineNo">101</span>         */<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        public int shortestMale();<a name="line.102"></a>
+<span class="sourceLineNo">103</span><a name="line.103"></a>
+<span class="sourceLineNo">104</span>        /**<a name="line.104"></a>
+<span class="sourceLineNo">105</span>         * The minimum height of females of this race.<a name="line.105"></a>
+<span class="sourceLineNo">106</span>         * @return minimum height of females in inches<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         */<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        public int shortestFemale();<a name="line.108"></a>
+<span class="sourceLineNo">109</span><a name="line.109"></a>
+<span class="sourceLineNo">110</span>        /**<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         * The amount from 0-this to add to the minimum height<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         * to achieve a random height.<a name="line.112"></a>
+<span class="sourceLineNo">113</span>         * @return a range of inches to add to the mimiumum height<a name="line.113"></a>
+<span class="sourceLineNo">114</span>         */<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        public int heightVariance();<a name="line.115"></a>
+<span class="sourceLineNo">116</span><a name="line.116"></a>
+<span class="sourceLineNo">117</span>        /**<a name="line.117"></a>
+<span class="sourceLineNo">118</span>         * The lightest weight for a member of this race<a name="line.118"></a>
+<span class="sourceLineNo">119</span>         * @return the lightest weight for something of this race<a name="line.119"></a>
+<span class="sourceLineNo">120</span>         */<a name="line.120"></a>
+<span class="sourceLineNo">121</span>        public int lightestWeight();<a name="line.121"></a>
+<span class="sourceLineNo">122</span><a name="line.122"></a>
+<span class="sourceLineNo">123</span>        /**<a name="line.123"></a>
+<span class="sourceLineNo">124</span>         * The amount from 0-this to add to the minumum weight<a name="line.124"></a>
+<span class="sourceLineNo">125</span>         * to achieve a random weight.<a name="line.125"></a>
+<span class="sourceLineNo">126</span>         * @return a range of pounds to add to the minimum weight<a name="line.126"></a>
+<span class="sourceLineNo">127</span>         */<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        public int weightVariance();<a name="line.128"></a>
+<span class="sourceLineNo">129</span><a name="line.129"></a>
+<span class="sourceLineNo">130</span>        /**<a name="line.130"></a>
+<span class="sourceLineNo">131</span>         * Returns an integer array equal in size and index to the<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         * Race.AGE_* constants in the Race interface.  Each value<a name="line.132"></a>
+<span class="sourceLineNo">133</span>         * in the index represents the first mudyear age of that<a name="line.133"></a>
+<span class="sourceLineNo">134</span>         * age category.<a name="line.134"></a>
+<span class="sourceLineNo">135</span>         * @see Race<a name="line.135"></a>
+<span class="sourceLineNo">136</span>         * @return an integer array mapping ages to age categories<a name="line.136"></a>
+<span class="sourceLineNo">137</span>         */<a name="line.137"></a>
+<span class="sourceLineNo">138</span>        public int[] getAgingChart();<a name="line.138"></a>
+<span class="sourceLineNo">139</span><a name="line.139"></a>
+<span class="sourceLineNo">140</span>        /**<a name="line.140"></a>
+<span class="sourceLineNo">141</span>         * A bitmap showing which on locations a member of this<a name="line.141"></a>
+<span class="sourceLineNo">142</span>         * race can not wear clothing, even if the members have one<a name="line.142"></a>
+<span class="sourceLineNo">143</span>         * or more of the required limbs.  The bitmap is made from<a name="line.143"></a>
+<span class="sourceLineNo">144</span>         * Wearable.WORN_* constant values.<a name="line.144"></a>
+<span class="sourceLineNo">145</span>         * @see com.planet_ink.coffee_mud.Items.interfaces.Item<a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * @return the illegal wear location bitmap<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         */<a name="line.147"></a>
+<span class="sourceLineNo">148</span>        public long forbiddenWornBits();<a name="line.148"></a>
+<span class="sourceLineNo">149</span><a name="line.149"></a>
+<span class="sourceLineNo">150</span>        /**<a name="line.150"></a>
+<span class="sourceLineNo">151</span>         * Returns an array indexed by body part codes as defined by<a name="line.151"></a>
+<span class="sourceLineNo">152</span>         * the BODY_* constants in the Race interface.  Each value is<a name="line.152"></a>
+<span class="sourceLineNo">153</span>         * either -1 to show that the body part does not apply, 0 to<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         * show that the body part is not found on this race, and 1 or<a name="line.154"></a>
+<span class="sourceLineNo">155</span>         * more to show how many of that part this race normally has.<a name="line.155"></a>
+<span class="sourceLineNo">156</span>         * @return an array of body parts<a name="line.156"></a>
+<span class="sourceLineNo">157</span>         */<a name="line.157"></a>
+<span class="sourceLineNo">158</span>        public int[] bodyMask();<a name="line.158"></a>
+<span class="sourceLineNo">159</span><a name="line.159"></a>
+<span class="sourceLineNo">160</span>        /**<a name="line.160"></a>
+<span class="sourceLineNo">161</span>         * Converts this race to a generic race (if it isn't already)<a name="line.161"></a>
+<span class="sourceLineNo">162</span>         * and returns it.  Returns itself if its already generic.<a name="line.162"></a>
+<span class="sourceLineNo">163</span>         * @return the generic race.<a name="line.163"></a>
+<span class="sourceLineNo">164</span>         */<a name="line.164"></a>
+<span class="sourceLineNo">165</span>        public Race makeGenRace();<a name="line.165"></a>
+<span class="sourceLineNo">166</span><a name="line.166"></a>
+<span class="sourceLineNo">167</span>        /**<a name="line.167"></a>
+<span class="sourceLineNo">168</span>         * Converts this race to a generic race (if it isn't already)<a name="line.168"></a>
+<span class="sourceLineNo">169</span>         * and mixes its attributes with the race passed it.  A new<a name="line.169"></a>
+<span class="sourceLineNo">170</span>         * race ID and a new race name must also be provided.<a name="line.170"></a>
+<span class="sourceLineNo">171</span>         * @param race the race to use as a baseline<a name="line.171"></a>
+<span class="sourceLineNo">172</span>         * @param newRaceID the id of the new race<a name="line.172"></a>
+<span class="sourceLineNo">173</span>         * @param newRaceName the name of the new race<a name="line.173"></a>
+<span class="sourceLineNo">174</span>         * @return the generic race.<a name="line.174"></a>
+<span class="sourceLineNo">175</span>         */<a name="line.175"></a>
+<span class="sourceLineNo">176</span>        public Race mixRace(Race race, String newRaceID, String newRaceName);<a name="line.176"></a>
+<span class="sourceLineNo">177</span><a name="line.177"></a>
+<span class="sourceLineNo">178</span>        /**<a name="line.178"></a>
+<span class="sourceLineNo">179</span>         * Returns a vector of Item objects representing the standard<a name="line.179"></a>
+<span class="sourceLineNo">180</span>         * clothing, weapons, or other objects commonly given to players<a name="line.180"></a>
+<span class="sourceLineNo">181</span>         * of this race just starting out.<a name="line.181"></a>
+<span class="sourceLineNo">182</span>         * @param myChar one who will receive the objects<a name="line.182"></a>
+<span class="sourceLineNo">183</span>         * @return a vector of Item objects<a name="line.183"></a>
+<span class="sourceLineNo">184</span>         */<a name="line.184"></a>
+<span class="sourceLineNo">185</span>        public List&lt;Item&gt; outfit(MOB myChar);<a name="line.185"></a>
+<span class="sourceLineNo">186</span><a name="line.186"></a>
+<span class="sourceLineNo">187</span>        /**<a name="line.187"></a>
+<span class="sourceLineNo">188</span>         * Returns a description of the given mobs description, by<a name="line.188"></a>
+<span class="sourceLineNo">189</span>         * consulting the mobs curState().getHitPoints method.<a name="line.189"></a>
+<span class="sourceLineNo">190</span>         * @see com.planet_ink.coffee_mud.MOBS.interfaces.MOB#curState()<a name="line.190"></a>
+<span class="sourceLineNo">191</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.CharState#getHitPoints()<a name="line.191"></a>
+<span class="sourceLineNo">192</span>         * @param viewer the mob observing the health of this one<a name="line.192"></a>
+<span class="sourceLineNo">193</span>         * @param mob the mob whose health to check<a name="line.193"></a>
+<span class="sourceLineNo">194</span>         * @return a string describing his health<a name="line.194"></a>
+<span class="sourceLineNo">195</span>         */<a name="line.195"></a>
+<span class="sourceLineNo">196</span>        public String healthText(final MOB viewer, final MOB mob);<a name="line.196"></a>
+<span class="sourceLineNo">197</span><a name="line.197"></a>
+<span class="sourceLineNo">198</span>        /**<a name="line.198"></a>
+<span class="sourceLineNo">199</span>         * Returns the list of ability IDs of skills that this<a name="line.199"></a>
+<span class="sourceLineNo">200</span>         * race is flatly and quietly immune to, whether<a name="line.200"></a>
+<span class="sourceLineNo">201</span>         * malicious or not -- it just won't happen.<a name="line.201"></a>
+<span class="sourceLineNo">202</span>         * @return the list of Ability IDs.<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         */<a name="line.203"></a>
+<span class="sourceLineNo">204</span>        public String[] abilityImmunities();<a name="line.204"></a>
+<span class="sourceLineNo">205</span><a name="line.205"></a>
+<span class="sourceLineNo">206</span>        /**<a name="line.206"></a>
+<span class="sourceLineNo">207</span>         * Sends back a generic mob name appropriate to a mob of this<a name="line.207"></a>
+<span class="sourceLineNo">208</span>         * race, at the given gender and age-group.<a name="line.208"></a>
+<span class="sourceLineNo">209</span>         *<a name="line.209"></a>
+<span class="sourceLineNo">210</span>         * @param gender the gender of the mob<a name="line.210"></a>
+<span class="sourceLineNo">211</span>         * @param age the age category<a name="line.211"></a>
+<span class="sourceLineNo">212</span>         * @return a good name<a name="line.212"></a>
+<span class="sourceLineNo">213</span>         */<a name="line.213"></a>
+<span class="sourceLineNo">214</span>        public String makeMobName(char gender, int age);<a name="line.214"></a>
+<span class="sourceLineNo">215</span><a name="line.215"></a>
+<span class="sourceLineNo">216</span>        /**<a name="line.216"></a>
+<span class="sourceLineNo">217</span>         * Returns a Weapon object representing what a member of this<a name="line.217"></a>
+<span class="sourceLineNo">218</span>         * race fights with when unarmed.  This method may change what it<a name="line.218"></a>
+<span class="sourceLineNo">219</span>         * returns on every call to mix things up a bit.<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         * @see com.planet_ink.coffee_mud.Items.interfaces.Weapon<a name="line.220"></a>
+<span class="sourceLineNo">221</span>         * @return a Weapon object representing claws or teeth, etc..<a name="line.221"></a>
+<span class="sourceLineNo">222</span>         */<a name="line.222"></a>
+<span class="sourceLineNo">223</span>        public Weapon myNaturalWeapon();<a name="line.223"></a>
+<span class="sourceLineNo">224</span><a name="line.224"></a>
+<span class="sourceLineNo">225</span>        /**<a name="line.225"></a>
+<span class="sourceLineNo">226</span>         * Returns resource codes of what this race can breathe as<a name="line.226"></a>
+<span class="sourceLineNo">227</span>         * an atmosphere.  The list is guaranteed sorted.  If the list<a name="line.227"></a>
+<span class="sourceLineNo">228</span>         * is empty, the race can breathe anything at all.<a name="line.228"></a>
+<span class="sourceLineNo">229</span>         * @see com.planet_ink.coffee_mud.Items.interfaces.RawMaterial<a name="line.229"></a>
+<span class="sourceLineNo">230</span>         * @return a list of resource codes that this race can breathe<a name="line.230"></a>
+<span class="sourceLineNo">231</span>         */<a name="line.231"></a>
+<span class="sourceLineNo">232</span>        public int[] getBreathables();<a name="line.232"></a>
+<span class="sourceLineNo">233</span><a name="line.233"></a>
+<span class="sourceLineNo">234</span>        /**<a name="line.234"></a>
+<span class="sourceLineNo">235</span>         * Returns a list of RawMaterial objects (usually GenFoodResource, GenLiquidResource,<a name="line.235"></a>
+<span class="sourceLineNo">236</span>         * or GenResource items) representing what is left over of a member of this race<a name="line.236"></a>
+<span class="sourceLineNo">237</span>         * after they've been butchered and cut up.<a name="line.237"></a>
+<span class="sourceLineNo">238</span>         * @see com.planet_ink.coffee_mud.Items.interfaces.RawMaterial<a name="line.238"></a>
+<span class="sourceLineNo">239</span>         * @return a list of rawmaterial objects<a name="line.239"></a>
+<span class="sourceLineNo">240</span>         */<a name="line.240"></a>
+<span class="sourceLineNo">241</span>        public List&lt;RawMaterial&gt; myResources();<a name="line.241"></a>
+<span class="sourceLineNo">242</span><a name="line.242"></a>
+<span class="sourceLineNo">243</span>        /**<a name="line.243"></a>
+<span class="sourceLineNo">244</span>         * Returns the corpse of a member of this race, populates it with the equipment of<a name="line.244"></a>
+<span class="sourceLineNo">245</span>         * the given mob, and places it in the given room.  If the destroyBodyAfterUse returns<a name="line.245"></a>
+<span class="sourceLineNo">246</span>         * true, it will also populate the body with the contents of the myResources method.<a name="line.246"></a>
+<span class="sourceLineNo">247</span>         * @see #myResources()<a name="line.247"></a>
+<span class="sourceLineNo">248</span>         * @param mob the mob to use as a template for the body<a name="line.248"></a>
+<span class="sourceLineNo">249</span>         * @param room the room to place the corpse in<a name="line.249"></a>
+<span class="sourceLineNo">250</span>         * @return the corpse generated and placed in the room<a name="line.250"></a>
+<span class="sourceLineNo">251</span>         */<a name="line.251"></a>
+<span class="sourceLineNo">252</span>        public DeadBody getCorpseContainer(MOB mob, Room room);<a name="line.252"></a>
+<span class="sourceLineNo">253</span><a name="line.253"></a>
+<span class="sourceLineNo">254</span>        /**<a name="line.254"></a>
+<span class="sourceLineNo">255</span>         * Whether this race object represents a Generic Race, or one which is modifiable by<a name="line.255"></a>
+<span class="sourceLineNo">256</span>         * builders at run-time.<a name="line.256"></a>
+<span class="sourceLineNo">257</span>         * @return whether this race is modifiable at run-time.<a name="line.257"></a>
+<span class="sourceLineNo">258</span>         */<a name="line.258"></a>
+<span class="sourceLineNo">259</span>        public boolean isGeneric();<a name="line.259"></a>
+<span class="sourceLineNo">260</span><a name="line.260"></a>
+<span class="sourceLineNo">261</span>        /**<a name="line.261"></a>
+<span class="sourceLineNo">262</span>         * Whether this race is usually rideable; helps determine the appropriate java class to use.<a name="line.262"></a>
+<span class="sourceLineNo">263</span>         * @return whether this race is generally rideable<a name="line.263"></a>
+<span class="sourceLineNo">264</span>         */<a name="line.264"></a>
+<span class="sourceLineNo">265</span>        public boolean useRideClass();<a name="line.265"></a>
+<span class="sourceLineNo">266</span><a name="line.266"></a>
+<span class="sourceLineNo">267</span>        /**<a name="line.267"></a>
+<span class="sourceLineNo">268</span>         * If this race is modifiable at run time, this method will return an xml document<a name="line.268"></a>
+<span class="sourceLineNo">269</span>         * describing the several attributes of this race.<a name="line.269"></a>
+<span class="sourceLineNo">270</span>         * @see #isGeneric()<a name="line.270"></a>
+<span class="sourceLineNo">271</span>         * @see #setRacialParms(String)<a name="line.271"></a>
+<span class="sourceLineNo">272</span>         * @return an xml document describing this race<a name="line.272"></a>
+<span class="sourceLineNo">273</span>         */<a name="line.273"></a>
+<span class="sourceLineNo">274</span>        public String racialParms();<a name="line.274"></a>
+<span class="sourceLineNo">275</span><a name="line.275"></a>
+<span class="sourceLineNo">276</span>        /**<a name="line.276"></a>
+<span class="sourceLineNo">277</span>         * If this race is modifiable at run time, this method will use the given xml document<a name="line.277"></a>
+<span class="sourceLineNo">278</span>         * describing the several attributes of this race to populate this races fields and attributes.<a name="line.278"></a>
+<span class="sourceLineNo">279</span>         * @see #isGeneric()<a name="line.279"></a>
+<span class="sourceLineNo">280</span>         * @see #racialParms()<a name="line.280"></a>
+<span class="sourceLineNo">281</span>         * @param parms an xml document describing this race<a name="line.281"></a>
+<span class="sourceLineNo">282</span>         */<a name="line.282"></a>
+<span class="sourceLineNo">283</span>        public void setRacialParms(String parms);<a name="line.283"></a>
+<span class="sourceLineNo">284</span><a name="line.284"></a>
+<span class="sourceLineNo">285</span>        /**<a name="line.285"></a>
+<span class="sourceLineNo">286</span>         * Returns the string describing what folks see when a member of this race enters a room.<a name="line.286"></a>
+<span class="sourceLineNo">287</span>         * Should give an idea of the gate or walking style of this race.<a name="line.287"></a>
+<span class="sourceLineNo">288</span>         * @return what people see what this race enters a room<a name="line.288"></a>
+<span class="sourceLineNo">289</span>         */<a name="line.289"></a>
+<span class="sourceLineNo">290</span>        public String arriveStr();<a name="line.290"></a>
+<span class="sourceLineNo">291</span><a name="line.291"></a>
+<span class="sourceLineNo">292</span>        /**<a name="line.292"></a>
+<span class="sourceLineNo">293</span>         * Returns the string describing what folks see when a member of this race leaves a room.<a name="line.293"></a>
+<span class="sourceLineNo">294</span>         * Should give an idea of the gate or walking style of this race.<a name="line.294"></a>
+<span class="sourceLineNo">295</span>         * @return what people see what this race leaves a room<a name="line.295"></a>
+<span class="sourceLineNo">296</span>         */<a name="line.296"></a>
+<span class="sourceLineNo">297</span>        public String leaveStr();<a name="line.297"></a>
+<span class="sourceLineNo">298</span><a name="line.298"></a>
+<span class="sourceLineNo">299</span>        /**<a name="line.299"></a>
+<span class="sourceLineNo">300</span>         * This method is called whenever a player gains a level while a member of this race.  If<a name="line.300"></a>
+<span class="sourceLineNo">301</span>         * there are any special things which need to be done to a player who gains a level, they<a name="line.301"></a>
+<span class="sourceLineNo">302</span>         * can be done in this method.  By default, it doesn't do anything.<a name="line.302"></a>
+<span class="sourceLineNo">303</span>         * @param mob the mob to level up<a name="line.303"></a>
+<span class="sourceLineNo">304</span>         * @param gainedAbilityIDs the set of abilities/skill IDs gained during this leveling process<a name="line.304"></a>
+<span class="sourceLineNo">305</span>         */<a name="line.305"></a>
+<span class="sourceLineNo">306</span>        public void level(MOB mob, List&lt;String&gt; gainedAbilityIDs);<a name="line.306"></a>
+<span class="sourceLineNo">307</span><a name="line.307"></a>
+<span class="sourceLineNo">308</span>        /**<a name="line.308"></a>
+<span class="sourceLineNo">309</span>         * Whenever a player or mob of this race gains experience, this method gets a chance<a name="line.309"></a>
+<span class="sourceLineNo">310</span>         * to modify the amount before the gain actually occurs.<a name="line.310"></a>
+<span class="sourceLineNo">311</span>         * @param host the player or mob whose race object this is<a name="line.311"></a>
+<span class="sourceLineNo">312</span>         * @param mob the player or mob gaining experience<a name="line.312"></a>
+<span class="sourceLineNo">313</span>         * @param victim if applicable, the mob or player who died to give the exp<a name="line.313"></a>
+<span class="sourceLineNo">314</span>         * @param amount the amount of exp on track for gaining<a name="line.314"></a>
+<span class="sourceLineNo">315</span>         * @return the adjusted amount of experience to gain<a name="line.315"></a>
+<span class="sourceLineNo">316</span>         */<a name="line.316"></a>
+<span class="sourceLineNo">317</span>        public int adjustExperienceGain(MOB host, MOB mob, MOB victim, int amount);<a name="line.317"></a>
+<span class="sourceLineNo">318</span><a name="line.318"></a>
+<span class="sourceLineNo">319</span>        /**<a name="line.319"></a>
+<span class="sourceLineNo">320</span>         * Returns true if the given race is actually the same as the<a name="line.320"></a>
+<span class="sourceLineNo">321</span>         * current race.  Usually just ID().equals(ID()), or if either<a name="line.321"></a>
+<span class="sourceLineNo">322</span>         * is human.  Passing the race to itself in this method is a good<a name="line.322"></a>
+<span class="sourceLineNo">323</span>         * way to check for general fertility.<a name="line.323"></a>
+<span class="sourceLineNo">324</span>         * @param R the race to check<a name="line.324"></a>
+<span class="sourceLineNo">325</span>         * @return true if its the same as this one, false otherwise<a name="line.325"></a>
+<span class="sourceLineNo">326</span>         */<a name="line.326"></a>
+<span class="sourceLineNo">327</span>        public boolean canBreedWith(Race R);<a name="line.327"></a>
+<span class="sourceLineNo">328</span><a name="line.328"></a>
+<span class="sourceLineNo">329</span>        /**<a name="line.329"></a>
+<span class="sourceLineNo">330</span>         * Whether this race can be associated with a character class.<a name="line.330"></a>
+<span class="sourceLineNo">331</span>         * @see com.planet_ink.coffee_mud.CharClasses.interfaces.CharClass<a name="line.331"></a>
+<span class="sourceLineNo">332</span>         * @return whether this race can have a class<a name="line.332"></a>
+<span class="sourceLineNo">333</span>         */<a name="line.333"></a>
+<span class="sourceLineNo">334</span>        public boolean classless();<a name="line.334"></a>
+<span class="sourceLineNo">335</span><a name="line.335"></a>
+<span class="sourceLineNo">336</span>        /**<a name="line.336"></a>
+<span class="sourceLineNo">337</span>         * Whether players of this race can be associated with an experience level.<a name="line.337"></a>
+<span class="sourceLineNo">338</span>         * @return whether players of this race can have a level<a name="line.338"></a>
+<span class="sourceLineNo">339</span>         */<a name="line.339"></a>
+<span class="sourceLineNo">340</span>        public boolean leveless();<a name="line.340"></a>
+<span class="sourceLineNo">341</span><a name="line.341"></a>
+<span class="sourceLineNo">342</span>        /**<a name="line.342"></a>
+<span class="sourceLineNo">343</span>         * Whether players of this race can gain or lose experience points.<a name="line.343"></a>
+<span class="sourceLineNo">344</span>         * @return whether players of this race can gain or lose experience points<a name="line.344"></a>
+<span class="sourceLineNo">345</span>         */<a name="line.345"></a>
+<span class="sourceLineNo">346</span>        public boolean expless();<a name="line.346"></a>
+<span class="sourceLineNo">347</span><a name="line.347"></a>
+<span class="sourceLineNo">348</span>        /**<a name="line.348"></a>
+<span class="sourceLineNo">349</span>         * Return a vector of skills, spells, and other ability ids granted to the given<a name="line.349"></a>
+<span class="sourceLineNo">350</span>         * mob when they are created as this race.  The entries are the ability id,<a name="line.350"></a>
+<span class="sourceLineNo">351</span>         * the default proficiency, the level, and whether it is auto-gained.<a name="line.351"></a>
+<span class="sourceLineNo">352</span>         * @see com.planet_ink.coffee_mud.Abilities.interfaces.Ability<a name="line.352"></a>
+<span class="sourceLineNo">353</span>         * @return a quadvector of the Ability IDs, profs, levels, auto-gained <a name="line.353"></a>
+<span class="sourceLineNo">354</span>         */<a name="line.354"></a>
+<span class="sourceLineNo">355</span>        public QuadVector&lt;String,Integer,Integer,Boolean&gt; culturalAbilities();<a name="line.355"></a>
+<span class="sourceLineNo">356</span><a name="line.356"></a>
+<span class="sourceLineNo">357</span>        /**<a name="line.357"></a>
+<span class="sourceLineNo">358</span>         * Return a vector of skills, spells, and other abilities granted to the given<a name="line.358"></a>
+<span class="sourceLineNo">359</span>         * mob of the given mobs level.<a name="line.359"></a>
+<span class="sourceLineNo">360</span>         * @see com.planet_ink.coffee_mud.Abilities.interfaces.Ability<a name="line.360"></a>
+<span class="sourceLineNo">361</span>         * @param mob the mob to grant the abilities to<a name="line.361"></a>
+<span class="sourceLineNo">362</span>         * @return a vector of the Ability objects<a name="line.362"></a>
+<span class="sourceLineNo">363</span>         */<a name="line.363"></a>
+<span class="sourceLineNo">364</span>        public SearchIDList&lt;Ability&gt; racialAbilities(MOB mob);<a name="line.364"></a>
+<span class="sourceLineNo">365</span><a name="line.365"></a>
+<span class="sourceLineNo">366</span>        /**<a name="line.366"></a>
+<span class="sourceLineNo">367</span>         * Return a vector of skills, spells, and other abilities granted to the given<a name="line.367"></a>
+<span class="sourceLineNo">368</span>         * mob of the given mobs level.  This method is not functionally used because<a name="line.368"></a>
+<span class="sourceLineNo">369</span>         * it doesn't quite work correctly yet.<a name="line.369"></a>
+<span class="sourceLineNo">370</span>         * @see com.planet_ink.coffee_mud.Abilities.interfaces.Ability<a name="line.370"></a>
+<span class="sourceLineNo">371</span>         * @see com.planet_ink.coffee_mud.Races.interfaces.Race#numRacialEffects(MOB)<a name="line.371"></a>
+<span class="sourceLineNo">372</span>         * @param mob the mob to grant the abilities to<a name="line.372"></a>
+<span class="sourceLineNo">373</span>         * @return a vector of the Ability objects<a name="line.373"></a>
+<span class="sourceLineNo">374</span>         */<a name="line.374"></a>
+<span class="sourceLineNo">375</span>        public ChameleonList&lt;Ability&gt; racialEffects(MOB mob);<a name="line.375"></a>
+<span class="sourceLineNo">376</span><a name="line.376"></a>
+<span class="sourceLineNo">377</span>        /**<a name="line.377"></a>
+<span class="sourceLineNo">378</span>         * Returns the number of racial effects elligible to the given lob. Must<a name="line.378"></a>
+<span class="sourceLineNo">379</span>         * faster and more efficient than getting the whole list and checking its<a name="line.379"></a>
+<span class="sourceLineNo">380</span>         * size.<a name="line.380"></a>
+<span class="sourceLineNo">381</span>         * @param mob the mob to grant the abilities to<a name="line.381"></a>
+<span class="sourceLineNo">382</span>         * @return number of entries in the ability object vector<a name="line.382"></a>
+<span class="sourceLineNo">383</span>         */<a name="line.383"></a>
+<span class="sourceLineNo">384</span>        public int numRacialEffects(MOB mob);<a name="line.384"></a>
+<span class="sourceLineNo">385</span><a name="line.385"></a>
+<span class="sourceLineNo">386</span>        /**<a name="line.386"></a>
+<span class="sourceLineNo">387</span>         * Apply any affects of the given mob at the given age to the given base and/or<a name="line.387"></a>
+<span class="sourceLineNo">388</span>         * current char stats.<a name="line.388"></a>
+<span class="sourceLineNo">389</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.CharState<a name="line.389"></a>
+<span class="sourceLineNo">390</span>         * @param mob the mob to apply changes to<a name="line.390"></a>
+<span class="sourceLineNo">391</span>         * @param baseStats permanent charstats changes<a name="line.391"></a>
+<span class="sourceLineNo">392</span>         * @param charStats temporary charstats changes<a name="line.392"></a>
+<span class="sourceLineNo">393</span>         */<a name="line.393"></a>
+<span class="sourceLineNo">394</span>        public void agingAffects(MOB mob, CharStats baseStats, CharStats charStats);<a name="line.394"></a>
+<span class="sourceLineNo">395</span><a name="line.395"></a>
+<span class="sourceLineNo">396</span>        /**<a name="line.396"></a>
+<span class="sourceLineNo">397</span>         * Returns the amount, as a positive or negative % to adjust all experience gains.<a name="line.397"></a>
+<span class="sourceLineNo">398</span>         * <a name="line.398"></a>
+<span class="sourceLineNo">399</span>         * @return xp adjustment 0-100, or -1 - -100 to adjust experience gains by.<a name="line.399"></a>
+<span class="sourceLineNo">400</span>         */<a name="line.400"></a>
+<span class="sourceLineNo">401</span>        public int getXPAdjustment();<a name="line.401"></a>
+<span class="sourceLineNo">402</span><a name="line.402"></a>
+<span class="sourceLineNo">403</span>        /**<a name="line.403"></a>
+<span class="sourceLineNo">404</span>         * Returns a list of the stat adjustments made by this race<a name="line.404"></a>
+<span class="sourceLineNo">405</span>         * @return a list of the stat adjustments made by this race<a name="line.405"></a>
+<span class="sourceLineNo">406</span>         */<a name="line.406"></a>
+<span class="sourceLineNo">407</span>        public String getStatAdjDesc();<a name="line.407"></a>
+<span class="sourceLineNo">408</span><a name="line.408"></a>
+<span class="sourceLineNo">409</span>        /**<a name="line.409"></a>
+<span class="sourceLineNo">410</span>         * Returns the adjustment to practices made by this race (or nothing)<a name="line.410"></a>
+<span class="sourceLineNo">411</span>         * @return the adjustment to practices made by this race (or nothing)<a name="line.411"></a>
+<span class="sourceLineNo">412</span>         */<a name="line.412"></a>
+<span class="sourceLineNo">413</span>        public String getPracAdjDesc();<a name="line.413"></a>
+<span class="sourceLineNo">414</span><a name="line.414"></a>
+<span class="sourceLineNo">415</span>        /**<a name="line.415"></a>
+<span class="sourceLineNo">416</span>         * Returns the adjustment to trains made by this race (or nothing)<a name="line.416"></a>
+<span class="sourceLineNo">417</span>         * @return the adjustment to trains made by this race (or nothing)<a name="line.417"></a>
+<span class="sourceLineNo">418</span>         */<a name="line.418"></a>
+<span class="sourceLineNo">419</span>        public String getTrainAdjDesc();<a name="line.419"></a>
+<span class="sourceLineNo">420</span><a name="line.420"></a>
+<span class="sourceLineNo">421</span>        /**<a name="line.421"></a>
+<span class="sourceLineNo">422</span>         * Returns the list of modifications to senses done by this race<a name="line.422"></a>
+<span class="sourceLineNo">423</span>         * or nothing.<a name="line.423"></a>
+<span class="sourceLineNo">424</span>         * @return the list of modifications to senses done by this race<a name="line.424"></a>
+<span class="sourceLineNo">425</span>         */<a name="line.425"></a>
+<span class="sourceLineNo">426</span>        public String getSensesChgDesc();<a name="line.426"></a>
+<span class="sourceLineNo">427</span><a name="line.427"></a>
+<span class="sourceLineNo">428</span>        /**<a name="line.428"></a>
+<span class="sourceLineNo">429</span>         * Returns the list of modifications to disposition done by this race<a name="line.429"></a>
+<span class="sourceLineNo">430</span>         * or nothing.<a name="line.430"></a>
+<span class="sourceLineNo">431</span>         * @return the list of modifications to disposition done by this race<a name="line.431"></a>
+<span class="sourceLineNo">432</span>         */<a name="line.432"></a>
+<span class="sourceLineNo">433</span>        public String getDispositionChgDesc();<a name="line.433"></a>
+<span class="sourceLineNo">434</span><a name="line.434"></a>
+<span class="sourceLineNo">435</span>        /**<a name="line.435"></a>
+<span class="sourceLineNo">436</span>         * Returns the list of racial abilities granted to those of this race<a name="line.436"></a>
+<span class="sourceLineNo">437</span>         * or nothing.<a name="line.437"></a>
+<span class="sourceLineNo">438</span>         * @return the list of racial abilities granted to those of this race<a name="line.438"></a>
+<span class="sourceLineNo">439</span>         */<a name="line.439"></a>
+<span class="sourceLineNo">440</span>        public String getAbilitiesDesc();<a name="line.440"></a>
+<span class="sourceLineNo">441</span><a name="line.441"></a>
+<span class="sourceLineNo">442</span>        /**<a name="line.442"></a>
+<span class="sourceLineNo">443</span>         * Returns the list of racial languages granted to those of this race<a name="line.443"></a>
+<span class="sourceLineNo">444</span>         * or nothing.<a name="line.444"></a>
+<span class="sourceLineNo">445</span>         * @return the list of racial languages granted to those of this race<a name="line.445"></a>
+<span class="sourceLineNo">446</span>         */<a name="line.446"></a>
+<span class="sourceLineNo">447</span>        public String getLanguagesDesc();<a name="line.447"></a>
+<span class="sourceLineNo">448</span>        <a name="line.448"></a>
+<span class="sourceLineNo">449</span>        /**<a name="line.449"></a>
+<span class="sourceLineNo">450</span>         * Returns the number of registered usages of this race as of the <a name="line.450"></a>
+<span class="sourceLineNo">451</span>         * moment of the call.  It includes mobs loaded at boot-time.<a name="line.451"></a>
+<span class="sourceLineNo">452</span>         * @param alter TODO<a name="line.452"></a>
+<span class="sourceLineNo">453</span>         * @return the usage count.<a name="line.453"></a>
+<span class="sourceLineNo">454</span>         */<a name="line.454"></a>
+<span class="sourceLineNo">455</span>        public int usageCount(int alter);<a name="line.455"></a>
+<span class="sourceLineNo">456</span><a name="line.456"></a>
+<span class="sourceLineNo">457</span>        /** Age constant for an infant */<a name="line.457"></a>
+<span class="sourceLineNo">458</span>        public final static int AGE_INFANT=0;<a name="line.458"></a>
+<span class="sourceLineNo">459</span>        /** Age constant for a toddler */<a name="line.459"></a>
+<span class="sourceLineNo">460</span>        public final static int AGE_TODDLER=1;<a name="line.460"></a>
+<span class="sourceLineNo">461</span>        /** Age constant for a child */<a name="line.461"></a>
+<span class="sourceLineNo">462</span>        public final static int AGE_CHILD=2;<a name="line.462"></a>
+<span class="sourceLineNo">463</span>        /** Age constant for a yound adultt */<a name="line.463"></a>
+<span class="sourceLineNo">464</span>        public final static int AGE_YOUNGADULT=3;<a name="line.464"></a>
+<span class="sourceLineNo">465</span>        /** Age constant for the mature adult */<a name="line.465"></a>
+<span class="sourceLineNo">466</span>        public final static int AGE_MATURE=4;<a name="line.466"></a>
+<span class="sourceLineNo">467</span>        /** Age constant for the middle aged adult*/<a name="line.467"></a>
+<span class="sourceLineNo">468</span>        public final static int AGE_MIDDLEAGED=5;<a name="line.468"></a>
+<span class="sourceLineNo">469</span>        /** Age constant for the old*/<a name="line.469"></a>
+<span class="sourceLineNo">470</span>        public final static int AGE_OLD=6;<a name="line.470"></a>
+<span class="sourceLineNo">471</span>        /** Age constant for the very old*/<a name="line.471"></a>
+<span class="sourceLineNo">472</span>        public final static int AGE_VENERABLE=7;<a name="line.472"></a>
+<span class="sourceLineNo">473</span>        /** Age constant for the very very old*/<a name="line.473"></a>
+<span class="sourceLineNo">474</span>        public final static int AGE_ANCIENT=8;<a name="line.474"></a>
+<span class="sourceLineNo">475</span>        /** Constant string list for the names of the age constants, in their order of value */<a name="line.475"></a>
+<span class="sourceLineNo">476</span>        public final static String[] AGE_DESCS=CMLib.lang().sessionTranslation(new String[]<a name="line.476"></a>
+<span class="sourceLineNo">477</span>        {<a name="line.477"></a>
+<span class="sourceLineNo">478</span>                        "Infant","Toddler","Child","Young adult","Adult", "Mature", "Old", "Venerable", "Ancient"<a name="line.478"></a>
+<span class="sourceLineNo">479</span>        });<a name="line.479"></a>
+<span class="sourceLineNo">480</span><a name="line.480"></a>
+<span class="sourceLineNo">481</span>        /** Age in Years constant for an immortal thing */<a name="line.481"></a>
+<span class="sourceLineNo">482</span>        public final static int YEARS_AGE_LIVES_FOREVER=Integer.MAX_VALUE;<a name="line.482"></a>
+<span class="sourceLineNo">483</span><a name="line.483"></a>
+<span class="sourceLineNo">484</span>        /** body part constant representing antenea*/<a name="line.484"></a>
+<span class="sourceLineNo">485</span>        public final static int BODY_ANTENEA=0;<a name="line.485"></a>
+<span class="sourceLineNo">486</span>        /** body part constant representing eyes */<a name="line.486"></a>
+<span class="sourceLineNo">487</span>        public final static int BODY_EYE=1;<a name="line.487"></a>
+<span class="sourceLineNo">488</span>        /** body part constant representing ears*/<a name="line.488"></a>
+<span class="sourceLineNo">489</span>        public final static int BODY_EAR=2;<a name="line.489"></a>
+<span class="sourceLineNo">490</span>        /** body part constant representing head*/<a name="line.490"></a>
+<span class="sourceLineNo">491</span>        public final static int BODY_HEAD=3;<a name="line.491"></a>
+<span class="sourceLineNo">492</span>        /** body part constant representing neck*/<a name="line.492"></a>
+<span class="sourceLineNo">493</span>        public final static int BODY_NECK=4;<a name="line.493"></a>
+<span class="sourceLineNo">494</span>        /** body part constant representing arm*/<a name="line.494"></a>
+<span class="sourceLineNo">495</span>        public final static int BODY_ARM=5;<a name="line.495"></a>
+<span class="sourceLineNo">496</span>        /** body part constant representing hand*/<a name="line.496"></a>
+<span class="sourceLineNo">497</span>        public final static int BODY_HAND=6;<a name="line.497"></a>
+<span class="sourceLineNo">498</span>        /** body part constant representing torso*/<a name="line.498"></a>
+<span class="sourceLineNo">499</span>        public final static int BODY_TORSO=7;<a name="line.499"></a>
+<span class="sourceLineNo">500</span>        /** body part constant representing legs*/<a name="line.500"></a>
+<span class="sourceLineNo">501</span>        public final static int BODY_LEG=8;<a name="line.501"></a>
+<span class="sourceLineNo">502</span>        /** body part constant representing feet*/<a name="line.502"></a>
+<span class="sourceLineNo">503</span>        public final static int BODY_FOOT=9;<a name="line.503"></a>
+<span class="sourceLineNo">504</span>        /** body part constant representing noses*/<a name="line.504"></a>
+<span class="sourceLineNo">505</span>        public final static int BODY_NOSE=10;<a name="line.505"></a>
+<span class="sourceLineNo">506</span>        /** body part constant representing gills*/<a name="line.506"></a>
+<span class="sourceLineNo">507</span>        public final static int BODY_GILL=11;<a name="line.507"></a>
+<span class="sourceLineNo">508</span>        /** body part constant representing mouth*/<a name="line.508"></a>
+<span class="sourceLineNo">509</span>        public final static int BODY_MOUTH=12;<a name="line.509"></a>
+<span class="sourceLineNo">510</span>        /** body part constant representing waists*/<a name="line.510"></a>
+<span class="sourceLineNo">511</span>        public final static int BODY_WAIST=13;<a name="line.511"></a>
+<span class="sourceLineNo">512</span>        /** body part constant representing tails*/<a name="line.512"></a>
+<span class="sourceLineNo">513</span>        public final static int BODY_TAIL=14;<a name="line.513"></a>
+<span class="sourceLineNo">514</span>        /** body part constant representing wings*/<a name="line.514"></a>
+<span class="sourceLineNo">515</span>        public final static int BODY_WING=15;<a name="line.515"></a>
+<span class="sourceLineNo">516</span>        /** the number of body part constants*/<a name="line.516"></a>
+<span class="sourceLineNo">517</span>        public final static int BODY_PARTS=16;<a name="line.517"></a>
+<span class="sourceLineNo">518</span>        /** constant string list naming each of the BODY_* constants in the order of their value*/<a name="line.518"></a>
+<span class="sourceLineNo">519</span>        public final static String[] BODYPARTSTR=<a name="line.519"></a>
+<span class="sourceLineNo">520</span>        {<a name="line.520"></a>
+<span class="sourceLineNo">521</span>                "ANTENEA","EYE","EAR","HEAD","NECK","ARM","HAND","TORSO","LEG","FOOT",<a name="line.521"></a>
+<span class="sourceLineNo">522</span>                "NOSE","GILL","MOUTH","WAIST","TAIL","WING"<a name="line.522"></a>
+<span class="sourceLineNo">523</span>        };<a name="line.523"></a>
+<span class="sourceLineNo">524</span>        /** constant hash of BODYPARTSTR */<a name="line.524"></a>
+<span class="sourceLineNo">525</span>        public final static Map&lt;Object,Integer&gt; BODYPARTHASH=CMStrings.makeNumericHash(BODYPARTSTR);<a name="line.525"></a>
+<span class="sourceLineNo">526</span>        <a name="line.526"></a>
+<span class="sourceLineNo">527</span>        /** constant used to set and check the classless flag on generic races */<a name="line.527"></a>
+<span class="sourceLineNo">528</span>        public final static int GENFLAG_NOCLASS=1;<a name="line.528"></a>
+<span class="sourceLineNo">529</span>        /** constant used to set and check the levelless flag on generic races */<a name="line.529"></a>
+<span class="sourceLineNo">530</span>        public final static int GENFLAG_NOLEVELS=2;<a name="line.530"></a>
+<span class="sourceLineNo">531</span>        /** constant used to set and check the expless flag on generic races */<a name="line.531"></a>
+<span class="sourceLineNo">532</span>        public final static int GENFLAG_NOEXP=4;<a name="line.532"></a>
+<span class="sourceLineNo">533</span>        /** constant used to set and check the charming flag on generic races */<a name="line.533"></a>
+<span class="sourceLineNo">534</span>        public final static int GENFLAG_NOCHARM=8;<a name="line.534"></a>
+<span class="sourceLineNo">535</span>        /** constant used to set and check the fertility flag on generic races */<a name="line.535"></a>
+<span class="sourceLineNo">536</span>        public final static int GENFLAG_NOFERTILE=16;<a name="line.536"></a>
+<span class="sourceLineNo">537</span>        /** constant used to set and check the infatigueable flag on generic races */<a name="line.537"></a>
+<span class="sourceLineNo">538</span>        public final static int GENFLAG_INFATIGUEABLE=32;<a name="line.538"></a>
+<span class="sourceLineNo">539</span>        /** constant string list naming each of the GENFLAG_* constants in the order of their value */<a name="line.539"></a>
+<span class="sourceLineNo">540</span>        public final static String[] GENFLAG_DESCS={"CLASSLESS","LEVELLESS","EXPLESS","CHARMLESS","CHILDLESS","INFATIGUEABLE"};<a name="line.540"></a>
+<span class="sourceLineNo">541</span><a name="line.541"></a>
+<span class="sourceLineNo">542</span>        public final static Map&lt;String,Integer&gt; BODYPARTHASH_RL_LOWER=new SHashtable&lt;String,Integer&gt;(new Enumeration&lt;Pair&lt;String,Integer&gt;&gt;()<a name="line.542"></a>
+<span class="sourceLineNo">543</span>        {<a name="line.543"></a>
+<span class="sourceLineNo">544</span>                private int                                                                     index   = 0;<a name="line.544"></a>
+<span class="sourceLineNo">545</span>                private final Stack&lt;Pair&lt;String, Integer&gt;&gt;      others  = new Stack&lt;Pair&lt;String, Integer&gt;&gt;();<a name="line.545"></a>
+<span class="sourceLineNo">546</span><a name="line.546"></a>
+<span class="sourceLineNo">547</span>                @Override<a name="line.547"></a>
+<span class="sourceLineNo">548</span>                public boolean hasMoreElements()<a name="line.548"></a>
+<span class="sourceLineNo">549</span>                {<a name="line.549"></a>
+<span class="sourceLineNo">550</span>                        return (others.size() &gt; 0) || (index &lt; BODYPARTSTR.length);<a name="line.550"></a>
+<span class="sourceLineNo">551</span>                }<a name="line.551"></a>
+<span class="sourceLineNo">552</span><a name="line.552"></a>
+<span class="sourceLineNo">553</span>                @Override<a name="line.553"></a>
+<span class="sourceLineNo">554</span>                public Pair&lt;String, Integer&gt; nextElement()<a name="line.554"></a>
+<span class="sourceLineNo">555</span>                {<a name="line.555"></a>
+<span class="sourceLineNo">556</span>                        if (!hasMoreElements())<a name="line.556"></a>
+<span class="sourceLineNo">557</span>                                throw new NoSuchElementException();<a name="line.557"></a>
+<span class="sourceLineNo">558</span>                        if (others.size() &gt; 0)<a name="line.558"></a>
+<span class="sourceLineNo">559</span>                                return others.pop();<a name="line.559"></a>
+<span class="sourceLineNo">560</span>                        others.push(new Pair&lt;String, Integer&gt;(BODYPARTSTR[index].toLowerCase(), Integer.valueOf(index)));<a name="line.560"></a>
+<span class="sourceLineNo">561</span>                        others.push(new Pair&lt;String, Integer&gt;("left " + BODYPARTSTR[index].toLowerCase(), Integer.valueOf(index)));<a name="line.561"></a>
+<span class="sourceLineNo">562</span>                        others.push(new Pair&lt;String, Integer&gt;("right " + BODYPARTSTR[index].toLowerCase(), Integer.valueOf(index)));<a name="line.562"></a>
+<span class="sourceLineNo">563</span>                        index++;<a name="line.563"></a>
+<span class="sourceLineNo">564</span>                        return others.pop();<a name="line.564"></a>
+<span class="sourceLineNo">565</span>                }<a name="line.565"></a>
+<span class="sourceLineNo">566</span>        });<a name="line.566"></a>
+<span class="sourceLineNo">567</span><a name="line.567"></a>
+<span class="sourceLineNo">568</span>        /** array mapping worn locations to body parts, indexed by body parts. */<a name="line.568"></a>
+<span class="sourceLineNo">569</span>        public final static long[] BODY_WEARVECTOR=<a name="line.569"></a>
+<span class="sourceLineNo">570</span>        {<a name="line.570"></a>
+<span class="sourceLineNo">571</span>                Wearable.WORN_HEAD, // ANTENEA, having any of these removes that pos<a name="line.571"></a>
+<span class="sourceLineNo">572</span>                Wearable.WORN_EYES, // EYES, having any of these adds this position<a name="line.572"></a>
+<span class="sourceLineNo">573</span>                Wearable.WORN_EARS, // EARS, gains a wear position here for every 2<a name="line.573"></a>
+<span class="sourceLineNo">574</span>                Wearable.WORN_HEAD, // HEAD, gains a wear position here for every 1<a name="line.574"></a>
+<span class="sourceLineNo">575</span>                Wearable.WORN_NECK, // NECK, gains a wear position here for every 1<a name="line.575"></a>
+<span class="sourceLineNo">576</span>                Wearable.WORN_ARMS, // ARMS, gains a wear position here for every 2<a name="line.576"></a>
+<span class="sourceLineNo">577</span>                Wearable.WORN_HANDS, // HANDS, gains a wear position here for every 1<a name="line.577"></a>
+<span class="sourceLineNo">578</span>                Wearable.WORN_TORSO, // TORSO, gains a wear position here for every 1<a name="line.578"></a>
+<span class="sourceLineNo">579</span>                Wearable.WORN_LEGS, // LEGS, gains a wear position here for every 2<a name="line.579"></a>
+<span class="sourceLineNo">580</span>                Wearable.WORN_FEET, // FEET, gains a wear position here for every 2<a name="line.580"></a>
+<span class="sourceLineNo">581</span>                Wearable.WORN_HEAD, // NOSE, No applicable wear position for this body part<a name="line.581"></a>
+<span class="sourceLineNo">582</span>                Wearable.WORN_HEAD, // GILLS, No applicable wear position for this body part<a name="line.582"></a>
+<span class="sourceLineNo">583</span>                Wearable.WORN_MOUTH, // MOUTH, gains a wear position here for every 1<a name="line.583"></a>
+<span class="sourceLineNo">584</span>                Wearable.WORN_WAIST, // WAIST, gains a wear position here for every 1<a name="line.584"></a>
+<span class="sourceLineNo">585</span>                Wearable.WORN_BACK, // TAIL, having any of these removes that pos<a name="line.585"></a>
+<span class="sourceLineNo">586</span>                Wearable.WORN_BACK, // WINGS, having any of these removes that pos<a name="line.586"></a>
+<span class="sourceLineNo">587</span>        };<a name="line.587"></a>
+<span class="sourceLineNo">588</span><a name="line.588"></a>
+<span class="sourceLineNo">589</span>        /** 2 dimentional array, indexed first by body_ part constant, with each row<a name="line.589"></a>
+<span class="sourceLineNo">590</span>         * having two values: the first being the Wearable.WORN_ location which is affected<a name="line.590"></a>
+<span class="sourceLineNo">591</span>         * by having or losing this body part, and then the number of such body parts<a name="line.591"></a>
+<span class="sourceLineNo">592</span>         * necessary to gain or lose one such wear location.  A value of -1 means N/A<a name="line.592"></a>
+<span class="sourceLineNo">593</span>         */<a name="line.593"></a>
+<span class="sourceLineNo">594</span>        public final static long[][] BODY_WEARGRID=<a name="line.594"></a>
+<span class="sourceLineNo">595</span>        {<a name="line.595"></a>
+<span class="sourceLineNo">596</span>                {Wearable.WORN_HEAD,-1}, // ANTENEA, having any of these removes that pos<a name="line.596"></a>
+<span class="sourceLineNo">597</span>                {Wearable.WORN_EYES,2}, // EYES, having any of these adds this position<a name="line.597"></a>
+<span class="sourceLineNo">598</span>                {Wearable.WORN_EARS,2}, // EARS, gains a wear position here for every 2<a name="line.598"></a>
+<span class="sourceLineNo">599</span>                {Wearable.WORN_HEAD,1}, // HEAD, gains a wear position here for every 1<a name="line.599"></a>
+<span class="sourceLineNo">600</span>                {Wearable.WORN_NECK,1}, // NECK, gains a wear position here for every 1<a name="line.600"></a>
+<span class="sourceLineNo">601</span>                {Wearable.WORN_ARMS,2}, // ARMS, gains a wear position here for every 2<a name="line.601"></a>
+<span class="sourceLineNo">602</span>                {Wearable.WORN_WIELD|Wearable.WORN_HELD|Wearable.WORN_HANDS<a name="line.602"></a>
+<span class="sourceLineNo">603</span>                 |Wearable.WORN_LEFT_FINGER|Wearable.WORN_LEFT_WRIST<a name="line.603"></a>
+<span class="sourceLineNo">604</span>                 |Wearable.WORN_RIGHT_FINGER|Wearable.WORN_RIGHT_WRIST,1}, // HANDS, gains a wear position here for every 1<a name="line.604"></a>
+<span class="sourceLineNo">605</span>                        // lots of exceptions apply to the above<a name="line.605"></a>
+<span class="sourceLineNo">606</span>                {Wearable.WORN_TORSO|Wearable.WORN_BACK,1}, // TORSO, gains a wear position here for every 1<a name="line.606"></a>
+<span class="sourceLineNo">607</span>                {Wearable.WORN_LEGS,2}, // LEGS, gains a wear position here for every 2<a name="line.607"></a>
+<span class="sourceLineNo">608</span>                {Wearable.WORN_FEET,2}, // FEET, gains a wear position here for every 2<a name="line.608"></a>
+<span class="sourceLineNo">609</span>                {-1,-1}, // NOSE, No applicable wear position for this body part<a name="line.609"></a>
+<span class="sourceLineNo">610</span>                {-1,-1}, // GILLS, No applicable wear position for this body part<a name="line.610"></a>
+<span class="sourceLineNo">611</span>                {Wearable.WORN_MOUTH,1}, // MOUTH, gains a wear position here for every 1<a name="line.611"></a>
+<span class="sourceLineNo">612</span>                {Wearable.WORN_WAIST,1}, // WAIST, gains a wear position here for every 1<a name="line.612"></a>
+<span class="sourceLineNo">613</span>                {-1,-1}, // TAIL, having any of these removes that pos<a name="line.613"></a>
+<span class="sourceLineNo">614</span>                {Wearable.WORN_BACK,-1}, // WINGS, having any of these removes that pos<a name="line.614"></a>
+<span class="sourceLineNo">615</span>        };<a name="line.615"></a>
+<span class="sourceLineNo">616</span>}<a name="line.616"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

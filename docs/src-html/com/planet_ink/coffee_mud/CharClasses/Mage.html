@@ -1,0 +1,581 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.CharClasses;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/*<a name="line.20"></a>
+<span class="sourceLineNo">021</span>   Copyright 2001-2018 Bo Zimmerman<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.23"></a>
+<span class="sourceLineNo">024</span>   you may not use this file except in compliance with the License.<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   You may obtain a copy of the License at<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>   Unless required by applicable law or agreed to in writing, software<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   See the License for the specific language governing permissions and<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   limitations under the License.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>*/<a name="line.34"></a>
+<span class="sourceLineNo">035</span><a name="line.35"></a>
+<span class="sourceLineNo">036</span>public class Mage extends StdCharClass<a name="line.36"></a>
+<span class="sourceLineNo">037</span>{<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        @Override<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        public String ID()<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        {<a name="line.40"></a>
+<span class="sourceLineNo">041</span>                return "Mage";<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        }<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>        private final static String     localizedStaticName     = CMLib.lang().L("Mage");<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>        @Override<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        public String name()<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        {<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                return localizedStaticName;<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        }<a name="line.50"></a>
+<span class="sourceLineNo">051</span><a name="line.51"></a>
+<span class="sourceLineNo">052</span>        @Override<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        public String baseClass()<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        {<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                return ID();<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        }<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>        @Override<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        public int getBonusPracLevel()<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        {<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                return 4;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        }<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>        @Override<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        public int getBonusAttackLevel()<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        {<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                return 0;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        }<a name="line.68"></a>
+<span class="sourceLineNo">069</span><a name="line.69"></a>
+<span class="sourceLineNo">070</span>        @Override<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        public int getAttackAttribute()<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        {<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                return CharStats.STAT_INTELLIGENCE;<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        }<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>        @Override<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        public int getLevelsPerBonusDamage()<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        {<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                return 30;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>        }<a name="line.80"></a>
+<span class="sourceLineNo">081</span><a name="line.81"></a>
+<span class="sourceLineNo">082</span>        @Override<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        public int getPracsFirstLevel()<a name="line.83"></a>
+<span class="sourceLineNo">084</span>        {<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                return 6;<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        }<a name="line.86"></a>
+<span class="sourceLineNo">087</span><a name="line.87"></a>
+<span class="sourceLineNo">088</span>        @Override<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        public int getTrainsFirstLevel()<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        {<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                return 3;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        }<a name="line.92"></a>
+<span class="sourceLineNo">093</span><a name="line.93"></a>
+<span class="sourceLineNo">094</span>        @Override<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        public String getMovementFormula()<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        {<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                return "3*((@x2&lt;@x3)/18)";<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        }<a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span>        @Override<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        public String getHitPointsFormula()<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        {<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                return "((@x6&lt;@x7)/6)+(1*(1?5))";<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        }<a name="line.104"></a>
+<span class="sourceLineNo">105</span><a name="line.105"></a>
+<span class="sourceLineNo">106</span>        @Override<a name="line.106"></a>
+<span class="sourceLineNo">107</span>        public String getManaFormula()<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        {<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                return "((@x4&lt;@x5)/3)+(1*(1?4))";<a name="line.109"></a>
+<span class="sourceLineNo">110</span>        }<a name="line.110"></a>
+<span class="sourceLineNo">111</span><a name="line.111"></a>
+<span class="sourceLineNo">112</span>        @Override<a name="line.112"></a>
+<span class="sourceLineNo">113</span>        protected String armorFailMessage()<a name="line.113"></a>
+<span class="sourceLineNo">114</span>        {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                return L("&lt;S-NAME&gt; watch(es) &lt;S-HIS-HER&gt; armor absorb &lt;S-HIS-HER&gt; magical energy!");<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        }<a name="line.116"></a>
+<span class="sourceLineNo">117</span><a name="line.117"></a>
+<span class="sourceLineNo">118</span>        @Override<a name="line.118"></a>
+<span class="sourceLineNo">119</span>        public int allowedArmorLevel()<a name="line.119"></a>
+<span class="sourceLineNo">120</span>        {<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                return CharClass.ARMOR_CLOTH;<a name="line.121"></a>
+<span class="sourceLineNo">122</span>        }<a name="line.122"></a>
+<span class="sourceLineNo">123</span><a name="line.123"></a>
+<span class="sourceLineNo">124</span>        @Override<a name="line.124"></a>
+<span class="sourceLineNo">125</span>        public int allowedWeaponLevel()<a name="line.125"></a>
+<span class="sourceLineNo">126</span>        {<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                return CharClass.WEAPONS_MAGELIKE;<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        }<a name="line.128"></a>
+<span class="sourceLineNo">129</span><a name="line.129"></a>
+<span class="sourceLineNo">130</span>        private final Set&lt;Integer&gt;      disallowedWeapons       = buildDisallowedWeaponClasses();<a name="line.130"></a>
+<span class="sourceLineNo">131</span><a name="line.131"></a>
+<span class="sourceLineNo">132</span>        @Override<a name="line.132"></a>
+<span class="sourceLineNo">133</span>        protected Set&lt;Integer&gt; disallowedWeaponClasses(MOB mob)<a name="line.133"></a>
+<span class="sourceLineNo">134</span>        {<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                return disallowedWeapons;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>        }<a name="line.136"></a>
+<span class="sourceLineNo">137</span><a name="line.137"></a>
+<span class="sourceLineNo">138</span>        @Override<a name="line.138"></a>
+<span class="sourceLineNo">139</span>        public int requiredArmorSourceMinor()<a name="line.139"></a>
+<span class="sourceLineNo">140</span>        {<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                return CMMsg.TYP_CAST_SPELL;<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        }<a name="line.142"></a>
+<span class="sourceLineNo">143</span><a name="line.143"></a>
+<span class="sourceLineNo">144</span>        protected boolean grantSomeSpells()<a name="line.144"></a>
+<span class="sourceLineNo">145</span>        {<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                return true;<a name="line.146"></a>
+<span class="sourceLineNo">147</span>        }<a name="line.147"></a>
+<span class="sourceLineNo">148</span><a name="line.148"></a>
+<span class="sourceLineNo">149</span>        public Mage()<a name="line.149"></a>
+<span class="sourceLineNo">150</span>        {<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                super();<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                maxStatAdj[CharStats.STAT_INTELLIGENCE]=7;<a name="line.152"></a>
+<span class="sourceLineNo">153</span>        }<a name="line.153"></a>
+<span class="sourceLineNo">154</span><a name="line.154"></a>
+<span class="sourceLineNo">155</span>        @Override<a name="line.155"></a>
+<span class="sourceLineNo">156</span>        public void initializeClass()<a name="line.156"></a>
+<span class="sourceLineNo">157</span>        {<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                super.initializeClass();<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Skill_Write",100,true);<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Skill_WandUse",25,true);<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Skill_Recall",25,true);<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Skill_Revoke",true);<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Skill_Swim",false);<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),15,"Skill_Climb",false);<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Skill_Spellcraft",false);<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Skill_ScrollCopy",false);<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"ScrollScribing",75,true);<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                // level 1<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_MagicMissile",true);<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_ResistMagicMissiles",true);<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_ReadMagic",true);<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_Shield",true);<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_IronGrip",true);<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_Erase",false);<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_MagicalAura",false);<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_Ventriloquate",false);<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_SpiderClimb",false);<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_WizardsChest",false);<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),1,"Spell_RepairingAura",false);<a name="line.179"></a>
+<span class="sourceLineNo">180</span><a name="line.180"></a>
+<span class="sourceLineNo">181</span>                // level 2<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_Blur",false);<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_Infravision",false);<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_DetectUndead",false);<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_ObscureSelf",false);<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_SummonSteed",false);<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_ResistPoison",false);<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_EnchantArrows",false);<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_Enlarge",false);<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_Shrink",false);<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_Light",false);<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_Clog",false);<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),2,"Spell_AnimateItem",false);<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                // level 3<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_KnowAlignment",false);<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_DetectMetal",false);<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_Dream",false);<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_ResistGas",false);<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_Grease",false);<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_SummoningWard",false);<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_SummonCompanion",false);<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_WizardLock",false);<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_Deafness",false);<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_Knock",false);<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_FeatherFall",false);<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_Sleep",false);<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),3,"Spell_FloatingDisc",false);<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                // level 4<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_FakeFood",false);<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_FakeSpring",false);<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_Frost",false);<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_AcidArrow",false);<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_Hunger",false);<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_DetectWater",false);<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_DetectPoison",false);<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_ResistAcid",false);<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_MageArmor",false);<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_BurningHands",false);<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_Friends",false);<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),4,"Spell_WaterBreathing",false);<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                // level 5<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_DetectMagic",false);<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_DetectGold",false);<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_WallOfStone",false);<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_Spook",false);<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_CharmWard",false);<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_ResistCold",false);<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_Mend",false);<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_WeaknessGas",false);<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_DispelMagic",false);<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_FaerieFire",false);<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),5,"Spell_MysticShine",false);<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                // level 6<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_WeaknessAcid",false);<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_Augury",false);<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_Charm",false);<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_Meld",false);<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_IllusoryWall",false);<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_FindFamiliar",false);<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_StinkingCloud",false);<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_DetectInvisible",false);<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_ResistElectricity",false);<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_GraceOfTheCat",false);<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),6,"Spell_ShockingGrasp",false);<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                // level 7<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_WeaknessCold",false);<a name="line.246"></a>
+<span class="sourceLineNo">247</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_Darkness",false);<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_Invisibility",false);<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_GhostSound",false);<a name="line.249"></a>
+<span class="sourceLineNo">250</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_Tourettes",false);<a name="line.250"></a>
+<span class="sourceLineNo">251</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_Refit",false);<a name="line.251"></a>
+<span class="sourceLineNo">252</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_ResistFire",false);<a name="line.252"></a>
+<span class="sourceLineNo">253</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_DetectHidden",false);<a name="line.253"></a>
+<span class="sourceLineNo">254</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_PassDoor",false);<a name="line.254"></a>
+<span class="sourceLineNo">255</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_Fireball",false);<a name="line.255"></a>
+<span class="sourceLineNo">256</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),7,"Spell_SummonMonster",false);<a name="line.256"></a>
+<span class="sourceLineNo">257</span>                // level 8<a name="line.257"></a>
+<span class="sourceLineNo">258</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Spell_WeaknessElectricity",false);<a name="line.258"></a>
+<span class="sourceLineNo">259</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Spell_FaerieFog",false);<a name="line.259"></a>
+<span class="sourceLineNo">260</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Spell_Lightning",false);<a name="line.260"></a>
+<span class="sourceLineNo">261</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Spell_ResistDisease",false);<a name="line.261"></a>
+<span class="sourceLineNo">262</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Spell_TeleportationWard",false);<a name="line.262"></a>
+<span class="sourceLineNo">263</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Spell_Shatter",false);<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Spell_ElementalStorm",false);<a name="line.264"></a>
+<span class="sourceLineNo">265</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Spell_WallOfDarkness",false);<a name="line.265"></a>
+<span class="sourceLineNo">266</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Spell_Fear",false);<a name="line.266"></a>
+<span class="sourceLineNo">267</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),8,"Spell_IdentifyObject",false);<a name="line.267"></a>
+<span class="sourceLineNo">268</span>                // level 9<a name="line.268"></a>
+<span class="sourceLineNo">269</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),9,"Spell_WeaknessFire",false);<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),9,"Spell_Blindness",false);<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),9,"Spell_Mirage",false);<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),9,"Spell_Awe",false);<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),9,"Spell_ComprehendLangs",false);<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),9,"Spell_MagicMouth",false);<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),9,"Spell_Daydream",false);<a name="line.275"></a>
+<span class="sourceLineNo">276</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),9,"Spell_IceSheet",false);<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),9,"Spell_Farsight",false);<a name="line.277"></a>
+<span class="sourceLineNo">278</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),9,"Spell_Flameshield",false);<a name="line.278"></a>
+<span class="sourceLineNo">279</span>                // level 10<a name="line.279"></a>
+<span class="sourceLineNo">280</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),10,"Spell_LocateObject",false);<a name="line.280"></a>
+<span class="sourceLineNo">281</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),10,"Spell_Slow",false);<a name="line.281"></a>
+<span class="sourceLineNo">282</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),10,"Spell_ArcaneMark",false);<a name="line.282"></a>
+<span class="sourceLineNo">283</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),10,"Spell_PhantomHound",false);<a name="line.283"></a>
+<span class="sourceLineNo">284</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),10,"Spell_ResistArrows",false);<a name="line.284"></a>
+<span class="sourceLineNo">285</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),10,"Spell_Teleport",false);<a name="line.285"></a>
+<span class="sourceLineNo">286</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),10,"Spell_GustOfWind",false);<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),10,"Spell_Ugliness",false);<a name="line.287"></a>
+<span class="sourceLineNo">288</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),10,"Spell_Mute",false);<a name="line.288"></a>
+<span class="sourceLineNo">289</span>                // level 11<a name="line.289"></a>
+<span class="sourceLineNo">290</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),11,"Spell_Claireaudience",false);<a name="line.290"></a>
+<span class="sourceLineNo">291</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),11,"Spell_Feeblemind",false);<a name="line.291"></a>
+<span class="sourceLineNo">292</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),11,"Spell_Stoneskin",false);<a name="line.292"></a>
+<span class="sourceLineNo">293</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),11,"Spell_WallOfIce",false);<a name="line.293"></a>
+<span class="sourceLineNo">294</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),11,"Spell_AcidFog",false);<a name="line.294"></a>
+<span class="sourceLineNo">295</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),11,"Spell_HeatMetal",false);<a name="line.295"></a>
+<span class="sourceLineNo">296</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),11,"Spell_Weaken",false);<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),11,"Spell_MirrorImage",false);<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),11,"Spell_ChangeSex",false);<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                // level 12<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),12,"Spell_Laughter",false);<a name="line.300"></a>
+<span class="sourceLineNo">301</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),12,"Spell_Clairevoyance",false);<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),12,"Spell_Haste",false);<a name="line.302"></a>
+<span class="sourceLineNo">303</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),12,"Spell_DestroyObject",false);<a name="line.303"></a>
+<span class="sourceLineNo">304</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),12,"Spell_Enlightenment",false);<a name="line.304"></a>
+<span class="sourceLineNo">305</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),12,"Spell_MinorGlobe",false);<a name="line.305"></a>
+<span class="sourceLineNo">306</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),12,"Spell_Shelter",false);<a name="line.306"></a>
+<span class="sourceLineNo">307</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),12,"Spell_Confusion",false);<a name="line.307"></a>
+<span class="sourceLineNo">308</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),12,"Spell_Delirium",false);<a name="line.308"></a>
+<span class="sourceLineNo">309</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),12,"Spell_Fly",false);<a name="line.309"></a>
+<span class="sourceLineNo">310</span>                //level 13<a name="line.310"></a>
+<span class="sourceLineNo">311</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),13,"Spell_DistantVision",false);<a name="line.311"></a>
+<span class="sourceLineNo">312</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),13,"Spell_Reinforce",false);<a name="line.312"></a>
+<span class="sourceLineNo">313</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),13,"Spell_ResistParalyzation",false);<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),13,"Spell_FeignDeath",false);<a name="line.314"></a>
+<span class="sourceLineNo">315</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),13,"Spell_Earthquake",false);<a name="line.315"></a>
+<span class="sourceLineNo">316</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),13,"Spell_Gate",false);<a name="line.316"></a>
+<span class="sourceLineNo">317</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),13,"Spell_GiantStrength",false);<a name="line.317"></a>
+<span class="sourceLineNo">318</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),13,"Spell_Frenzy",false);<a name="line.318"></a>
+<span class="sourceLineNo">319</span>                // level 14<a name="line.319"></a>
+<span class="sourceLineNo">320</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),14,"Spell_KnowValue",false);<a name="line.320"></a>
+<span class="sourceLineNo">321</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),14,"Spell_Silence",false);<a name="line.321"></a>
+<span class="sourceLineNo">322</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),14,"Spell_ArcanePossession",false);<a name="line.322"></a>
+<span class="sourceLineNo">323</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),14,"Spell_WallOfAir",false);<a name="line.323"></a>
+<span class="sourceLineNo">324</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),14,"Spell_AnimateWeapon",false);<a name="line.324"></a>
+<span class="sourceLineNo">325</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),14,"Spell_MassInvisibility",false);<a name="line.325"></a>
+<span class="sourceLineNo">326</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),14,"Spell_Scribe",false);<a name="line.326"></a>
+<span class="sourceLineNo">327</span>                // level 15<a name="line.327"></a>
+<span class="sourceLineNo">328</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),15,"Spell_Ensnare",false);<a name="line.328"></a>
+<span class="sourceLineNo">329</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),15,"Spell_Hold",false);<a name="line.329"></a>
+<span class="sourceLineNo">330</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),15,"Spell_FakeWeapon",false);<a name="line.330"></a>
+<span class="sourceLineNo">331</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),15,"Spell_Blink",false);<a name="line.331"></a>
+<span class="sourceLineNo">332</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),15,"Spell_Polymorph",false);<a name="line.332"></a>
+<span class="sourceLineNo">333</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),15,"Spell_Youth",0,"",false,true);<a name="line.333"></a>
+<span class="sourceLineNo">334</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),15,"Spell_Irritation",false);<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                // level 16<a name="line.335"></a>
+<span class="sourceLineNo">336</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),16,"Spell_ChainLightening",false);<a name="line.336"></a>
+<span class="sourceLineNo">337</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),16,"Spell_Choke",false);<a name="line.337"></a>
+<span class="sourceLineNo">338</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),16,"Spell_Dismissal",false);<a name="line.338"></a>
+<span class="sourceLineNo">339</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),16,"Skill_Meditation",false);<a name="line.339"></a>
+<span class="sourceLineNo">340</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),16,"Spell_MageClaws",false);<a name="line.340"></a>
+<span class="sourceLineNo">341</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),16,"Spell_FreeMovement",false);<a name="line.341"></a>
+<span class="sourceLineNo">342</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),16,"Spell_PredictWeather",false);<a name="line.342"></a>
+<span class="sourceLineNo">343</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),16,"Spell_FakeArmor",false);<a name="line.343"></a>
+<span class="sourceLineNo">344</span>                // level 17<a name="line.344"></a>
+<span class="sourceLineNo">345</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),17,"Spell_ClarifyScroll",false);<a name="line.345"></a>
+<span class="sourceLineNo">346</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),17,"Spell_FoolsGold",false);<a name="line.346"></a>
+<span class="sourceLineNo">347</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),17,"Spell_WallOfFire",false);<a name="line.347"></a>
+<span class="sourceLineNo">348</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),17,"Spell_Siphon",false);<a name="line.348"></a>
+<span class="sourceLineNo">349</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),17,"Spell_Portal",false);<a name="line.349"></a>
+<span class="sourceLineNo">350</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),17,"Spell_RechargeWand",false);<a name="line.350"></a>
+<span class="sourceLineNo">351</span>                // level 18<a name="line.351"></a>
+<span class="sourceLineNo">352</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),18,"Spell_SeeAura",false);<a name="line.352"></a>
+<span class="sourceLineNo">353</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),18,"Spell_ReverseGravity",false);<a name="line.353"></a>
+<span class="sourceLineNo">354</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),18,"Spell_Web",false);<a name="line.354"></a>
+<span class="sourceLineNo">355</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),18,"Spell_Delude",false);<a name="line.355"></a>
+<span class="sourceLineNo">356</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),18,"Spell_ResistPetrification",false);<a name="line.356"></a>
+<span class="sourceLineNo">357</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),18,"Spell_Summon",false);<a name="line.357"></a>
+<span class="sourceLineNo">358</span>                // level 19<a name="line.358"></a>
+<span class="sourceLineNo">359</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),19,"Spell_FleshStone",false);<a name="line.359"></a>
+<span class="sourceLineNo">360</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),19,"Spell_Forget",false);<a name="line.360"></a>
+<span class="sourceLineNo">361</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),19,"Spell_StoneFlesh",false);<a name="line.361"></a>
+<span class="sourceLineNo">362</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),19,"Spell_WallOfForce",false);<a name="line.362"></a>
+<span class="sourceLineNo">363</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),19,"Spell_ImprovedInvisibility",false);<a name="line.363"></a>
+<span class="sourceLineNo">364</span>                // level 20<a name="line.364"></a>
+<span class="sourceLineNo">365</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),20,"Spell_Scry",false);<a name="line.365"></a>
+<span class="sourceLineNo">366</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),20,"Spell_ImprovedPolymorph",false);<a name="line.366"></a>
+<span class="sourceLineNo">367</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),20,"Spell_Nightmare",false);<a name="line.367"></a>
+<span class="sourceLineNo">368</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),20,"Spell_Cloudkill",false);<a name="line.368"></a>
+<span class="sourceLineNo">369</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),20,"Spell_Repulsion",false);<a name="line.369"></a>
+<span class="sourceLineNo">370</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),20,"Spell_EnchantArmor",false);<a name="line.370"></a>
+<span class="sourceLineNo">371</span>                // level 21<a name="line.371"></a>
+<span class="sourceLineNo">372</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),21,"Alchemy",false);<a name="line.372"></a>
+<span class="sourceLineNo">373</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),21,"Spell_Command",false);<a name="line.373"></a>
+<span class="sourceLineNo">374</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),21,"Spell_Immunity",false);<a name="line.374"></a>
+<span class="sourceLineNo">375</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),21,"Spell_SummonEnemy",false);<a name="line.375"></a>
+<span class="sourceLineNo">376</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),21,"Spell_MassHaste",false);<a name="line.376"></a>
+<span class="sourceLineNo">377</span>                // level 22<a name="line.377"></a>
+<span class="sourceLineNo">378</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),22,"Spell_Disenchant",false);<a name="line.378"></a>
+<span class="sourceLineNo">379</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),22,"Spell_MajorGlobe",false);<a name="line.379"></a>
+<span class="sourceLineNo">380</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),22,"Spell_Hungerless",false);<a name="line.380"></a>
+<span class="sourceLineNo">381</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),22,"Spell_MeteorStorm",false);<a name="line.381"></a>
+<span class="sourceLineNo">382</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),22,"Spell_EnchantWeapon",false);<a name="line.382"></a>
+<span class="sourceLineNo">383</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),22,"Spell_DetectSentience",false);<a name="line.383"></a>
+<span class="sourceLineNo">384</span>                // level 23<a name="line.384"></a>
+<span class="sourceLineNo">385</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),23,"Spell_Dragonfire",false);<a name="line.385"></a>
+<span class="sourceLineNo">386</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),23,"Spell_MindBlock",false);<a name="line.386"></a>
+<span class="sourceLineNo">387</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),23,"Spell_Cogniportive",false);<a name="line.387"></a>
+<span class="sourceLineNo">388</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),23,"Spell_TimeStop",false);<a name="line.388"></a>
+<span class="sourceLineNo">389</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),23,"Spell_CombatPrecognition",false);<a name="line.389"></a>
+<span class="sourceLineNo">390</span>                // level 24<a name="line.390"></a>
+<span class="sourceLineNo">391</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),24,"Spell_Delay",false);<a name="line.391"></a>
+<span class="sourceLineNo">392</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),24,"Spell_Frailty",false);<a name="line.392"></a>
+<span class="sourceLineNo">393</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),24,"Spell_Boomerang",false);<a name="line.393"></a>
+<span class="sourceLineNo">394</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),24,"Spell_Thirstless",false);<a name="line.394"></a>
+<span class="sourceLineNo">395</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),24,"Spell_SummonFlyer",false);<a name="line.395"></a>
+<span class="sourceLineNo">396</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),24,"Spell_Anchor",false);<a name="line.396"></a>
+<span class="sourceLineNo">397</span>                // level 25<a name="line.397"></a>
+<span class="sourceLineNo">398</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),25,"Spell_SpellTurning",false);<a name="line.398"></a>
+<span class="sourceLineNo">399</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),25,"Spell_Disintegrate",false);<a name="line.399"></a>
+<span class="sourceLineNo">400</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),25,"Spell_DemonGate",false);<a name="line.400"></a>
+<span class="sourceLineNo">401</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),25,"Spell_MassFly",false);<a name="line.401"></a>
+<span class="sourceLineNo">402</span>                CMLib.ableMapper().addCharAbilityMapping(ID(),25,"Spell_Geas",false);<a name="line.402"></a>
+<span class="sourceLineNo">403</span><a name="line.403"></a>
+<span class="sourceLineNo">404</span>                // level 30<a name="line.404"></a>
+<span class="sourceLineNo">405</span>                if(ID().equals(baseClass()))<a name="line.405"></a>
+<span class="sourceLineNo">406</span>                        CMLib.ableMapper().addCharAbilityMapping(ID(),30,"Spell_Spellbinding",true);<a name="line.406"></a>
+<span class="sourceLineNo">407</span>        }<a name="line.407"></a>
+<span class="sourceLineNo">408</span><a name="line.408"></a>
+<span class="sourceLineNo">409</span>        @Override<a name="line.409"></a>
+<span class="sourceLineNo">410</span>        public int availabilityCode()<a name="line.410"></a>
+<span class="sourceLineNo">411</span>        {<a name="line.411"></a>
+<span class="sourceLineNo">412</span>                return Area.THEME_FANTASY;<a name="line.412"></a>
+<span class="sourceLineNo">413</span>        }<a name="line.413"></a>
+<span class="sourceLineNo">414</span><a name="line.414"></a>
+<span class="sourceLineNo">415</span>        private final String[] raceRequiredList=new String[]{<a name="line.415"></a>
+<span class="sourceLineNo">416</span>                "Human","Elf","Dragon","Humanoid","Illithid",<a name="line.416"></a>
+<span class="sourceLineNo">417</span>                "Gnome","Fairy-kin","HalfElf","Mindflayer","Svirfneblin",<a name="line.417"></a>
+<span class="sourceLineNo">418</span>                "Githyanki","Merfolk","Faerie","Orc"<a name="line.418"></a>
+<span class="sourceLineNo">419</span>        };<a name="line.419"></a>
+<span class="sourceLineNo">420</span><a name="line.420"></a>
+<span class="sourceLineNo">421</span>        @Override<a name="line.421"></a>
+<span class="sourceLineNo">422</span>        public String[] getRequiredRaceList()<a name="line.422"></a>
+<span class="sourceLineNo">423</span>        {<a name="line.423"></a>
+<span class="sourceLineNo">424</span>                return raceRequiredList;<a name="line.424"></a>
+<span class="sourceLineNo">425</span>        }<a name="line.425"></a>
+<span class="sourceLineNo">426</span><a name="line.426"></a>
+<span class="sourceLineNo">427</span>        @SuppressWarnings("unchecked")<a name="line.427"></a>
+<span class="sourceLineNo">428</span>        private final Pair&lt;String,Integer&gt;[] minimumStatRequirements=new Pair[]<a name="line.428"></a>
+<span class="sourceLineNo">429</span>        {<a name="line.429"></a>
+<span class="sourceLineNo">430</span>                new Pair&lt;String,Integer&gt;("Intelligence",Integer.valueOf(9))<a name="line.430"></a>
+<span class="sourceLineNo">431</span>        };<a name="line.431"></a>
+<span class="sourceLineNo">432</span><a name="line.432"></a>
+<span class="sourceLineNo">433</span>        @Override<a name="line.433"></a>
+<span class="sourceLineNo">434</span>        public Pair&lt;String,Integer&gt;[] getMinimumStatRequirements() <a name="line.434"></a>
+<span class="sourceLineNo">435</span>        {<a name="line.435"></a>
+<span class="sourceLineNo">436</span>                return minimumStatRequirements;<a name="line.436"></a>
+<span class="sourceLineNo">437</span>        }<a name="line.437"></a>
+<span class="sourceLineNo">438</span><a name="line.438"></a>
+<span class="sourceLineNo">439</span>        @Override<a name="line.439"></a>
+<span class="sourceLineNo">440</span>        public void grantAbilities(MOB mob, boolean isBorrowedClass)<a name="line.440"></a>
+<span class="sourceLineNo">441</span>        {<a name="line.441"></a>
+<span class="sourceLineNo">442</span>                super.grantAbilities(mob,isBorrowedClass);<a name="line.442"></a>
+<span class="sourceLineNo">443</span>                if(!grantSomeSpells())<a name="line.443"></a>
+<span class="sourceLineNo">444</span>                        return;<a name="line.444"></a>
+<span class="sourceLineNo">445</span><a name="line.445"></a>
+<span class="sourceLineNo">446</span>                final Vector&lt;String&gt; grantable=new Vector&lt;String&gt;();<a name="line.446"></a>
+<span class="sourceLineNo">447</span><a name="line.447"></a>
+<span class="sourceLineNo">448</span>                final int level=mob.charStats().getClassLevel(this);<a name="line.448"></a>
+<span class="sourceLineNo">449</span>                int numSpells=3;<a name="line.449"></a>
+<span class="sourceLineNo">450</span>                if(level&lt;8)<a name="line.450"></a>
+<span class="sourceLineNo">451</span>                        numSpells=3;<a name="line.451"></a>
+<span class="sourceLineNo">452</span>                else<a name="line.452"></a>
+<span class="sourceLineNo">453</span>                if(level&lt;19)<a name="line.453"></a>
+<span class="sourceLineNo">454</span>                        numSpells=2;<a name="line.454"></a>
+<span class="sourceLineNo">455</span>                else<a name="line.455"></a>
+<span class="sourceLineNo">456</span>                        numSpells=1;<a name="line.456"></a>
+<span class="sourceLineNo">457</span>                for(final Enumeration&lt;Ability&gt; a=CMClass.abilities();a.hasMoreElements();)<a name="line.457"></a>
+<span class="sourceLineNo">458</span>                {<a name="line.458"></a>
+<span class="sourceLineNo">459</span>                        final Ability A=a.nextElement();<a name="line.459"></a>
+<span class="sourceLineNo">460</span>                        if((CMLib.ableMapper().getQualifyingLevel(ID(),true,A.ID())==level)<a name="line.460"></a>
+<span class="sourceLineNo">461</span>                        &amp;&amp;((CMLib.ableMapper().getQualifyingLevel(ID(),true,A.ID())&lt;=25)<a name="line.461"></a>
+<span class="sourceLineNo">462</span>                        &amp;&amp;(!CMLib.ableMapper().getSecretSkill(ID(),true,A.ID()))<a name="line.462"></a>
+<span class="sourceLineNo">463</span>                        &amp;&amp;(!CMLib.ableMapper().getDefaultGain(ID(),true,A.ID()))<a name="line.463"></a>
+<span class="sourceLineNo">464</span>                        &amp;&amp;((A.classificationCode()&amp;Ability.ALL_ACODES)==Ability.ACODE_SPELL)))<a name="line.464"></a>
+<span class="sourceLineNo">465</span>                        {<a name="line.465"></a>
+<span class="sourceLineNo">466</span>                                if (!grantable.contains(A.ID()))<a name="line.466"></a>
+<span class="sourceLineNo">467</span>                                        grantable.addElement(A.ID());<a name="line.467"></a>
+<span class="sourceLineNo">468</span>                        }<a name="line.468"></a>
+<span class="sourceLineNo">469</span>                }<a name="line.469"></a>
+<span class="sourceLineNo">470</span>                for(int a=0;a&lt;mob.numAbilities();a++)<a name="line.470"></a>
+<span class="sourceLineNo">471</span>                {<a name="line.471"></a>
+<span class="sourceLineNo">472</span>                        final Ability A=mob.fetchAbility(a);<a name="line.472"></a>
+<span class="sourceLineNo">473</span>                        if(grantable.contains(A.ID()))<a name="line.473"></a>
+<span class="sourceLineNo">474</span>                        {<a name="line.474"></a>
+<span class="sourceLineNo">475</span>                                grantable.remove(A.ID());<a name="line.475"></a>
+<span class="sourceLineNo">476</span>                                numSpells--;<a name="line.476"></a>
+<span class="sourceLineNo">477</span>                        }<a name="line.477"></a>
+<span class="sourceLineNo">478</span>                }<a name="line.478"></a>
+<span class="sourceLineNo">479</span>                for(int i=0;i&lt;numSpells;i++)<a name="line.479"></a>
+<span class="sourceLineNo">480</span>                {<a name="line.480"></a>
+<span class="sourceLineNo">481</span>                        if(grantable.size()==0)<a name="line.481"></a>
+<span class="sourceLineNo">482</span>                                break;<a name="line.482"></a>
+<span class="sourceLineNo">483</span>                        final String AID=grantable.elementAt(CMLib.dice().roll(1,grantable.size(),-1));<a name="line.483"></a>
+<span class="sourceLineNo">484</span>                        if(AID!=null)<a name="line.484"></a>
+<span class="sourceLineNo">485</span>                        {<a name="line.485"></a>
+<span class="sourceLineNo">486</span>                                grantable.removeElement(AID);<a name="line.486"></a>
+<span class="sourceLineNo">487</span>                                giveMobAbility(mob,<a name="line.487"></a>
+<span class="sourceLineNo">488</span>                                                           CMClass.getAbility(AID),<a name="line.488"></a>
+<span class="sourceLineNo">489</span>                                                           CMLib.ableMapper().getDefaultProficiency(ID(),true,AID),<a name="line.489"></a>
+<span class="sourceLineNo">490</span>                                                           CMLib.ableMapper().getDefaultParm(ID(),true,AID),<a name="line.490"></a>
+<span class="sourceLineNo">491</span>                                                           isBorrowedClass);<a name="line.491"></a>
+<span class="sourceLineNo">492</span>                        }<a name="line.492"></a>
+<span class="sourceLineNo">493</span>                }<a name="line.493"></a>
+<span class="sourceLineNo">494</span>        }<a name="line.494"></a>
+<span class="sourceLineNo">495</span><a name="line.495"></a>
+<span class="sourceLineNo">496</span>        @Override<a name="line.496"></a>
+<span class="sourceLineNo">497</span>        public List&lt;Item&gt; outfit(MOB myChar)<a name="line.497"></a>
+<span class="sourceLineNo">498</span>        {<a name="line.498"></a>
+<span class="sourceLineNo">499</span>                if(outfitChoices==null)<a name="line.499"></a>
+<span class="sourceLineNo">500</span>                {<a name="line.500"></a>
+<span class="sourceLineNo">501</span>                        final Weapon w=CMClass.getWeapon("Quarterstaff");<a name="line.501"></a>
+<span class="sourceLineNo">502</span>                        if(w == null)<a name="line.502"></a>
+<span class="sourceLineNo">503</span>                                return new Vector&lt;Item&gt;();<a name="line.503"></a>
+<span class="sourceLineNo">504</span>                        outfitChoices=new Vector&lt;Item&gt;();<a name="line.504"></a>
+<span class="sourceLineNo">505</span>                        outfitChoices.add(w);<a name="line.505"></a>
+<span class="sourceLineNo">506</span>                }<a name="line.506"></a>
+<span class="sourceLineNo">507</span>                return outfitChoices;<a name="line.507"></a>
+<span class="sourceLineNo">508</span>        }<a name="line.508"></a>
+<span class="sourceLineNo">509</span>}<a name="line.509"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.MOBS.interfaces;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.util.Map;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.util.Vector;<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>/*<a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Copyright 2005-2018 Bo Zimmerman<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.25"></a>
+<span class="sourceLineNo">026</span>   you may not use this file except in compliance with the License.<a name="line.26"></a>
+<span class="sourceLineNo">027</span>   You may obtain a copy of the License at<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.29"></a>
+<span class="sourceLineNo">030</span><a name="line.30"></a>
+<span class="sourceLineNo">031</span>   Unless required by applicable law or agreed to in writing, software<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>   See the License for the specific language governing permissions and<a name="line.34"></a>
+<span class="sourceLineNo">035</span>   limitations under the License.<a name="line.35"></a>
+<span class="sourceLineNo">036</span> */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>/**<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * A PostOffice is a kind of shopkeeper that belongs to a "chain" which<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * shares access to a common store of post office boxes to hold items<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * for players.  Post officers simulate delivery by transferring the<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * items given to them into the appropriate boxes.  Players must then<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * go to a post office in the same chain to retrieve items delivered<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * to them.  <a name="line.43"></a>
+<span class="sourceLineNo">044</span> * Post offices can serve an entire clan, or a single player.<a name="line.44"></a>
+<span class="sourceLineNo">045</span> * They can handle several different types of charges, including COD.<a name="line.45"></a>
+<span class="sourceLineNo">046</span> * <a name="line.46"></a>
+<span class="sourceLineNo">047</span> * @author Bo Zimmerman<a name="line.47"></a>
+<span class="sourceLineNo">048</span> */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>public interface PostOffice extends ShopKeeper<a name="line.49"></a>
+<span class="sourceLineNo">050</span>{<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        /**<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         * When the given mob tries to send or withdraw a package, this method is <a name="line.52"></a>
+<span class="sourceLineNo">053</span>         * called to get the proper FROM address, which is either the mob themselves <a name="line.53"></a>
+<span class="sourceLineNo">054</span>         * or their clan, if they are (optionally) permitted by their rank.<a name="line.54"></a>
+<span class="sourceLineNo">055</span>         * If checked is true, and the mob does NOT have clan privileges, then an<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         * error message is given to the mob and null is returned.<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.Clan.Function<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * @param mob the mob who is trying to send the package<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         * @param func either Clan.Function.WITHDRAW or Clan.FUNCTION.DEPOSIT<a name="line.59"></a>
+<span class="sourceLineNo">060</span>         * @param checked true if the mob must have clan privileges, false if not.<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         * @return the mobs name, their clan name, or null<a name="line.61"></a>
+<span class="sourceLineNo">062</span>         */<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        public String getSenderName(MOB mob, Clan.Function func, boolean checked);<a name="line.63"></a>
+<span class="sourceLineNo">064</span><a name="line.64"></a>
+<span class="sourceLineNo">065</span>        /**<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         * Low level method to add an item directly to a postal box.<a name="line.66"></a>
+<span class="sourceLineNo">067</span>         * @see PostOffice#delFromBox(String, Item)<a name="line.67"></a>
+<span class="sourceLineNo">068</span>         * @see PostOffice#emptyBox(String)<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         * @param boxName the box name, such as a player or clan name<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * @param thisThang the item to add to the postal box<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * @param from player or clan the item is from<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * @param to player or clan the item is to<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * @param holdTime when the package was sent, real time, in milliseconds<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         * @param COD the amount of money which must be paid to withdraw the item<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         */<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        public void addToBox(String boxName, Item thisThang, String from, String to, long holdTime, double COD);<a name="line.76"></a>
+<span class="sourceLineNo">077</span><a name="line.77"></a>
+<span class="sourceLineNo">078</span>        /**<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         * Low level method to remove an item from a postal box<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         * @see PostOffice#addToBox(String, Item, String, String, long, double)<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * @see PostOffice#emptyBox(String)<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         * @param boxName the box name, such as a player or clan name<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         * @param thisThang the item to remove from the postal box<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         * @return true if the item was removed, or false otherwise<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         */<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        public boolean delFromBox(String boxName, Item thisThang);<a name="line.86"></a>
+<span class="sourceLineNo">087</span><a name="line.87"></a>
+<span class="sourceLineNo">088</span>        /**<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         * Removes all items from the given post office box<a name="line.89"></a>
+<span class="sourceLineNo">090</span>         * @see PostOffice#addToBox(String, Item, String, String, long, double)<a name="line.90"></a>
+<span class="sourceLineNo">091</span>         * @see PostOffice#delFromBox(String, Item)<a name="line.91"></a>
+<span class="sourceLineNo">092</span>         * @param boxName the box name, such as a player or clan name<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         */<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        public void emptyBox(String boxName);<a name="line.94"></a>
+<span class="sourceLineNo">095</span><a name="line.95"></a>
+<span class="sourceLineNo">096</span>        /**<a name="line.96"></a>
+<span class="sourceLineNo">097</span>         * Searches the given postal box for an item with the given<a name="line.97"></a>
+<span class="sourceLineNo">098</span>         * name, or one with the given string as a substring.<a name="line.98"></a>
+<span class="sourceLineNo">099</span>         * @param boxName the player or clan name of the postal box<a name="line.99"></a>
+<span class="sourceLineNo">100</span>         * @param likeThis the search string for the item name<a name="line.100"></a>
+<span class="sourceLineNo">101</span>         * @return the item found, or null<a name="line.101"></a>
+<span class="sourceLineNo">102</span>         */<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        public Item findBoxContents(String boxName, String likeThis);<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        <a name="line.104"></a>
+<span class="sourceLineNo">105</span>        /**<a name="line.105"></a>
+<span class="sourceLineNo">106</span>         * Returns a mapping of postal branches in this chain to forwarding <a name="line.106"></a>
+<span class="sourceLineNo">107</span>         * addresses, for the given postal box.<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         * @see PostOffice#deleteBoxHere(String)<a name="line.108"></a>
+<span class="sourceLineNo">109</span>         * @see PostOffice#createBoxHere(String, String)<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         * @param boxName the player or clan name of the box<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         * @return a mapping of postal branches to forwarding addresses.<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         */<a name="line.112"></a>
+<span class="sourceLineNo">113</span>        public Map&lt;String, String&gt; getOurOpenBoxes(String boxName);<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>        /**<a name="line.115"></a>
+<span class="sourceLineNo">116</span>         * Creates a new post office box for the given player or clan<a name="line.116"></a>
+<span class="sourceLineNo">117</span>         * name, with the given forwarding address.<a name="line.117"></a>
+<span class="sourceLineNo">118</span>         * @see PostOffice#deleteBoxHere(String)<a name="line.118"></a>
+<span class="sourceLineNo">119</span>         * @see PostOffice#getOurOpenBoxes(String)<a name="line.119"></a>
+<span class="sourceLineNo">120</span>         * @param boxName the player or clan name of the new box<a name="line.120"></a>
+<span class="sourceLineNo">121</span>         * @param forward the player or clan name of the forwarding<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         */<a name="line.122"></a>
+<span class="sourceLineNo">123</span>        public void createBoxHere(String boxName, String forward);<a name="line.123"></a>
+<span class="sourceLineNo">124</span><a name="line.124"></a>
+<span class="sourceLineNo">125</span>        /**<a name="line.125"></a>
+<span class="sourceLineNo">126</span>         * Removes the given post office box for the given player or<a name="line.126"></a>
+<span class="sourceLineNo">127</span>         * clan name.<a name="line.127"></a>
+<span class="sourceLineNo">128</span>         * @see PostOffice#createBoxHere(String, String)<a name="line.128"></a>
+<span class="sourceLineNo">129</span>         * @see PostOffice#getOurOpenBoxes(String)<a name="line.129"></a>
+<span class="sourceLineNo">130</span>         * @param boxName the player or clan name of the new box<a name="line.130"></a>
+<span class="sourceLineNo">131</span>         */<a name="line.131"></a>
+<span class="sourceLineNo">132</span>        public void deleteBoxHere(String boxName);<a name="line.132"></a>
+<span class="sourceLineNo">133</span><a name="line.133"></a>
+<span class="sourceLineNo">134</span>        /**<a name="line.134"></a>
+<span class="sourceLineNo">135</span>         * Parses an postal package entry, which is formatted<a name="line.135"></a>
+<span class="sourceLineNo">136</span>         * as item xml preceded by various semicolon-delimited<a name="line.136"></a>
+<span class="sourceLineNo">137</span>         * numbers and data. <a name="line.137"></a>
+<span class="sourceLineNo">138</span>         * @see PostOffice.MailPiece<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         * @param data the postal package formatted string<a name="line.139"></a>
+<span class="sourceLineNo">140</span>         * @return the MailPiece object<a name="line.140"></a>
+<span class="sourceLineNo">141</span>         */<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        public MailPiece parsePostalItemData(String data);<a name="line.142"></a>
+<span class="sourceLineNo">143</span><a name="line.143"></a>
+<span class="sourceLineNo">144</span>        /**<a name="line.144"></a>
+<span class="sourceLineNo">145</span>         * Returns the postal chain, a string shared by all post <a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * offices that deal with the same postal boxes and<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         * customers, able to send mail to each other.<a name="line.147"></a>
+<span class="sourceLineNo">148</span>         * @see PostOffice#setPostalChain(String)<a name="line.148"></a>
+<span class="sourceLineNo">149</span>         * @return the name of the postal chain<a name="line.149"></a>
+<span class="sourceLineNo">150</span>         */<a name="line.150"></a>
+<span class="sourceLineNo">151</span>        public String postalChain();<a name="line.151"></a>
+<span class="sourceLineNo">152</span><a name="line.152"></a>
+<span class="sourceLineNo">153</span>        /**<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         * Sets the postal chain, a string shared by all post <a name="line.154"></a>
+<span class="sourceLineNo">155</span>         * offices that deal with the same postal boxes and<a name="line.155"></a>
+<span class="sourceLineNo">156</span>         * customers, able to send mail to each other.<a name="line.156"></a>
+<span class="sourceLineNo">157</span>         * @see PostOffice#postalChain()<a name="line.157"></a>
+<span class="sourceLineNo">158</span>         * @param name  the name of the postal chain<a name="line.158"></a>
+<span class="sourceLineNo">159</span>         */<a name="line.159"></a>
+<span class="sourceLineNo">160</span>        public void setPostalChain(String name);<a name="line.160"></a>
+<span class="sourceLineNo">161</span><a name="line.161"></a>
+<span class="sourceLineNo">162</span>        /**<a name="line.162"></a>
+<span class="sourceLineNo">163</span>         * Returns the branch of the postal chain that this specific<a name="line.163"></a>
+<span class="sourceLineNo">164</span>         * postoffice employee belongs to.  Typically the extended<a name="line.164"></a>
+<span class="sourceLineNo">165</span>         * room id, this is a unique identifier for this branch of<a name="line.165"></a>
+<span class="sourceLineNo">166</span>         * the postal chain.  Each PostOffice should be unique!<a name="line.166"></a>
+<span class="sourceLineNo">167</span>         * @see PostOffice#findProperBranch(String)<a name="line.167"></a>
+<span class="sourceLineNo">168</span>         * @return the branch of the postal chain<a name="line.168"></a>
+<span class="sourceLineNo">169</span>         */<a name="line.169"></a>
+<span class="sourceLineNo">170</span>        public String postalBranch(); // based on individual shopkeeper<a name="line.170"></a>
+<span class="sourceLineNo">171</span><a name="line.171"></a>
+<span class="sourceLineNo">172</span>        /**<a name="line.172"></a>
+<span class="sourceLineNo">173</span>         * Returns the proper branch of this postal chain to which to<a name="line.173"></a>
+<span class="sourceLineNo">174</span>         * deliver packages belonging to the given mob or clan name.<a name="line.174"></a>
+<span class="sourceLineNo">175</span>         * @see PostOffice#postalBranch()<a name="line.175"></a>
+<span class="sourceLineNo">176</span>         * @param name the player or clan name receiving the package<a name="line.176"></a>
+<span class="sourceLineNo">177</span>         * @return the best branch in this postal chain to deliver to<a name="line.177"></a>
+<span class="sourceLineNo">178</span>         */<a name="line.178"></a>
+<span class="sourceLineNo">179</span>        public String findProperBranch(String name);<a name="line.179"></a>
+<span class="sourceLineNo">180</span><a name="line.180"></a>
+<span class="sourceLineNo">181</span>        /**<a name="line.181"></a>
+<span class="sourceLineNo">182</span>         * Gets the minimum postage to send a package from this branch.<a name="line.182"></a>
+<span class="sourceLineNo">183</span>         * @see PostOffice#setMinimumPostage(double)<a name="line.183"></a>
+<span class="sourceLineNo">184</span>         * @return the minimum postage to send a package from this branch.<a name="line.184"></a>
+<span class="sourceLineNo">185</span>         */<a name="line.185"></a>
+<span class="sourceLineNo">186</span>        public double minimumPostage();<a name="line.186"></a>
+<span class="sourceLineNo">187</span><a name="line.187"></a>
+<span class="sourceLineNo">188</span>        /**<a name="line.188"></a>
+<span class="sourceLineNo">189</span>         * Sets the minimum postage to send a package from this branch.<a name="line.189"></a>
+<span class="sourceLineNo">190</span>         * @see PostOffice#minimumPostage()<a name="line.190"></a>
+<span class="sourceLineNo">191</span>         * @param d the minimum postage to send a package from this branch.<a name="line.191"></a>
+<span class="sourceLineNo">192</span>         */<a name="line.192"></a>
+<span class="sourceLineNo">193</span>        public void setMinimumPostage(double d);<a name="line.193"></a>
+<span class="sourceLineNo">194</span><a name="line.194"></a>
+<span class="sourceLineNo">195</span>        /**<a name="line.195"></a>
+<span class="sourceLineNo">196</span>         * Gets the postage charged per pound after the first, to send<a name="line.196"></a>
+<span class="sourceLineNo">197</span>         * packages from this branch.<a name="line.197"></a>
+<span class="sourceLineNo">198</span>         * @see PostOffice#setPostagePerPound(double)<a name="line.198"></a>
+<span class="sourceLineNo">199</span>         * @return the postage charged per pound after the first<a name="line.199"></a>
+<span class="sourceLineNo">200</span>         */<a name="line.200"></a>
+<span class="sourceLineNo">201</span>        public double postagePerPound();<a name="line.201"></a>
+<span class="sourceLineNo">202</span><a name="line.202"></a>
+<span class="sourceLineNo">203</span>        /**<a name="line.203"></a>
+<span class="sourceLineNo">204</span>         * Sets the postage charged per pound after the first, to send<a name="line.204"></a>
+<span class="sourceLineNo">205</span>         * packages from this branch.<a name="line.205"></a>
+<span class="sourceLineNo">206</span>         * @see PostOffice#postagePerPound()<a name="line.206"></a>
+<span class="sourceLineNo">207</span>         * @param d the postage charged per pound after the first<a name="line.207"></a>
+<span class="sourceLineNo">208</span>         */<a name="line.208"></a>
+<span class="sourceLineNo">209</span>        public void setPostagePerPound(double d);<a name="line.209"></a>
+<span class="sourceLineNo">210</span><a name="line.210"></a>
+<span class="sourceLineNo">211</span>        /**<a name="line.211"></a>
+<span class="sourceLineNo">212</span>         * Gets the fee charged per pound per mud month to hold a <a name="line.212"></a>
+<span class="sourceLineNo">213</span>         * package in a postal box at this branch.<a name="line.213"></a>
+<span class="sourceLineNo">214</span>         * @see PostOffice#setHoldFeePerPound(double)<a name="line.214"></a>
+<span class="sourceLineNo">215</span>         * @return the fee charged per pound per mud month<a name="line.215"></a>
+<span class="sourceLineNo">216</span>         */<a name="line.216"></a>
+<span class="sourceLineNo">217</span>        public double holdFeePerPound();<a name="line.217"></a>
+<span class="sourceLineNo">218</span><a name="line.218"></a>
+<span class="sourceLineNo">219</span>        /**<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         * Sets the fee charged per pound per mud month to hold a <a name="line.220"></a>
+<span class="sourceLineNo">221</span>         * package in a postal box at this branch.<a name="line.221"></a>
+<span class="sourceLineNo">222</span>         * @see PostOffice#holdFeePerPound()<a name="line.222"></a>
+<span class="sourceLineNo">223</span>         * @param d the fee charged per pound per mud month<a name="line.223"></a>
+<span class="sourceLineNo">224</span>         */<a name="line.224"></a>
+<span class="sourceLineNo">225</span>        public void setHoldFeePerPound(double d);<a name="line.225"></a>
+<span class="sourceLineNo">226</span><a name="line.226"></a>
+<span class="sourceLineNo">227</span>        /**<a name="line.227"></a>
+<span class="sourceLineNo">228</span>         * Gets the fee to open a new postal box at this branch.<a name="line.228"></a>
+<span class="sourceLineNo">229</span>         * @see PostOffice#setFeeForNewBox(double)<a name="line.229"></a>
+<span class="sourceLineNo">230</span>         * @return the fee to open a new postal box at this branch.<a name="line.230"></a>
+<span class="sourceLineNo">231</span>         */<a name="line.231"></a>
+<span class="sourceLineNo">232</span>        public double feeForNewBox();<a name="line.232"></a>
+<span class="sourceLineNo">233</span><a name="line.233"></a>
+<span class="sourceLineNo">234</span>        /**<a name="line.234"></a>
+<span class="sourceLineNo">235</span>         * Sets the fee to open a new postal box at this branch.<a name="line.235"></a>
+<span class="sourceLineNo">236</span>         * @see PostOffice#feeForNewBox()<a name="line.236"></a>
+<span class="sourceLineNo">237</span>         * @param d the fee to open a new postal box at this branch.<a name="line.237"></a>
+<span class="sourceLineNo">238</span>         */<a name="line.238"></a>
+<span class="sourceLineNo">239</span>        public void setFeeForNewBox(double d);<a name="line.239"></a>
+<span class="sourceLineNo">240</span><a name="line.240"></a>
+<span class="sourceLineNo">241</span>        /**<a name="line.241"></a>
+<span class="sourceLineNo">242</span>         * Returns the maximum number of mud-months that a package<a name="line.242"></a>
+<span class="sourceLineNo">243</span>         * will be held before it gets put on sale at this branch.<a name="line.243"></a>
+<span class="sourceLineNo">244</span>         * @see PostOffice#setMaxMudMonthsHeld(int)<a name="line.244"></a>
+<span class="sourceLineNo">245</span>         * @return the maximum number of mud-months to hold<a name="line.245"></a>
+<span class="sourceLineNo">246</span>         */<a name="line.246"></a>
+<span class="sourceLineNo">247</span>        public int maxMudMonthsHeld();<a name="line.247"></a>
+<span class="sourceLineNo">248</span><a name="line.248"></a>
+<span class="sourceLineNo">249</span>        /**<a name="line.249"></a>
+<span class="sourceLineNo">250</span>         * Sets the maximum number of mud-months that a package<a name="line.250"></a>
+<span class="sourceLineNo">251</span>         * will be held before it gets put on sale at this branch.<a name="line.251"></a>
+<span class="sourceLineNo">252</span>         * @see PostOffice#setMaxMudMonthsHeld(int)<a name="line.252"></a>
+<span class="sourceLineNo">253</span>         * @param months the maximum number of mud-months to hold<a name="line.253"></a>
+<span class="sourceLineNo">254</span>         */<a name="line.254"></a>
+<span class="sourceLineNo">255</span>        public void setMaxMudMonthsHeld(int months);<a name="line.255"></a>
+<span class="sourceLineNo">256</span><a name="line.256"></a>
+<span class="sourceLineNo">257</span>        /**<a name="line.257"></a>
+<span class="sourceLineNo">258</span>         * Represents a complete mail package/letter, postal<a name="line.258"></a>
+<span class="sourceLineNo">259</span>         * object. Holding all relevant info about a package<a name="line.259"></a>
+<span class="sourceLineNo">260</span>         * from one person to another.<a name="line.260"></a>
+<span class="sourceLineNo">261</span>         * @author Bo Zimmerman<a name="line.261"></a>
+<span class="sourceLineNo">262</span>         *<a name="line.262"></a>
+<span class="sourceLineNo">263</span>         */<a name="line.263"></a>
+<span class="sourceLineNo">264</span>        public static class MailPiece<a name="line.264"></a>
+<span class="sourceLineNo">265</span>        {<a name="line.265"></a>
+<span class="sourceLineNo">266</span>                public String   from    = "";<a name="line.266"></a>
+<span class="sourceLineNo">267</span>                public String   to              = "";<a name="line.267"></a>
+<span class="sourceLineNo">268</span>                public String   time    = "";<a name="line.268"></a>
+<span class="sourceLineNo">269</span>                public String   cod             = "";<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                public String   classID = "";<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                public String   xml             = "";<a name="line.271"></a>
+<span class="sourceLineNo">272</span>        }<a name="line.272"></a>
+<span class="sourceLineNo">273</span><a name="line.273"></a>
+<span class="sourceLineNo">274</span>}<a name="line.274"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

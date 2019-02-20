@@ -1,0 +1,427 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Abilities.Spells;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.io.IOException;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.io.ByteArrayInputStream;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.io.ByteArrayOutputStream;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import java.io.ObjectInputStream;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import java.io.ObjectOutputStream;<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>/*<a name="line.25"></a>
+<span class="sourceLineNo">026</span>   Copyright 2004-2018 Bo Zimmerman<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.28"></a>
+<span class="sourceLineNo">029</span>   you may not use this file except in compliance with the License.<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   You may obtain a copy of the License at<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>   Unless required by applicable law or agreed to in writing, software<a name="line.34"></a>
+<span class="sourceLineNo">035</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.35"></a>
+<span class="sourceLineNo">036</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.36"></a>
+<span class="sourceLineNo">037</span>   See the License for the specific language governing permissions and<a name="line.37"></a>
+<span class="sourceLineNo">038</span>   limitations under the License.<a name="line.38"></a>
+<span class="sourceLineNo">039</span>*/<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>public class Spell_Spellbinding extends Spell<a name="line.41"></a>
+<span class="sourceLineNo">042</span>{<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>        @Override<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        public String ID()<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        {<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                return "Spell_Spellbinding";<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        }<a name="line.48"></a>
+<span class="sourceLineNo">049</span><a name="line.49"></a>
+<span class="sourceLineNo">050</span>        private final static String     localizedName   = CMLib.lang().L("Spellbinding");<a name="line.50"></a>
+<span class="sourceLineNo">051</span><a name="line.51"></a>
+<span class="sourceLineNo">052</span>        @Override<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        public String name()<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        {<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                return localizedName;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        }<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>        @Override<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        protected int overrideMana()<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        {<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                return 0;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        }<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>        @Override<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        public String displayText()<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        {<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                if (spellbindings.size() == 0)<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                        return "";<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                final StringBuffer bindings = new StringBuffer("");<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                for (int i = 0; i &lt; spellbindings.size(); i++)<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                        bindings.append(" " + ((String) spellbindings.elementAt(i, 1)));<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                return "(Bindings: " + bindings.toString() + ")";<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        }<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>        @Override<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        protected int canAffectCode()<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                return CAN_MOBS;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        }<a name="line.79"></a>
+<span class="sourceLineNo">080</span><a name="line.80"></a>
+<span class="sourceLineNo">081</span>        @Override<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        protected int canTargetCode()<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        {<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                return 0;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        }<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>        @Override<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        public int classificationCode()<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        {<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                return Ability.ACODE_SPELL | Ability.DOMAIN_ALTERATION;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        }<a name="line.91"></a>
+<span class="sourceLineNo">092</span><a name="line.92"></a>
+<span class="sourceLineNo">093</span>        @Override<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        public int abstractQuality()<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        {<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                return Ability.QUALITY_INDIFFERENT;<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        }<a name="line.97"></a>
+<span class="sourceLineNo">098</span><a name="line.98"></a>
+<span class="sourceLineNo">099</span>        @Override<a name="line.99"></a>
+<span class="sourceLineNo">100</span>        public boolean isAutoInvoked()<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        {<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                return spellbindings.size() &gt; 0;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        }<a name="line.103"></a>
+<span class="sourceLineNo">104</span><a name="line.104"></a>
+<span class="sourceLineNo">105</span>        protected DVector spellbindings=new DVector(2);<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        protected final static int COST_STATIC=50;<a name="line.106"></a>
+<span class="sourceLineNo">107</span><a name="line.107"></a>
+<span class="sourceLineNo">108</span>        @Override<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        public void affectCharState(final MOB affected, final CharState affectableState)<a name="line.109"></a>
+<span class="sourceLineNo">110</span>        {<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                super.affectCharState(affected,affectableState);<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                int total=0;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                for(int i=0;i&lt;spellbindings.size();i++)<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                        final DVector V=(DVector)spellbindings.elementAt(i,2);<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                        for(int x=0;x&lt;V.size();x++)<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                                total+=((Integer)V.elementAt(x,2)).intValue();<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                }<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                total=(total+COST_STATIC)*spellbindings.size();<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                if(affectableState.getMana()&gt;=total)<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                        affectableState.setMana(affectableState.getMana()-total);<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                else<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                        affectableState.setMana(0);<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        }<a name="line.124"></a>
+<span class="sourceLineNo">125</span><a name="line.125"></a>
+<span class="sourceLineNo">126</span>        @Override<a name="line.126"></a>
+<span class="sourceLineNo">127</span>        public String text()<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        {<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                if(spellbindings.size()==0)<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                        return super.text();<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                try<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                {<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                        final ByteArrayOutputStream bytes=new ByteArrayOutputStream();<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                        new ObjectOutputStream(bytes).writeObject(spellbindings);<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                        return CMParms.toSemicolonListString(bytes.toByteArray())+";";<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                }<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                catch(final Exception e)<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                {<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                        Log.errOut("Spell_Spellbinding","Spell bindings are corrupt for "+((affected!=null)?affected.Name():"someone")+".");<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                }<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                return super.text();<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        }<a name="line.142"></a>
+<span class="sourceLineNo">143</span><a name="line.143"></a>
+<span class="sourceLineNo">144</span>        @Override<a name="line.144"></a>
+<span class="sourceLineNo">145</span>        public void setMiscText(String text)<a name="line.145"></a>
+<span class="sourceLineNo">146</span>        {<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                if(text.length()==0)<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                        spellbindings=new DVector(2);<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                else<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                {<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                        try<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                        {<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                                final ByteArrayInputStream bytes=new ByteArrayInputStream(CMParms.parseSemicolonByteList(text));<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                                spellbindings=(DVector)new ObjectInputStream(bytes).readObject();<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                        }<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                        catch(final Exception e)<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                        {<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                                Log.errOut("Spell_Spellbinding",e);<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                        }<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                }<a name="line.160"></a>
+<span class="sourceLineNo">161</span>        }<a name="line.161"></a>
+<span class="sourceLineNo">162</span><a name="line.162"></a>
+<span class="sourceLineNo">163</span>        @Override<a name="line.163"></a>
+<span class="sourceLineNo">164</span>        public void executeMsg(final Environmental host, final CMMsg msg)<a name="line.164"></a>
+<span class="sourceLineNo">165</span>        {<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                if((msg.source()==affected)<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                &amp;&amp;(msg.sourceMinor()==CMMsg.TYP_SPEAK)<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                &amp;&amp;(msg.sourceMessage()!=null)<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                &amp;&amp;(msg.sourceMessage().length()&gt;0))<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                {<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                        final String s=CMStrings.getSayFromMessage(msg.sourceMessage());<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                        if(s!=null)<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                        {<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                                for(int v=0;v&lt;spellbindings.size();v++)<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                                {<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                                        if(((String)spellbindings.elementAt(v,1)).equalsIgnoreCase(s))<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                                        {<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                                                boolean alreadyWanding=false;<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                                                final List&lt;CMMsg&gt; trailers =msg.trailerMsgs();<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                                                if(trailers!=null)<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                                                {<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                                                        for(final CMMsg msg2 : trailers)<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                                                        {<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                                                                if((msg2.targetMinor()==CMMsg.TYP_WAND_USE)<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                                                                &amp;&amp;(msg2.target() == msg.target()))<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                                                                        alreadyWanding=true;<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                                                        }<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                                                }<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                                                if(!alreadyWanding)<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                                                        msg.addTrailerMsg(CMClass.getMsg(msg.source(),msg.target(),this,CMMsg.MASK_ALWAYS|CMMsg.TYP_WAND_USE,L("The magic of '@x1' swells within you!",s),CMMsg.NO_EFFECT,null,CMMsg.NO_EFFECT,null));<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                                        }<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                                }<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                        }<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                }<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                else<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                if((msg.tool()==this)<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                &amp;&amp;(msg.source()==affected)<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                &amp;&amp;(msg.sourceMinor()==CMMsg.TYP_WAND_USE)<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                &amp;&amp;(msg.sourceMessage()!=null)<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                &amp;&amp;(msg.sourceMessage().length()&gt;0))<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                {<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                        final String s=CMStrings.getSayFromMessage(msg.sourceMessage());<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                        if(s!=null)<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                        {<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                                for(int v=spellbindings.size()-1;v&gt;=0;v--)<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                                {<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                                        if(((String)spellbindings.elementAt(v,1)).equalsIgnoreCase(s))<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                                        {<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                                                final DVector V2=(DVector)spellbindings.elementAt(v,2);<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                                                for(int v2=0;v2&lt;V2.size();v2++)<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                                                {<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                                                        final Ability A=msg.source().fetchAbility((String)V2.elementAt(v2,1));<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                                                        final int curMana=msg.source().curState().getMana();<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                                                        msg.source().curState().setMana(1000);<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                                                        if(msg.target()!=null)<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                                                                A.invoke(msg.source(),CMParms.parse(msg.target().Name()),null,false,0);<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                                                        else<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                                                                A.invoke(msg.source(),new Vector&lt;String&gt;(),null,false,0);<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                                                        msg.source().curState().setMana(curMana);<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                                                }<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                                                if(canBeUninvoked())<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                                                        spellbindings.removeElementAt(v);<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                                        }<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                                }<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                        }<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                }<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                if((spellbindings.size()==0)&amp;&amp;(canBeUninvoked()))<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                        unInvoke();<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                super.executeMsg(host,msg);<a name="line.229"></a>
+<span class="sourceLineNo">230</span>        }<a name="line.230"></a>
+<span class="sourceLineNo">231</span><a name="line.231"></a>
+<span class="sourceLineNo">232</span>        @Override<a name="line.232"></a>
+<span class="sourceLineNo">233</span>        public boolean invoke(MOB mob, List&lt;String&gt; commands, Physical givenTarget, boolean auto, int asLevel)<a name="line.233"></a>
+<span class="sourceLineNo">234</span>        {<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                if(!super.invoke(mob,commands,givenTarget,auto,asLevel))<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                        return false;<a name="line.236"></a>
+<span class="sourceLineNo">237</span><a name="line.237"></a>
+<span class="sourceLineNo">238</span>                final MOB target = mob;<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                Spell_Spellbinding priorBinding=(Spell_Spellbinding)target.fetchEffect(ID());<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                if(commands.size()&lt;2)<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                {<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                        mob.tell(L("You must specify your trigger word, followed by a list of spells, seperated by spaces."));<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                        return false;<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                }<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                final String key=commands.get(0);<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                commands.remove(0);<a name="line.246"></a>
+<span class="sourceLineNo">247</span>                final String combined=CMParms.combine(commands,0);<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                final DVector V=new DVector(2);<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                Ability A=mob.fetchAbility(combined);<a name="line.249"></a>
+<span class="sourceLineNo">250</span>                if(A!=null)<a name="line.250"></a>
+<span class="sourceLineNo">251</span>                {<a name="line.251"></a>
+<span class="sourceLineNo">252</span>                        if(((A.classificationCode()&amp;ALL_ACODES)!=ACODE_SPELL)<a name="line.252"></a>
+<span class="sourceLineNo">253</span>                        ||(A.ID().equals(ID()))<a name="line.253"></a>
+<span class="sourceLineNo">254</span>                        ||(A.usageCost(mob,true)[Ability.USAGEINDEX_MANA]&gt;50))<a name="line.254"></a>
+<span class="sourceLineNo">255</span>                        {<a name="line.255"></a>
+<span class="sourceLineNo">256</span>                                mob.tell(L("You can't bind '@x1'.",A.ID()));<a name="line.256"></a>
+<span class="sourceLineNo">257</span>                                return false;<a name="line.257"></a>
+<span class="sourceLineNo">258</span>                        }<a name="line.258"></a>
+<span class="sourceLineNo">259</span>                        V.addElement(A.ID(),Integer.valueOf(A.usageCost(mob,true)[Ability.USAGEINDEX_MANA]));<a name="line.259"></a>
+<span class="sourceLineNo">260</span>                }<a name="line.260"></a>
+<span class="sourceLineNo">261</span>                else<a name="line.261"></a>
+<span class="sourceLineNo">262</span>                for(int v=0;v&lt;commands.size();v++)<a name="line.262"></a>
+<span class="sourceLineNo">263</span>                {<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                        A=mob.fetchAbility(commands.get(v));<a name="line.264"></a>
+<span class="sourceLineNo">265</span>                        if((A==null)<a name="line.265"></a>
+<span class="sourceLineNo">266</span>                        ||(A.ID().equals(ID()))<a name="line.266"></a>
+<span class="sourceLineNo">267</span>                        ||((A.classificationCode()&amp;ALL_ACODES)!=ACODE_SPELL)<a name="line.267"></a>
+<span class="sourceLineNo">268</span>                        ||(A.usageCost(mob,true)[Ability.USAGEINDEX_MANA]&gt;50))<a name="line.268"></a>
+<span class="sourceLineNo">269</span>                        {<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                                mob.tell(L("You can't bind '@x1'.",(commands.get(v))));<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                                return false;<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                        }<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                        V.addElement(A.ID(),Integer.valueOf(A.usageCost(mob,true)[Ability.USAGEINDEX_MANA]));<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                }<a name="line.274"></a>
+<span class="sourceLineNo">275</span><a name="line.275"></a>
+<span class="sourceLineNo">276</span>                int totalcost=0;<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                for(int v=0;v&lt;V.size();v++)<a name="line.277"></a>
+<span class="sourceLineNo">278</span>                        totalcost+=((Integer)V.elementAt(v,2)).intValue();<a name="line.278"></a>
+<span class="sourceLineNo">279</span>                totalcost=(totalcost+COST_STATIC)*V.size();<a name="line.279"></a>
+<span class="sourceLineNo">280</span>                final int curMana=mob.curState().getMana();<a name="line.280"></a>
+<span class="sourceLineNo">281</span>                if(curMana&lt;totalcost)<a name="line.281"></a>
+<span class="sourceLineNo">282</span>                {<a name="line.282"></a>
+<span class="sourceLineNo">283</span>                        mob.tell(L("You need @x1 mana to bind those spells.",""+totalcost));<a name="line.283"></a>
+<span class="sourceLineNo">284</span>                        return false;<a name="line.284"></a>
+<span class="sourceLineNo">285</span>                }<a name="line.285"></a>
+<span class="sourceLineNo">286</span>                DVector thePriorKey=null;<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                if(priorBinding!=null)<a name="line.287"></a>
+<span class="sourceLineNo">288</span>                {<a name="line.288"></a>
+<span class="sourceLineNo">289</span>                        for(int x=0;x&lt;priorBinding.spellbindings.size();x++)<a name="line.289"></a>
+<span class="sourceLineNo">290</span>                        {<a name="line.290"></a>
+<span class="sourceLineNo">291</span>                                if(((String)priorBinding.spellbindings.elementAt(x,1)).equalsIgnoreCase(key))<a name="line.291"></a>
+<span class="sourceLineNo">292</span>                                {<a name="line.292"></a>
+<span class="sourceLineNo">293</span>                                        thePriorKey = (DVector) priorBinding.spellbindings.elementAt(x, 2);<a name="line.293"></a>
+<span class="sourceLineNo">294</span>                                }<a name="line.294"></a>
+<span class="sourceLineNo">295</span>                        }<a name="line.295"></a>
+<span class="sourceLineNo">296</span>                }<a name="line.296"></a>
+<span class="sourceLineNo">297</span><a name="line.297"></a>
+<span class="sourceLineNo">298</span>                for(int v=0;v&lt;V.size();v++)<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                {<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                        for(int v2=0;v2&lt;V.size();v2++)<a name="line.300"></a>
+<span class="sourceLineNo">301</span>                        {<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                                if((v!=v2)&amp;&amp;(((String)V.elementAt(v,1)).equals(V.elementAt(v2,1))))<a name="line.302"></a>
+<span class="sourceLineNo">303</span>                                {<a name="line.303"></a>
+<span class="sourceLineNo">304</span>                                        mob.tell(L("The same spell can not be bound to the same trigger more than once."));<a name="line.304"></a>
+<span class="sourceLineNo">305</span>                                        return false;<a name="line.305"></a>
+<span class="sourceLineNo">306</span>                                }<a name="line.306"></a>
+<span class="sourceLineNo">307</span>                        }<a name="line.307"></a>
+<span class="sourceLineNo">308</span>                }<a name="line.308"></a>
+<span class="sourceLineNo">309</span>                if(thePriorKey!=null)<a name="line.309"></a>
+<span class="sourceLineNo">310</span>                {<a name="line.310"></a>
+<span class="sourceLineNo">311</span>                        for(int v=0;v&lt;V.size();v++)<a name="line.311"></a>
+<span class="sourceLineNo">312</span>                        {<a name="line.312"></a>
+<span class="sourceLineNo">313</span>                                if(thePriorKey.contains(V.elementAt(v,1)))<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                                {<a name="line.314"></a>
+<span class="sourceLineNo">315</span>                                        mob.tell(L("The same spell can not be bound to the same trigger more than once."));<a name="line.315"></a>
+<span class="sourceLineNo">316</span>                                        return false;<a name="line.316"></a>
+<span class="sourceLineNo">317</span>                                }<a name="line.317"></a>
+<span class="sourceLineNo">318</span>                        }<a name="line.318"></a>
+<span class="sourceLineNo">319</span>                }<a name="line.319"></a>
+<span class="sourceLineNo">320</span><a name="line.320"></a>
+<span class="sourceLineNo">321</span>                final boolean success=proficiencyCheck(mob,0,auto);<a name="line.321"></a>
+<span class="sourceLineNo">322</span><a name="line.322"></a>
+<span class="sourceLineNo">323</span>                if(mob.curState().getMana()&gt;(curMana-totalcost))<a name="line.323"></a>
+<span class="sourceLineNo">324</span>                        mob.curState().setMana(curMana-totalcost);<a name="line.324"></a>
+<span class="sourceLineNo">325</span><a name="line.325"></a>
+<span class="sourceLineNo">326</span>                if(success)<a name="line.326"></a>
+<span class="sourceLineNo">327</span>                {<a name="line.327"></a>
+<span class="sourceLineNo">328</span><a name="line.328"></a>
+<span class="sourceLineNo">329</span>                        final CMMsg msg = CMClass.getMsg(mob, null, this, verbalCastCode(mob,target,auto),L(auto?"":"^S&lt;S-NAME&gt; shout(s) the magic of spellbinding!^?"));<a name="line.329"></a>
+<span class="sourceLineNo">330</span>                        if(mob.location().okMessage(mob,msg))<a name="line.330"></a>
+<span class="sourceLineNo">331</span>                        {<a name="line.331"></a>
+<span class="sourceLineNo">332</span>                                mob.location().send(mob,msg);<a name="line.332"></a>
+<span class="sourceLineNo">333</span>                                if(priorBinding==null)<a name="line.333"></a>
+<span class="sourceLineNo">334</span>                                {<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                                        beneficialAffect(mob,target,asLevel,0);<a name="line.335"></a>
+<span class="sourceLineNo">336</span>                                        priorBinding=(Spell_Spellbinding)target.fetchEffect(ID());<a name="line.336"></a>
+<span class="sourceLineNo">337</span>                                        if(priorBinding==null)<a name="line.337"></a>
+<span class="sourceLineNo">338</span>                                                return false;<a name="line.338"></a>
+<span class="sourceLineNo">339</span>                                        priorBinding.makeLongLasting();<a name="line.339"></a>
+<span class="sourceLineNo">340</span>                                }<a name="line.340"></a>
+<span class="sourceLineNo">341</span>                                if(thePriorKey==null)<a name="line.341"></a>
+<span class="sourceLineNo">342</span>                                        priorBinding.spellbindings.addElement(key,V);<a name="line.342"></a>
+<span class="sourceLineNo">343</span>                                else<a name="line.343"></a>
+<span class="sourceLineNo">344</span>                                for(int v=0;v&lt;V.size();v++)<a name="line.344"></a>
+<span class="sourceLineNo">345</span>                                        thePriorKey.addElement(V.elementAt(v,1),V.elementAt(v,2));<a name="line.345"></a>
+<span class="sourceLineNo">346</span>                                target.recoverMaxState();<a name="line.346"></a>
+<span class="sourceLineNo">347</span>                        }<a name="line.347"></a>
+<span class="sourceLineNo">348</span>                }<a name="line.348"></a>
+<span class="sourceLineNo">349</span>                else<a name="line.349"></a>
+<span class="sourceLineNo">350</span>                        return beneficialWordsFizzle(mob,null,L("&lt;S-NAME&gt; whisper(s) about spellbinding, and the magic fizzles."));<a name="line.350"></a>
+<span class="sourceLineNo">351</span><a name="line.351"></a>
+<span class="sourceLineNo">352</span>                // return whether it worked<a name="line.352"></a>
+<span class="sourceLineNo">353</span>                return success;<a name="line.353"></a>
+<span class="sourceLineNo">354</span>        }<a name="line.354"></a>
+<span class="sourceLineNo">355</span>}<a name="line.355"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

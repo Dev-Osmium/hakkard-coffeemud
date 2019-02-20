@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.core.interfaces;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/*<a name="line.20"></a>
+<span class="sourceLineNo">021</span>   Copyright 2001-2018 Bo Zimmerman<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.23"></a>
+<span class="sourceLineNo">024</span>   you may not use this file except in compliance with the License.<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   You may obtain a copy of the License at<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>   Unless required by applicable law or agreed to in writing, software<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   See the License for the specific language governing permissions and<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   limitations under the License.<a name="line.33"></a>
+<span class="sourceLineNo">034</span><a name="line.34"></a>
+<span class="sourceLineNo">035</span>   * something that is affected by, or affects<a name="line.35"></a>
+<span class="sourceLineNo">036</span>   * the environment around them.<a name="line.36"></a>
+<span class="sourceLineNo">037</span> */<a name="line.37"></a>
+<span class="sourceLineNo">038</span>/**<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * The core of most object types in CoffeeMud. Much of the most common fields and<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * data are derived from this.  It represents something that appears in the<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * environment, either physically, or as energy or other phenomenon.<a name="line.41"></a>
+<span class="sourceLineNo">042</span> *<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * @author Bo Zimmerman<a name="line.43"></a>
+<span class="sourceLineNo">044</span> *<a name="line.44"></a>
+<span class="sourceLineNo">045</span> */<a name="line.45"></a>
+<span class="sourceLineNo">046</span>public interface Environmental extends Tickable, StatsAffecting, MsgListener, Contingent, Modifiable<a name="line.46"></a>
+<span class="sourceLineNo">047</span>{<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        /**<a name="line.48"></a>
+<span class="sourceLineNo">049</span>         * The raw unmodified name of this object as stored in the database.<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         * This is the name set by builders and used as a basis for the name() method.<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         * @see  Environmental#name()<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         * @return the raw base name of this object on the map.<a name="line.52"></a>
+<span class="sourceLineNo">053</span>         */<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        public String Name();<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        /**<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         * Sets the raw unmodified name of this object as stored in the database.<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * This is the name set by builders and used as a basis for the name() method.<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * @see  Environmental#Name()<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         * @param newName the raw base name of this object on the map.<a name="line.59"></a>
+<span class="sourceLineNo">060</span>         */<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        public void setName(String newName);<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>        /**<a name="line.63"></a>
+<span class="sourceLineNo">064</span>         * Gets the raw string used to show what this object looks like in the room.<a name="line.64"></a>
+<span class="sourceLineNo">065</span>         * May be used as a basis for other methods, such as the title of rooms, and<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         * what an exit looks like when open.  The value for Items may be null if the item<a name="line.66"></a>
+<span class="sourceLineNo">067</span>         * is not displayed when the room is seen.<a name="line.67"></a>
+<span class="sourceLineNo">068</span>         * @return the string describing how this object looks in the room<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         */<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        public String displayText();<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        /**<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * Sets the raw string used to show what this object looks like in the room.<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * May be used as a basis for other methods, such as the title of rooms, and<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         * what an exit looks like when open.  The value for Items may be null if the item<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         * is not displayed when the room is seen.<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         * @param newDisplayText the string describing how this object looks in the room<a name="line.76"></a>
+<span class="sourceLineNo">077</span>         */<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        public void setDisplayText(String newDisplayText);<a name="line.78"></a>
+<span class="sourceLineNo">079</span><a name="line.79"></a>
+<span class="sourceLineNo">080</span>        /**<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * The basic description of this object, as shown when the item is directly LOOKed at.<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         * @return the basic detail description of this object<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         */<a name="line.83"></a>
+<span class="sourceLineNo">084</span>        public String description();<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        /**<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         * Sets the basic description of this object, as shown when the item is directly LOOKed at.<a name="line.86"></a>
+<span class="sourceLineNo">087</span>         * @param newDescription the basic detail description of this object<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         */<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        public void setDescription(String newDescription);<a name="line.89"></a>
+<span class="sourceLineNo">090</span><a name="line.90"></a>
+<span class="sourceLineNo">091</span>        /**<a name="line.91"></a>
+<span class="sourceLineNo">092</span>         * Returns the fully qualified and determined name of the image file displayed for this<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         * object when MXP is used.  If rawImage() is non-empty, it will return rawImage, and<a name="line.93"></a>
+<span class="sourceLineNo">094</span>         * otherwise use the mxp default data file.<a name="line.94"></a>
+<span class="sourceLineNo">095</span>         * @return the name of the mxp image to display for this object.<a name="line.95"></a>
+<span class="sourceLineNo">096</span>         */<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        public String image();<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        /**<a name="line.98"></a>
+<span class="sourceLineNo">099</span>         * Returns the raw name of the image file to display for this object when MXP is used.  This<a name="line.99"></a>
+<span class="sourceLineNo">100</span>         * is the value set by the builder, and may be returned by image() if it is non-empty.<a name="line.100"></a>
+<span class="sourceLineNo">101</span>         * @return the raw name of the mxp image file<a name="line.101"></a>
+<span class="sourceLineNo">102</span>         */<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        public String rawImage();<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        /**<a name="line.104"></a>
+<span class="sourceLineNo">105</span>         * Sets the raw name of the image file to display for this object when MXP is used.  This<a name="line.105"></a>
+<span class="sourceLineNo">106</span>         * is the value set by the builder, and may be returned by image() if it is non-empty.<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         * @param newImage the raw name of the mxp image file<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         */<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        public void setImage(String newImage);<a name="line.109"></a>
+<span class="sourceLineNo">110</span><a name="line.110"></a>
+<span class="sourceLineNo">111</span>        /**<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         * Whether the fields of this item are set in code, or set by builders.  Generic means that<a name="line.112"></a>
+<span class="sourceLineNo">113</span>         * they are set by builders, in which case XML is returned by the text() method containing<a name="line.113"></a>
+<span class="sourceLineNo">114</span>         * all of the values for all the fields.<a name="line.114"></a>
+<span class="sourceLineNo">115</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Environmental#text()<a name="line.115"></a>
+<span class="sourceLineNo">116</span>         * @return whether this item is modifiable by builders<a name="line.116"></a>
+<span class="sourceLineNo">117</span>         */<a name="line.117"></a>
+<span class="sourceLineNo">118</span>        public boolean isGeneric();<a name="line.118"></a>
+<span class="sourceLineNo">119</span><a name="line.119"></a>
+<span class="sourceLineNo">120</span>        /**<a name="line.120"></a>
+<span class="sourceLineNo">121</span>         * For objects which have false for their isGeneric method, this is used to set any internally<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         * coded strings to change the nature or behavior of the object.  For objects which have true<a name="line.122"></a>
+<span class="sourceLineNo">123</span>         * for their isGeneric method, this is used to set and parse the XML which will be used to<a name="line.123"></a>
+<span class="sourceLineNo">124</span>         * fill out the fields in this object.  Since Ability objects are never Generic, this will always<a name="line.124"></a>
+<span class="sourceLineNo">125</span>         * be where parameters are read from an Ability instance.<a name="line.125"></a>
+<span class="sourceLineNo">126</span>         * @param newMiscText either an open internal text string, or XML<a name="line.126"></a>
+<span class="sourceLineNo">127</span>         */<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        public void setMiscText(String newMiscText);<a name="line.128"></a>
+<span class="sourceLineNo">129</span>        /**<a name="line.129"></a>
+<span class="sourceLineNo">130</span>         * For objects which have false for their isGeneric method, this is used to set any internally<a name="line.130"></a>
+<span class="sourceLineNo">131</span>         * coded strings to change the nature or behavior of the object.  For objects which have true<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         * for their isGeneric method, this is used to set and parse the XML which will be used to<a name="line.132"></a>
+<span class="sourceLineNo">133</span>         * fill out the fields in this object. Since Ability objects are never Generic, this will always<a name="line.133"></a>
+<span class="sourceLineNo">134</span>         * be where parameters are read from an Ability instance.<a name="line.134"></a>
+<span class="sourceLineNo">135</span>         * @return either an open internal text string, or XML<a name="line.135"></a>
+<span class="sourceLineNo">136</span>         */<a name="line.136"></a>
+<span class="sourceLineNo">137</span>        public String text();<a name="line.137"></a>
+<span class="sourceLineNo">138</span><a name="line.138"></a>
+<span class="sourceLineNo">139</span>        /**<a name="line.139"></a>
+<span class="sourceLineNo">140</span>         * Unimplemented as of yet, but will hold a string telling the system what<a name="line.140"></a>
+<span class="sourceLineNo">141</span>         * the proper format of any miscText data.  Will use the CMParms.MTFORMAT_*<a name="line.141"></a>
+<span class="sourceLineNo">142</span>         * constants for definition.<a name="line.142"></a>
+<span class="sourceLineNo">143</span>         * @see com.planet_ink.coffee_mud.core.CMParms<a name="line.143"></a>
+<span class="sourceLineNo">144</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Environmental#text()<a name="line.144"></a>
+<span class="sourceLineNo">145</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Environmental#setMiscText(String)<a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * @return the format expected for the miscText field<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         */<a name="line.147"></a>
+<span class="sourceLineNo">148</span>        public String miscTextFormat();<a name="line.148"></a>
+<span class="sourceLineNo">149</span><a name="line.149"></a>
+<span class="sourceLineNo">150</span>        /**<a name="line.150"></a>
+<span class="sourceLineNo">151</span>         * Whether this object instance is functionally identical to the object passed in.  Works by repeatedly<a name="line.151"></a>
+<span class="sourceLineNo">152</span>         * calling getStat on both objects and comparing the values.<a name="line.152"></a>
+<span class="sourceLineNo">153</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Modifiable#getStatCodes()<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Modifiable#getStat(String)<a name="line.154"></a>
+<span class="sourceLineNo">155</span>         * @param E the object to compare this one to<a name="line.155"></a>
+<span class="sourceLineNo">156</span>         * @return whether this object is the same as the one passed in<a name="line.156"></a>
+<span class="sourceLineNo">157</span>         */<a name="line.157"></a>
+<span class="sourceLineNo">158</span>        public boolean sameAs(final Environmental E);<a name="line.158"></a>
+<span class="sourceLineNo">159</span><a name="line.159"></a>
+<span class="sourceLineNo">160</span>        /**<a name="line.160"></a>
+<span class="sourceLineNo">161</span>         * If this object expires, it should have a timestamp saying when it expires, in real time.<a name="line.161"></a>
+<span class="sourceLineNo">162</span>         * When it expires, a MSG_EXPIRE message will be sent to it.<a name="line.162"></a>
+<span class="sourceLineNo">163</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Environmental#setExpirationDate(long)<a name="line.163"></a>
+<span class="sourceLineNo">164</span>         * @return the time stamp when this thing expires<a name="line.164"></a>
+<span class="sourceLineNo">165</span>         */<a name="line.165"></a>
+<span class="sourceLineNo">166</span>        public long expirationDate();<a name="line.166"></a>
+<span class="sourceLineNo">167</span>        /**<a name="line.167"></a>
+<span class="sourceLineNo">168</span>         * If this object expires, it should have a timestamp saying when it expires, in real time.<a name="line.168"></a>
+<span class="sourceLineNo">169</span>         * When it expires, a MSG_EXPIRE message will be sent to it.<a name="line.169"></a>
+<span class="sourceLineNo">170</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Environmental#expirationDate()<a name="line.170"></a>
+<span class="sourceLineNo">171</span>         * @param dateTime the time stamp when this thing expires<a name="line.171"></a>
+<span class="sourceLineNo">172</span>         */<a name="line.172"></a>
+<span class="sourceLineNo">173</span>        public void setExpirationDate(long dateTime);<a name="line.173"></a>
+<span class="sourceLineNo">174</span>        /**<a name="line.174"></a>
+<span class="sourceLineNo">175</span>         * the maximum range of this object, if applicable.  Can refer to the size of a room,<a name="line.175"></a>
+<span class="sourceLineNo">176</span>         * the range of a weapon, or the calculated range of a mob in combat.<a name="line.176"></a>
+<span class="sourceLineNo">177</span>         * @return the maximum range<a name="line.177"></a>
+<span class="sourceLineNo">178</span>         */<a name="line.178"></a>
+<span class="sourceLineNo">179</span>        public int maxRange();<a name="line.179"></a>
+<span class="sourceLineNo">180</span>        /**<a name="line.180"></a>
+<span class="sourceLineNo">181</span>         * the minimum range of this object, if applicable.  Can refer to the size of a room,<a name="line.181"></a>
+<span class="sourceLineNo">182</span>         * the range of a weapon, or the calculated range of a mob in combat.  Usually 0.<a name="line.182"></a>
+<span class="sourceLineNo">183</span>         * @return the minimum range<a name="line.183"></a>
+<span class="sourceLineNo">184</span>         */<a name="line.184"></a>
+<span class="sourceLineNo">185</span>        public int minRange();<a name="line.185"></a>
+<span class="sourceLineNo">186</span><a name="line.186"></a>
+<span class="sourceLineNo">187</span>        /**<a name="line.187"></a>
+<span class="sourceLineNo">188</span>         * Localize an internal string -- shortcut. Same as calling:<a name="line.188"></a>
+<span class="sourceLineNo">189</span>         * @see com.planet_ink.coffee_mud.Libraries.interfaces.LanguageLibrary#fullSessionTranslation(String, String...)<a name="line.189"></a>
+<span class="sourceLineNo">190</span>         * Call with the string to translate, which may contain variables of the form @x1, @x2, etc. The array in xs<a name="line.190"></a>
+<span class="sourceLineNo">191</span>         * is then used to replace the variables AFTER the string is translated.<a name="line.191"></a>
+<span class="sourceLineNo">192</span>         * @param str the string to translate<a name="line.192"></a>
+<span class="sourceLineNo">193</span>         * @param xs the array of variables to replace<a name="line.193"></a>
+<span class="sourceLineNo">194</span>         * @return the translated string, with all variables in place<a name="line.194"></a>
+<span class="sourceLineNo">195</span>         */<a name="line.195"></a>
+<span class="sourceLineNo">196</span>        public String L(final String str, final String ... xs);<a name="line.196"></a>
+<span class="sourceLineNo">197</span>}<a name="line.197"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

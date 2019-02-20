@@ -1,0 +1,323 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Commands;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/*<a name="line.20"></a>
+<span class="sourceLineNo">021</span>   Copyright 2004-2018 Bo Zimmerman<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.23"></a>
+<span class="sourceLineNo">024</span>   you may not use this file except in compliance with the License.<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   You may obtain a copy of the License at<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>   Unless required by applicable law or agreed to in writing, software<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   See the License for the specific language governing permissions and<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   limitations under the License.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>*/<a name="line.34"></a>
+<span class="sourceLineNo">035</span><a name="line.35"></a>
+<span class="sourceLineNo">036</span>public class Consider extends StdCommand<a name="line.36"></a>
+<span class="sourceLineNo">037</span>{<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        public Consider()<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        {<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        }<a name="line.40"></a>
+<span class="sourceLineNo">041</span><a name="line.41"></a>
+<span class="sourceLineNo">042</span>        private final String[] access=I(new String[]{"CONSIDER","COS","CO"});<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        @Override<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        public String[] getAccessWords()<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        {<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                return access;<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        }<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span>        private final static Class&lt;?&gt;[][] internalParameters=new Class&lt;?&gt;[][]{{MOB.class}};<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>        public int relativeLevelDiff(MOB mob1, MOB mob2)<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        {<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                if((mob1==null)||(mob2==null))<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                        return 0;<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                final int mob2Armor=CMLib.combat().adjustedArmor(mob2);<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                final int mob1Armor=CMLib.combat().adjustedArmor(mob1);<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                final double mob1Attack=CMLib.combat().adjustedAttackBonus(mob1,mob2);<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                final double mob2Attack=CMLib.combat().adjustedAttackBonus(mob2,mob1);<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                final int mob2Dmg=mob2.phyStats().damage();<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                final int mob1Dmg=mob1.phyStats().damage();<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                final int mob2Hp=mob2.baseState().getHitPoints();<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                final int mob1Hp=mob1.baseState().getHitPoints();<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>                final double mob2HitRound=(((CMath.div(CMLib.dice().normalizeBy5((int)Math.round(50.0*mob2Attack/mob1Armor)),100.0))*CMath.div(mob2Dmg,2.0))+1.0)*CMath.mul(mob2.phyStats().speed(),1.0);<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                final double mob1HitRound=(((CMath.div(CMLib.dice().normalizeBy5((int)Math.round(50.0*mob1Attack/mob2Armor)),100.0))*CMath.div(mob1Dmg,2.0))+1.0)*CMath.mul(mob1.phyStats().speed(),1.0);<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                final double mob2SurvivalRounds=CMath.div(mob2Hp,mob1HitRound);<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                final double mob1SurvivalRounds=CMath.div(mob1Hp,mob2HitRound);<a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>                //int levelDiff=(int)Math.round(CMath.div((mob1SurvivalRounds-mob2SurvivalRounds),1));<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                final double levelDiff=(mob1SurvivalRounds-mob2SurvivalRounds)/2;<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                final int levelDiffed=(int)Math.round(Math.sqrt(Math.abs(levelDiff)));<a name="line.71"></a>
+<span class="sourceLineNo">072</span><a name="line.72"></a>
+<span class="sourceLineNo">073</span>                return levelDiffed*(levelDiff&lt;0.0?-1:1);<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        }<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>        public int doConsider(MOB mob, Physical target)<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                final Room R=mob.location();<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                if(R==null)<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                        return 0;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                final CMMsg msg=CMClass.getMsg(mob,target,null,CMMsg.MASK_EYES|CMMsg.TYP_OK_VISUAL,null,L("&lt;S-NAME&gt; consider(s) &lt;T-NAMESELF&gt;."),L("&lt;S-NAME&gt; consider(s) &lt;T-NAMESELF&gt;."));<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                if(R.okMessage(mob,msg))<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                        R.send(mob,msg);<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                int lvlDiff=0;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                if(target instanceof MOB)<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                {<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                        final MOB targetMOB=(MOB)target;<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                        final int relDiff=relativeLevelDiff(targetMOB,mob);<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                        lvlDiff=(target.phyStats().level()-mob.phyStats().level());<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                        final int realDiff=relDiff;//(relDiff+lvlDiff)/2;<a name="line.90"></a>
+<span class="sourceLineNo">091</span><a name="line.91"></a>
+<span class="sourceLineNo">092</span>                        int theDiff=2;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                        if(mob.phyStats().level()&gt;20)<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                                theDiff=3;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                        if(mob.phyStats().level()&gt;40)<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                                theDiff=4;<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                        if(mob.phyStats().level()&gt;60)<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                                theDiff=5;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                        if(mob.phyStats().level()&gt;80)<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                                theDiff=6;<a name="line.100"></a>
+<span class="sourceLineNo">101</span><a name="line.101"></a>
+<span class="sourceLineNo">102</span>                        StringBuilder levelMsg=new StringBuilder("");<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                        if(lvlDiff==0)<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                                levelMsg.append(L(targetMOB.charStats().HeShe()+" is your equal"));<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                        else<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                        if(lvlDiff&lt;-CMProps.getIntVar(CMProps.Int.EXPRATE))<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                                levelMsg.append(L(targetMOB.charStats().HeShe()+" is vastly inferior to you"));<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                        else<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                        if(lvlDiff&gt;CMProps.getIntVar(CMProps.Int.EXPRATE))<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                                levelMsg.append(L(targetMOB.charStats().HeShe()+" is far superior to you"));<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                        else<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                        if(CMProps.getIntVar(CMProps.Int.EXPRATE)!=0)<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                        {<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                                final int relLvlDiff=(lvlDiff&lt;0)?-lvlDiff:lvlDiff;<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                                final double pct=CMath.div(relLvlDiff,CMProps.getIntVar(CMProps.Int.EXPRATE));<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                                if((lvlDiff&lt;0)&amp;&amp;(pct&lt;0.5))<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                                        levelMsg.append(L(targetMOB.charStats().HeShe()+" is almost your equal"));<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                                else<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                                if((lvlDiff&lt;0)&amp;&amp;(pct&lt;=1.0))<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                                        levelMsg.append(L(targetMOB.charStats().HeShe()+" is somewhat inferior to you"));<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                                else<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                                if((lvlDiff&lt;0))<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                                        levelMsg.append(L(targetMOB.charStats().HeShe()+" is inferior to you"));<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                                else<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                                if((lvlDiff&gt;0)&amp;&amp;(pct&lt;0.5))<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                                        levelMsg.append(L("You are almost "+targetMOB.charStats().hisher()+" equal"));<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                                else<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                                if((lvlDiff&gt;0)&amp;&amp;(pct&lt;0.8))<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                                        levelMsg.append(L(targetMOB.charStats().HeShe()+" is somewhat superior to you"));<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                                else<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                                        levelMsg.append(L(targetMOB.charStats().HeShe()+" is superior to you"));<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                        }<a name="line.132"></a>
+<span class="sourceLineNo">133</span><a name="line.133"></a>
+<span class="sourceLineNo">134</span>                        final int levelDiff=Math.abs(realDiff);<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                        if(levelDiff&lt;theDiff)<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                        {<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                                levelMsg.append(L((lvlDiff!=0)?" but ":" and "));<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                                levelMsg.append(L("the perfect match!"));<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                        }<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                        else<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                        if(realDiff&lt;0)<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                        {<a name="line.142"></a>
+<span class="sourceLineNo">143</span>                                levelMsg.append(L((lvlDiff&lt;0)?" and ":" but "));<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                                if(realDiff&gt;-(2*theDiff))<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                                        levelMsg.append(L(targetMOB.charStats().heshe()+" might actually give you a fight."));<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                                else<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                                if(realDiff&gt;-(3*theDiff))<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                                        levelMsg.append(L(targetMOB.charStats().heshe()+" won't put up a big fight."));<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                                else<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                                if(realDiff&gt;-(4*theDiff))<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                                        levelMsg.append(L(targetMOB.charStats().heshe()+" is basically a pushover."));<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                                else<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                                        levelMsg.append(L(targetMOB.charStats().heshe()+" is an easy kill."));<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                        }<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                        else<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                        {<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                                levelMsg.append(L((lvlDiff&gt;0)?" and ":" but "));<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                                if(realDiff&lt;(2*theDiff))<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                                        levelMsg.append(L(targetMOB.charStats().heshe()+" looks a little tough."));<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                                else<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                                if(realDiff&lt;(3*theDiff))<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                                        levelMsg.append(L(targetMOB.charStats().heshe()+" is a serious threat."));<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                                else<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                                if(realDiff&lt;(4*theDiff))<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                                        levelMsg.append(L(targetMOB.charStats().heshe()+" will clean your clock."));<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                                else<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                                        levelMsg.append(L(targetMOB.charStats().heshe()+" WILL KILL YOU DEAD!"));<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                        }<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                        mob.tell(levelMsg.toString());<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                }<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                final StringBuffer withWhat=new StringBuffer("");<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                final Vector&lt;Ability&gt; mendors=new Vector&lt;Ability&gt;();<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                for(final Enumeration&lt;Ability&gt; a=mob.allAbilities();a.hasMoreElements();)<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                {<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                        final Ability A=a.nextElement();<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                        if((A instanceof MendingSkill)&amp;&amp;(((MendingSkill)A).supportsMending((target))))<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                                mendors.add(A);<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                }<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                for(int m=0;m&lt;mendors.size();m++)<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                {<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                        final Ability A=mendors.get(m);<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                        if(m==0)<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                                withWhat.append(L("You could probably help @x1 out with your @x2 skill",target.name(mob),A.name()));<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                        else<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                        if(m&lt;mendors.size()-1)<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                                withWhat.append(L(", your @x1 skill",A.name()));<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                        else<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                                withWhat.append(L(" or your @x1 skill",A.name()));<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                }<a name="line.189"></a>
+<span class="sourceLineNo">190</span><a name="line.190"></a>
+<span class="sourceLineNo">191</span>                if(withWhat.length()&gt;0)<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                        mob.tell(withWhat.toString()+".");<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                else<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                if(!(target instanceof MOB))<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                        mob.tell(L("You don't have any particular thoughts about that."));<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                return lvlDiff;<a name="line.196"></a>
+<span class="sourceLineNo">197</span>        }<a name="line.197"></a>
+<span class="sourceLineNo">198</span><a name="line.198"></a>
+<span class="sourceLineNo">199</span>        @Override<a name="line.199"></a>
+<span class="sourceLineNo">200</span>        public boolean execute(MOB mob, List&lt;String&gt; commands, int metaFlags)<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                throws java.io.IOException<a name="line.201"></a>
+<span class="sourceLineNo">202</span>        {<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                Vector&lt;String&gt; origCmds=new XVector&lt;String&gt;(commands);<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                Physical target=null;<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                if(commands.size()&lt;2)<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                {<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                        CMLib.commands().postCommandFail(mob,origCmds,L("Consider whom or what?"));<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                        return false;<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                }<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                commands.remove(0);<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                final String targetName=CMParms.combine(commands,0);<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                if(ID.equalsIgnoreCase("SELF")||ID.equalsIgnoreCase("ME"))<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                        target=mob;<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                if(target==null)<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                        target=mob.location().fetchFromMOBRoomFavorsMOBs(mob,null,targetName,Wearable.FILTER_ANY);<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                if((target==null)||(!CMLib.flags().canBeSeenBy(target,mob)))<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                {<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                        CMLib.commands().postCommandFail(mob,origCmds,L("I don't see '@x1' here.",targetName));<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                        return false;<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                }<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                doConsider(mob,target);<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                return true;<a name="line.222"></a>
+<span class="sourceLineNo">223</span>        }<a name="line.223"></a>
+<span class="sourceLineNo">224</span><a name="line.224"></a>
+<span class="sourceLineNo">225</span>        @Override<a name="line.225"></a>
+<span class="sourceLineNo">226</span>        public Object executeInternal(MOB mob, int metaFlags, Object... args) throws java.io.IOException<a name="line.226"></a>
+<span class="sourceLineNo">227</span>        {<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                if(!super.checkArguments(internalParameters, args))<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                        return Integer.valueOf(0);<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                return Integer.valueOf(doConsider(mob, (MOB)args[0]));<a name="line.230"></a>
+<span class="sourceLineNo">231</span>        }<a name="line.231"></a>
+<span class="sourceLineNo">232</span><a name="line.232"></a>
+<span class="sourceLineNo">233</span>        @Override<a name="line.233"></a>
+<span class="sourceLineNo">234</span>        public double combatActionsCost(final MOB mob, final List&lt;String&gt; cmds)<a name="line.234"></a>
+<span class="sourceLineNo">235</span>        {<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                return CMProps.getCommandCombatActionCost(ID());<a name="line.236"></a>
+<span class="sourceLineNo">237</span>        }<a name="line.237"></a>
+<span class="sourceLineNo">238</span><a name="line.238"></a>
+<span class="sourceLineNo">239</span>        @Override<a name="line.239"></a>
+<span class="sourceLineNo">240</span>        public double actionsCost(final MOB mob, final List&lt;String&gt; cmds)<a name="line.240"></a>
+<span class="sourceLineNo">241</span>        {<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                return CMProps.getCommandActionCost(ID());<a name="line.242"></a>
+<span class="sourceLineNo">243</span>        }<a name="line.243"></a>
+<span class="sourceLineNo">244</span><a name="line.244"></a>
+<span class="sourceLineNo">245</span>        @Override<a name="line.245"></a>
+<span class="sourceLineNo">246</span>        public boolean canBeOrdered()<a name="line.246"></a>
+<span class="sourceLineNo">247</span>        {<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                return true;<a name="line.248"></a>
+<span class="sourceLineNo">249</span>        }<a name="line.249"></a>
+<span class="sourceLineNo">250</span><a name="line.250"></a>
+<span class="sourceLineNo">251</span>}<a name="line.251"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

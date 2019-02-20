@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.core.interfaces;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.Abilities.interfaces.Ability;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.Behavior;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Common.interfaces.PhyStats;<a name="line.5"></a>
+<span class="sourceLineNo">006</span><a name="line.6"></a>
+<span class="sourceLineNo">007</span>/*<a name="line.7"></a>
+<span class="sourceLineNo">008</span>   Copyright 2013-2018 Bo Zimmerman<a name="line.8"></a>
+<span class="sourceLineNo">009</span><a name="line.9"></a>
+<span class="sourceLineNo">010</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.10"></a>
+<span class="sourceLineNo">011</span>   you may not use this file except in compliance with the License.<a name="line.11"></a>
+<span class="sourceLineNo">012</span>   You may obtain a copy of the License at<a name="line.12"></a>
+<span class="sourceLineNo">013</span><a name="line.13"></a>
+<span class="sourceLineNo">014</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.14"></a>
+<span class="sourceLineNo">015</span><a name="line.15"></a>
+<span class="sourceLineNo">016</span>   Unless required by applicable law or agreed to in writing, software<a name="line.16"></a>
+<span class="sourceLineNo">017</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.17"></a>
+<span class="sourceLineNo">018</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.18"></a>
+<span class="sourceLineNo">019</span>   See the License for the specific language governing permissions and<a name="line.19"></a>
+<span class="sourceLineNo">020</span>   limitations under the License.<a name="line.20"></a>
+<span class="sourceLineNo">021</span>*/<a name="line.21"></a>
+<span class="sourceLineNo">022</span>/**<a name="line.22"></a>
+<span class="sourceLineNo">023</span>*<a name="line.23"></a>
+<span class="sourceLineNo">024</span>* A place where people might be, can be either abstract (like an area),<a name="line.24"></a>
+<span class="sourceLineNo">025</span>* or concrete (like a Room)<a name="line.25"></a>
+<span class="sourceLineNo">026</span>* @author Bo Zimmerman<a name="line.26"></a>
+<span class="sourceLineNo">027</span>*<a name="line.27"></a>
+<span class="sourceLineNo">028</span>*/<a name="line.28"></a>
+<span class="sourceLineNo">029</span>public interface Places extends PhysicalAgent<a name="line.29"></a>
+<span class="sourceLineNo">030</span>{<a name="line.30"></a>
+<span class="sourceLineNo">031</span>        /** a constant code for {@link Places#getAtmosphereCode()} that denotes that the atmo is inherited from a parent */<a name="line.31"></a>
+<span class="sourceLineNo">032</span>        public final static int ATMOSPHERE_INHERIT = -1;<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>        /**<a name="line.34"></a>
+<span class="sourceLineNo">035</span>         * Returns the resource (or -1) that represents the atmosphere of this area.<a name="line.35"></a>
+<span class="sourceLineNo">036</span>         * Since most rooms inherit their atmosphere from the area, this is important.<a name="line.36"></a>
+<span class="sourceLineNo">037</span>         * Return -1 to have this area inherit its atmosphere from parents (which<a name="line.37"></a>
+<span class="sourceLineNo">038</span>         * would ultimately go back to RESOURCE_AIR)<a name="line.38"></a>
+<span class="sourceLineNo">039</span>         * @see com.planet_ink.coffee_mud.Items.interfaces.RawMaterial#MATERIAL_GAS<a name="line.39"></a>
+<span class="sourceLineNo">040</span>         * @return the RawMaterial resource, or -1<a name="line.40"></a>
+<span class="sourceLineNo">041</span>         */<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        public int getAtmosphereCode();<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>        /**<a name="line.44"></a>
+<span class="sourceLineNo">045</span>         * Returns the resource that represents the atmosphere of this area.<a name="line.45"></a>
+<span class="sourceLineNo">046</span>         * Since most rooms inherit their atmosphere from the area, this is important.<a name="line.46"></a>
+<span class="sourceLineNo">047</span>         * Could have this area inherit its atmosphere from parents (which<a name="line.47"></a>
+<span class="sourceLineNo">048</span>         * would ultimately go back to RESOURCE_AIR)<a name="line.48"></a>
+<span class="sourceLineNo">049</span>         * @see com.planet_ink.coffee_mud.Items.interfaces.RawMaterial#MATERIAL_GAS<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         * @return the RawMaterial resource<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         */<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        public int getAtmosphere();<a name="line.52"></a>
+<span class="sourceLineNo">053</span><a name="line.53"></a>
+<span class="sourceLineNo">054</span>        /**<a name="line.54"></a>
+<span class="sourceLineNo">055</span>         * Sets the resource (or -1) that represents the atmosphere of this area.<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         * Since most rooms inherit their atmosphere from the area, this is important.<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * Return -1 to have this area inherit its atmosphere from parents (which<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * would ultimately go back to RESOURCE_AIR)<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         * @see com.planet_ink.coffee_mud.Items.interfaces.RawMaterial#MATERIAL_GAS<a name="line.59"></a>
+<span class="sourceLineNo">060</span>         * @param resourceCode the RawMaterial resource to use<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         */<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        public void setAtmosphere(int resourceCode);<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>        /**<a name="line.64"></a>
+<span class="sourceLineNo">065</span>         * Returns a bitmap of climate flags for this area which will be used to influence<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         * the weather for the area in addition to season and other factors.<a name="line.66"></a>
+<span class="sourceLineNo">067</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Places#CLIMASK_COLD<a name="line.67"></a>
+<span class="sourceLineNo">068</span>         * @return a CLIMASK bitmap<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         */<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        public int getClimateTypeCode();<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        /**<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * Returns a bitmap of climate flags for this area which will be used to influence<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * the weather for the area in addition to season and other factors.<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Places#CLIMASK_COLD<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         * @param newClimateType a CLIMASK bitmap<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         */<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        public void setClimateType(int newClimateType);<a name="line.77"></a>
+<span class="sourceLineNo">078</span><a name="line.78"></a>
+<span class="sourceLineNo">079</span>        /**<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         * Returns a bitmap of the climate for this place.  If the climate is CLIMASK_INHERIT,<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * then it will look to parent objects, such as areas, and parent areas, until it<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         * eventually finds a non-inherit, or returns CLIMASK_NORMAL;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Places#CLIMASK_COLD<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         * @return a derived climate<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         */<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        public int getClimateType();<a name="line.86"></a>
+<span class="sourceLineNo">087</span><a name="line.87"></a>
+<span class="sourceLineNo">088</span>        /**     Bitmap climate flag meaning that the area has inherited weather.  @see com.planet_ink.coffee_mud.core.interfaces.Places#climateType() */<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        public final static int CLIMASK_INHERIT = -1;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        /**     Bitmap climate flag meaning that the area has normal weather.  @see com.planet_ink.coffee_mud.core.interfaces.Places#climateType() */<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        public final static int CLIMASK_NORMAL=0;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        /**     Bitmap climate flag meaning that the area has wet weather.  @see com.planet_ink.coffee_mud.core.interfaces.Places#climateType() */<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        public final static int CLIMASK_WET=1;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        /**     Bitmap climate flag meaning that the area has cold weather.  @see com.planet_ink.coffee_mud.core.interfaces.Places#climateType() */<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        public final static int CLIMASK_COLD=2;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        /**     Bitmap climate flag meaning that the area has windy weather.  @see com.planet_ink.coffee_mud.core.interfaces.Places#climateType() */<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        public final static int CLIMASK_WINDY=4;<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        /**     Bitmap climate flag meaning that the area has hot weather.  @see com.planet_ink.coffee_mud.core.interfaces.Places#climateType() */<a name="line.98"></a>
+<span class="sourceLineNo">099</span>        public final static int CLIMASK_HOT=8;<a name="line.99"></a>
+<span class="sourceLineNo">100</span>        /**     Bitmap climate flag meaning that the area has dry weather.  @see com.planet_ink.coffee_mud.core.interfaces.Places#climateType() */<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        public final static int CLIMASK_DRY=16;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        /**     Indexed description of the CLIMASK_ bitmap constants in all possible combinations.<a name="line.102"></a>
+<span class="sourceLineNo">103</span>         * @see com.planet_ink.coffee_mud.core.interfaces.Places#CLIMASK_NORMAL<a name="line.103"></a>
+<span class="sourceLineNo">104</span>         */<a name="line.104"></a>
+<span class="sourceLineNo">105</span>        public final static String[] CLIMATE_DESCS={"NORMAL","WET","COLD","WINDY","HOT","DRY"};<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        /**     Number of CLIMASK_ constants.  @see com.planet_ink.coffee_mud.core.interfaces.Places#climateType() */<a name="line.106"></a>
+<span class="sourceLineNo">107</span>        public final static int NUM_CLIMATES=6;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        /**     Bitmap climate flag meaning that the area has all weather modifiers.  @see com.planet_ink.coffee_mud.core.interfaces.Places#climateType() */<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        public final static int ALL_CLIMATE_MASK=31;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>}<a name="line.110"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

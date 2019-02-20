@@ -1,0 +1,484 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.WebMacros;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_web.interfaces.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.core.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Libraries.interfaces.AbilityMapper.AbilityMapping;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Common.interfaces.Clan.Authority;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.Common.interfaces.Clan.MemberRecord;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>import java.util.*;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>/*<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   Copyright 2011-2018 Bo Zimmerman<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.27"></a>
+<span class="sourceLineNo">028</span>   you may not use this file except in compliance with the License.<a name="line.28"></a>
+<span class="sourceLineNo">029</span>   You may obtain a copy of the License at<a name="line.29"></a>
+<span class="sourceLineNo">030</span><a name="line.30"></a>
+<span class="sourceLineNo">031</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.31"></a>
+<span class="sourceLineNo">032</span><a name="line.32"></a>
+<span class="sourceLineNo">033</span>   Unless required by applicable law or agreed to in writing, software<a name="line.33"></a>
+<span class="sourceLineNo">034</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.34"></a>
+<span class="sourceLineNo">035</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.35"></a>
+<span class="sourceLineNo">036</span>   See the License for the specific language governing permissions and<a name="line.36"></a>
+<span class="sourceLineNo">037</span>   limitations under the License.<a name="line.37"></a>
+<span class="sourceLineNo">038</span>*/<a name="line.38"></a>
+<span class="sourceLineNo">039</span>public class ClanGovernmentData extends StdWebMacro<a name="line.39"></a>
+<span class="sourceLineNo">040</span>{<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        @Override<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        public String name()<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        {<a name="line.43"></a>
+<span class="sourceLineNo">044</span>                return "ClanGovernmentData";<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        }<a name="line.45"></a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span>        @Override<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        public String runMacro(HTTPRequest httpReq, String parm, HTTPResponse httpResp)<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        {<a name="line.49"></a>
+<span class="sourceLineNo">050</span>                final java.util.Map&lt;String,String&gt; parms=parseParms(parm);<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                final String last=httpReq.getUrlParameter("GOVERNMENT");<a name="line.51"></a>
+<span class="sourceLineNo">052</span>                if(last==null)<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                        return " @break@";<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                if(last.length()&gt;0)<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                {<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                        ClanGovernment G=null;<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                        if(CMath.isInteger(last))<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                        {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                                final int lastID=CMath.s_int(last);<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                                G=CMLib.clans().getStockGovernment(lastID);<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                        }<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                        if(G==null)<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                        {<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                                final Set&lt;Integer&gt; usedTypeIDs=new HashSet&lt;Integer&gt;();<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                                for(final ClanGovernment G2 : CMLib.clans().getStockGovernments())<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                                        usedTypeIDs.add(Integer.valueOf(G2.getID()));<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                                G=CMLib.clans().createSampleGovernment();<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                                G.setName(httpReq.getUrlParameter("NAME"));<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                                G.setCategory(httpReq.getUrlParameter("CATEGORY"));<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                                for(int i=0;i&lt;CMLib.clans().getStockGovernments().length;i++)<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                                {<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                                        if(!usedTypeIDs.contains(Integer.valueOf(i)))<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                                        {<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                                                G.setID(i);<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                                                break;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                                        }<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                                }<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                        }<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                        final StringBuffer str=new StringBuffer("");<a name="line.79"></a>
+<span class="sourceLineNo">080</span><a name="line.80"></a>
+<span class="sourceLineNo">081</span>                        // ******************************************************************************************<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                        // do govt positions FIRST!<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                        // ******************************************************************************************<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                        final List&lt;ClanPosition&gt; posList=new Vector&lt;ClanPosition&gt;();<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                        String posDexStr="0";<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                        int posDex=0;<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                        final Set&lt;Integer&gt; usedRoleIDs=new HashSet&lt;Integer&gt;();<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                        if(!httpReq.isUrlParameter("GPOSID_"+posDexStr))<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                        {<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                                for(final ClanPosition P : G.getPositions())<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                                {<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                                        posList.add(P);<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                                        usedRoleIDs.add(Integer.valueOf(P.getRoleID()));<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                                }<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                        }<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                        else<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                        while(httpReq.isUrlParameter("GPOSID_"+posDexStr) &amp;&amp; httpReq.getUrlParameter("GPOSID_"+posDexStr).trim().length()&gt;0)<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                        {<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                                final String oldID=httpReq.getUrlParameter("GPOSID_"+posDexStr);<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                                final String oldName=httpReq.getUrlParameter("GPOSNAME_"+posDexStr);<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                                final String oldPluralName=httpReq.getUrlParameter("GPOSPLURALNAME_"+posDexStr);<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                                final int oldRoleID=CMath.s_int(httpReq.getUrlParameter("GPOSROLEID_"+posDexStr));<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                                usedRoleIDs.add(Integer.valueOf(oldRoleID));<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                                final int oldRank=CMath.s_int(httpReq.getUrlParameter("GPOSRANK_"+posDexStr));<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                                final int oldMax=CMath.s_int(httpReq.getUrlParameter("GPOSMAX_"+posDexStr));<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                                final String oldMask=httpReq.getUrlParameter("GPOSINNERMASK_"+posDexStr);<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                                final String oldIsPublicStr=httpReq.getUrlParameter("GPOSISPUBLIC_"+posDexStr);<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                                final boolean oldIsPublic=oldIsPublicStr==null?false:oldIsPublicStr.equalsIgnoreCase("on");<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                                final Clan.Authority powerFuncs[]=new Clan.Authority[Clan.Function.values().length];<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                                for(int f=0;f&lt;Clan.Function.values().length;f++)<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                                        powerFuncs[f]=Clan.Authority.CAN_NOT_DO;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                                String authDexStr="";<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                                int authDex=0;<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                                while(httpReq.getUrlParameter("GPOSPOWER_"+posDexStr+"_"+authDexStr)!=null)<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                                {<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                                        final Clan.Function auth = (Clan.Function)CMath.s_valueOf(Clan.Function.values(),httpReq.getUrlParameter("GPOSPOWER_"+posDexStr+"_"+authDexStr));<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                                        powerFuncs[auth.ordinal()]=Clan.Authority.CAN_DO;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                                        authDex++;<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                                        authDexStr=Integer.toString(authDex);<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                                }<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                                final ClanPosition P=(ClanPosition)CMClass.getCommon("DefaultClanPosition");<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                                P.setID(oldID);<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                                P.setRoleID(oldRoleID);<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                                P.setRank(oldRank);<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                                P.setName(oldName);<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                                P.setPluralName(oldPluralName);<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                                P.setMax(oldMax);<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                                P.setInnerMaskStr(oldMask);<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                                P.setFunctionChart(powerFuncs);<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                                P.setPublic(oldIsPublic);<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                                posList.add(P);<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                                posDex++;<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                                posDexStr=Integer.toString(posDex);<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                        }<a name="line.134"></a>
+<span class="sourceLineNo">135</span><a name="line.135"></a>
+<span class="sourceLineNo">136</span>                        final String cmpos=httpReq.getUrlParameter("GOVTPOSITION");<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                        ClanPosition gPos = null;<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                        if((cmpos!=null)&amp;&amp;(cmpos.length()&gt;0)&amp;&amp;(CMath.s_int(cmpos)&gt;=0)&amp;&amp;(CMath.s_int(cmpos)&lt;posList.size()))<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                                gPos=posList.get(CMath.s_int(cmpos));<a name="line.139"></a>
+<span class="sourceLineNo">140</span><a name="line.140"></a>
+<span class="sourceLineNo">141</span>                        if((gPos!=null)&amp;&amp;parms.containsKey("GPOSID_"+cmpos))<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                                str.append(gPos.getID()+", ");<a name="line.142"></a>
+<span class="sourceLineNo">143</span>                        if((gPos!=null)&amp;&amp;parms.containsKey("GPOSROLEID_"+cmpos))<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                                str.append(gPos.getRoleID()+", ");<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                        if((gPos!=null)&amp;&amp;parms.containsKey("GPOSNAME_"+cmpos))<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                                str.append(gPos.getName()+", ");<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                        if((gPos!=null)&amp;&amp;parms.containsKey("GPOSPLURALNAME_"+cmpos))<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                                str.append(gPos.getPluralName()+", ");<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                        if((gPos!=null)&amp;&amp;parms.containsKey("GPOSRANK_"+cmpos))<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                                str.append(gPos.getRank()+", ");<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                        if((gPos!=null)&amp;&amp;parms.containsKey("GPOSMAX_"+cmpos))<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                                str.append(gPos.getMax()+", ");<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                        if((gPos!=null)&amp;&amp;parms.containsKey("GPOSINNERMASK_"+cmpos))<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                                str.append(gPos.getInnerMaskStr()+", ");<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                        if((gPos!=null)&amp;&amp;parms.containsKey("GPOSISPUBLIC_"+cmpos))<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                                str.append(gPos.isPublic()?"checked, ":"");<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                        if((gPos!=null)&amp;&amp;parms.containsKey("GPOSPOWER_"+cmpos+"_"))<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                        {<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                                for(final Clan.Function func : Clan.Function.values())<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                                {<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                                        str.append("&lt;OPTION VALUE=\""+func.toString()+"\"");<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                                        if(gPos.getFunctionChart()[func.ordinal()]==Authority.CAN_DO)<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                                                str.append(" SELECTED");<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                                        str.append("&gt;"+func.toString());<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                                }<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                        }<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                        if(parms.containsKey("GPOSPOWERLIST"))<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                        {<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                                for(final Clan.Function func : Clan.Function.values())<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                                        str.append("&lt;OPTION VALUE=\""+func.toString()+"\"&gt;"+func.toString());<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                        }<a name="line.171"></a>
+<span class="sourceLineNo">172</span><a name="line.172"></a>
+<span class="sourceLineNo">173</span>                        if(parms.containsKey("NEXTPOSITIONID"))<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                        {<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                                for(int i=0;i&lt;posList.size()+10;i++)<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                                {<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                                        if(!usedRoleIDs.contains(Integer.valueOf(i)))<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                                        {<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                                                str.append(i+", ");<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                                                break;<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                                        }<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                                }<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                        }<a name="line.183"></a>
+<span class="sourceLineNo">184</span><a name="line.184"></a>
+<span class="sourceLineNo">185</span>                        // iterators<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                        if(parms.containsKey("POSITIONSTART"))<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                        {<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                                if(httpReq.getUrlParameter("GOVTPOSITION")!=null)<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                                        httpReq.removeUrlParameter("GOVTPOSITION");<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                                return "";<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                        }<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                        if(parms.containsKey("POSITIONNEXT"))<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                        {<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                                String lastPos="";<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                                for(int p=0;p&lt;posList.size();p++)<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                                {<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                                        if((cmpos==null)||((cmpos.length()&gt;0)&amp;&amp;(cmpos.equals(lastPos))&amp;&amp;(!(""+p).equals(lastPos))))<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                                        {<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                                                httpReq.addFakeUrlParameter("GOVTPOSITION",(""+p));<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                                                return "";<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                                        }<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                                        lastPos=(""+p);<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                                }<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                                httpReq.addFakeUrlParameter("LASTGOVTPOSITION",""+posList.size());<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                                httpReq.addFakeUrlParameter("GOVTPOSITION","");<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                                if(parms.containsKey("EMPTYOK"))<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                                        return "&lt;!--EMPTY--&gt;";<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                                return " @break@";<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                        }<a name="line.209"></a>
+<span class="sourceLineNo">210</span><a name="line.210"></a>
+<span class="sourceLineNo">211</span>                        if(parms.containsKey("NAME"))<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                        {<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                                String old=httpReq.getUrlParameter("NAME");<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                                if(old==null)<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                                        old=G.getName();<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                                str.append(old+", ");<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                        }<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                        if(parms.containsKey("AUTOROLE"))<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                        {<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                                String old=httpReq.getUrlParameter("AUTOROLE");<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                                if(old==null)<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                                        old=""+G.getAutoRole();<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                                final int autoPos=CMath.s_int(old);<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                                for(final ClanPosition pos : posList)<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                                        str.append("&lt;OPTION VALUE="+pos.getRoleID()+" "+((autoPos==pos.getRoleID())?"SELECTED":"")+"&gt;"+pos.getName());<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                        }<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                        if(parms.containsKey("ACCEPTPOS"))<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                        {<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                                String old=httpReq.getUrlParameter("ACCEPTPOS");<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                                if(old==null)<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                                        old=""+G.getAcceptPos();<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                                final int autoPos=CMath.s_int(old);<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                                for(final ClanPosition pos : posList)<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                                        str.append("&lt;OPTION VALUE="+pos.getRoleID()+" "+((autoPos==pos.getRoleID())?"SELECTED":"")+"&gt;"+pos.getName());<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                        }<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                        if(parms.containsKey("SHORTDESC"))<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                        {<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                                String old=httpReq.getUrlParameter("SHORTDESC");<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                                if(old==null)<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                                        old=G.getShortDesc();<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                                str.append(old+", ");<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                        }<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                        if(parms.containsKey("CATEGORY"))<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                        {<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                                String old=httpReq.getUrlParameter("CATEGORY");<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                                if(old==null)<a name="line.246"></a>
+<span class="sourceLineNo">247</span>                                        old=G.getCategory();<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                                str.append(old+", ");<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                        }<a name="line.249"></a>
+<span class="sourceLineNo">250</span>                        if(parms.containsKey("REQUIREDMASK"))<a name="line.250"></a>
+<span class="sourceLineNo">251</span>                        {<a name="line.251"></a>
+<span class="sourceLineNo">252</span>                                String old=httpReq.getUrlParameter("REQUIREDMASK");<a name="line.252"></a>
+<span class="sourceLineNo">253</span>                                if(old==null)<a name="line.253"></a>
+<span class="sourceLineNo">254</span>                                        old=G.getRequiredMaskStr();<a name="line.254"></a>
+<span class="sourceLineNo">255</span>                                str.append(old+", ");<a name="line.255"></a>
+<span class="sourceLineNo">256</span>                        }<a name="line.256"></a>
+<span class="sourceLineNo">257</span>                        if(parms.containsKey("ENTRYSCRIPT"))<a name="line.257"></a>
+<span class="sourceLineNo">258</span>                        {<a name="line.258"></a>
+<span class="sourceLineNo">259</span>                                String old=httpReq.getUrlParameter("ENTRYSCRIPT");<a name="line.259"></a>
+<span class="sourceLineNo">260</span>                                if(old==null)<a name="line.260"></a>
+<span class="sourceLineNo">261</span>                                        old=G.getEntryScript();<a name="line.261"></a>
+<span class="sourceLineNo">262</span>                                str.append(old+", ");<a name="line.262"></a>
+<span class="sourceLineNo">263</span>                        }<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                        if(parms.containsKey("EXITSCRIPT"))<a name="line.264"></a>
+<span class="sourceLineNo">265</span>                        {<a name="line.265"></a>
+<span class="sourceLineNo">266</span>                                String old=httpReq.getUrlParameter("EXITSCRIPT");<a name="line.266"></a>
+<span class="sourceLineNo">267</span>                                if(old==null)<a name="line.267"></a>
+<span class="sourceLineNo">268</span>                                        old=G.getExitScript();<a name="line.268"></a>
+<span class="sourceLineNo">269</span>                                str.append(old+", ");<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                        }<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                        if(parms.containsKey("ISPUBLIC"))<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                        {<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                                String old=httpReq.getUrlParameter("ISPUBLIC");<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                                if(old==null)<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                                        old=G.isPublic()?"on":"";<a name="line.275"></a>
+<span class="sourceLineNo">276</span>                                str.append(old.equalsIgnoreCase("on")?"checked, ":"");<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                        }<a name="line.277"></a>
+<span class="sourceLineNo">278</span>                        if(parms.containsKey("ISDEFAULT"))<a name="line.278"></a>
+<span class="sourceLineNo">279</span>                        {<a name="line.279"></a>
+<span class="sourceLineNo">280</span>                                String old=httpReq.getUrlParameter("ISDEFAULT");<a name="line.280"></a>
+<span class="sourceLineNo">281</span>                                if(old==null)<a name="line.281"></a>
+<span class="sourceLineNo">282</span>                                        old=G.isDefault()?"on":"";<a name="line.282"></a>
+<span class="sourceLineNo">283</span>                                str.append(old.equalsIgnoreCase("on")?"checked, ":"");<a name="line.283"></a>
+<span class="sourceLineNo">284</span>                        }<a name="line.284"></a>
+<span class="sourceLineNo">285</span>                        if(parms.containsKey("ISFAMILYONLY"))<a name="line.285"></a>
+<span class="sourceLineNo">286</span>                        {<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                                String old=httpReq.getUrlParameter("ISFAMILYONLY");<a name="line.287"></a>
+<span class="sourceLineNo">288</span>                                if(old==null)<a name="line.288"></a>
+<span class="sourceLineNo">289</span>                                        old=G.isFamilyOnly()?"on":"";<a name="line.289"></a>
+<span class="sourceLineNo">290</span>                                str.append(old.equalsIgnoreCase("on")?"checked, ":"");<a name="line.290"></a>
+<span class="sourceLineNo">291</span>                        }<a name="line.291"></a>
+<span class="sourceLineNo">292</span>                        if(parms.containsKey("OVERRIDEMINMEMBERS"))<a name="line.292"></a>
+<span class="sourceLineNo">293</span>                        {<a name="line.293"></a>
+<span class="sourceLineNo">294</span>                                String old=httpReq.getUrlParameter("OVERRIDEMINMEMBERS");<a name="line.294"></a>
+<span class="sourceLineNo">295</span>                                if(old==null)<a name="line.295"></a>
+<span class="sourceLineNo">296</span>                                        old=G.getOverrideMinMembers()==null?"":G.getOverrideMinMembers().toString();<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                                str.append(old+", ");<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                        }<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                        if(parms.containsKey("CONQUESTENABLED"))<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                        {<a name="line.300"></a>
+<span class="sourceLineNo">301</span>                                String old=httpReq.getUrlParameter("CONQUESTENABLED");<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                                if(old==null)<a name="line.302"></a>
+<span class="sourceLineNo">303</span>                                        old=G.isConquestEnabled()?"on":"";<a name="line.303"></a>
+<span class="sourceLineNo">304</span>                                str.append(old.equalsIgnoreCase("on")?"checked, ":"");<a name="line.304"></a>
+<span class="sourceLineNo">305</span>                        }<a name="line.305"></a>
+<span class="sourceLineNo">306</span>                        if(parms.containsKey("CONQUESTITEMLOYALTY"))<a name="line.306"></a>
+<span class="sourceLineNo">307</span>                        {<a name="line.307"></a>
+<span class="sourceLineNo">308</span>                                String old=httpReq.getUrlParameter("CONQUESTITEMLOYALTY");<a name="line.308"></a>
+<span class="sourceLineNo">309</span>                                if(old==null)<a name="line.309"></a>
+<span class="sourceLineNo">310</span>                                        old=G.isConquestItemLoyalty()?"on":"";<a name="line.310"></a>
+<span class="sourceLineNo">311</span>                                str.append(old.equalsIgnoreCase("on")?"checked, ":"");<a name="line.311"></a>
+<span class="sourceLineNo">312</span>                        }<a name="line.312"></a>
+<span class="sourceLineNo">313</span>                        if(parms.containsKey("CONQUESTDEITYBASIS"))<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                        {<a name="line.314"></a>
+<span class="sourceLineNo">315</span>                                String old=httpReq.getUrlParameter("CONQUESTDEITYBASIS");<a name="line.315"></a>
+<span class="sourceLineNo">316</span>                                if(old==null)<a name="line.316"></a>
+<span class="sourceLineNo">317</span>                                        old=G.isConquestByWorship()?"on":"";<a name="line.317"></a>
+<span class="sourceLineNo">318</span>                                str.append(old.equalsIgnoreCase("on")?"checked, ":"");<a name="line.318"></a>
+<span class="sourceLineNo">319</span>                        }<a name="line.319"></a>
+<span class="sourceLineNo">320</span>                        if(parms.containsKey("ISRIVALROUS"))<a name="line.320"></a>
+<span class="sourceLineNo">321</span>                        {<a name="line.321"></a>
+<span class="sourceLineNo">322</span>                                String old=httpReq.getUrlParameter("ISRIVALROUS");<a name="line.322"></a>
+<span class="sourceLineNo">323</span>                                if(old==null)<a name="line.323"></a>
+<span class="sourceLineNo">324</span>                                        old=G.isRivalrous()?"on":"";<a name="line.324"></a>
+<span class="sourceLineNo">325</span>                                str.append(old.equalsIgnoreCase("on")?"checked, ":"");<a name="line.325"></a>
+<span class="sourceLineNo">326</span>                        }<a name="line.326"></a>
+<span class="sourceLineNo">327</span>                        if(parms.containsKey("MAXVOTEDAYS"))<a name="line.327"></a>
+<span class="sourceLineNo">328</span>                        {<a name="line.328"></a>
+<span class="sourceLineNo">329</span>                                String old=httpReq.getUrlParameter("MAXVOTEDAYS");<a name="line.329"></a>
+<span class="sourceLineNo">330</span>                                if(old==null)<a name="line.330"></a>
+<span class="sourceLineNo">331</span>                                        old=Integer.toString(G.getMaxVoteDays());<a name="line.331"></a>
+<span class="sourceLineNo">332</span>                                str.append(CMath.s_int(old)+", ");<a name="line.332"></a>
+<span class="sourceLineNo">333</span>                        }<a name="line.333"></a>
+<span class="sourceLineNo">334</span>                        if(parms.containsKey("XPLEVELFORMULA"))<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                        {<a name="line.335"></a>
+<span class="sourceLineNo">336</span>                                String old=httpReq.getUrlParameter("XPLEVELFORMULA");<a name="line.336"></a>
+<span class="sourceLineNo">337</span>                                if(old==null)<a name="line.337"></a>
+<span class="sourceLineNo">338</span>                                        old=G.getXpCalculationFormulaStr();<a name="line.338"></a>
+<span class="sourceLineNo">339</span>                                str.append(CMath.s_int(old)+", ");<a name="line.339"></a>
+<span class="sourceLineNo">340</span>                        }<a name="line.340"></a>
+<span class="sourceLineNo">341</span>                        if(parms.containsKey("VOTEQUORUMPCT"))<a name="line.341"></a>
+<span class="sourceLineNo">342</span>                        {<a name="line.342"></a>
+<span class="sourceLineNo">343</span>                                String old=httpReq.getUrlParameter("VOTEQUORUMPCT");<a name="line.343"></a>
+<span class="sourceLineNo">344</span>                                if(old==null)<a name="line.344"></a>
+<span class="sourceLineNo">345</span>                                        old=Integer.toString(G.getVoteQuorumPct());<a name="line.345"></a>
+<span class="sourceLineNo">346</span>                                str.append(CMath.s_int(old)+", ");<a name="line.346"></a>
+<span class="sourceLineNo">347</span>                        }<a name="line.347"></a>
+<span class="sourceLineNo">348</span>                        if(parms.containsKey("AUTOPROMOTEBY"))<a name="line.348"></a>
+<span class="sourceLineNo">349</span>                        {<a name="line.349"></a>
+<span class="sourceLineNo">350</span>                                String old=httpReq.getUrlParameter("AUTOPROMOTEBY");<a name="line.350"></a>
+<span class="sourceLineNo">351</span>                                if(old==null)<a name="line.351"></a>
+<span class="sourceLineNo">352</span>                                        old=""+G.getAutoPromoteBy().toString();<a name="line.352"></a>
+<span class="sourceLineNo">353</span>                                for(final Clan.AutoPromoteFlag flag : Clan.AutoPromoteFlag.values())<a name="line.353"></a>
+<span class="sourceLineNo">354</span>                                        str.append("&lt;OPTION VALUE="+flag.toString()+" "+((old.equals(flag.toString()))?"SELECTED":"")+"&gt;"+flag.toString());<a name="line.354"></a>
+<span class="sourceLineNo">355</span>                        }<a name="line.355"></a>
+<span class="sourceLineNo">356</span>                        if(parms.containsKey("VOTEFUNCS"))<a name="line.356"></a>
+<span class="sourceLineNo">357</span>                        {<a name="line.357"></a>
+<span class="sourceLineNo">358</span>                                final String old=httpReq.getUrlParameter("VOTEFUNCS");<a name="line.358"></a>
+<span class="sourceLineNo">359</span>                                final Set&lt;String&gt; voteFuncs=new HashSet&lt;String&gt;();<a name="line.359"></a>
+<span class="sourceLineNo">360</span>                                if(old==null)<a name="line.360"></a>
+<span class="sourceLineNo">361</span>                                {<a name="line.361"></a>
+<span class="sourceLineNo">362</span>                                        if(posList.size()&gt;0)<a name="line.362"></a>
+<span class="sourceLineNo">363</span>                                        {<a name="line.363"></a>
+<span class="sourceLineNo">364</span>                                                final ClanPosition P=posList.get(0);<a name="line.364"></a>
+<span class="sourceLineNo">365</span>                                                for(final Clan.Function func : Clan.Function.values())<a name="line.365"></a>
+<span class="sourceLineNo">366</span>                                                {<a name="line.366"></a>
+<span class="sourceLineNo">367</span>                                                        if(P.getFunctionChart()[func.ordinal()]==Clan.Authority.MUST_VOTE_ON)<a name="line.367"></a>
+<span class="sourceLineNo">368</span>                                                                voteFuncs.add(func.toString());<a name="line.368"></a>
+<span class="sourceLineNo">369</span>                                                }<a name="line.369"></a>
+<span class="sourceLineNo">370</span>                                        }<a name="line.370"></a>
+<span class="sourceLineNo">371</span>                                }<a name="line.371"></a>
+<span class="sourceLineNo">372</span>                                else<a name="line.372"></a>
+<span class="sourceLineNo">373</span>                                {<a name="line.373"></a>
+<span class="sourceLineNo">374</span>                                        voteFuncs.add(old);<a name="line.374"></a>
+<span class="sourceLineNo">375</span>                                        int x=1;<a name="line.375"></a>
+<span class="sourceLineNo">376</span>                                        while(httpReq.getUrlParameter("VOTEFUNCS"+x)!=null)<a name="line.376"></a>
+<span class="sourceLineNo">377</span>                                        {<a name="line.377"></a>
+<span class="sourceLineNo">378</span>                                                voteFuncs.add(httpReq.getUrlParameter("VOTEFUNCS"+x));<a name="line.378"></a>
+<span class="sourceLineNo">379</span>                                                x++;<a name="line.379"></a>
+<span class="sourceLineNo">380</span>                                        }<a name="line.380"></a>
+<span class="sourceLineNo">381</span>                                }<a name="line.381"></a>
+<span class="sourceLineNo">382</span>                                for(final Clan.Function func : Clan.Function.values())<a name="line.382"></a>
+<span class="sourceLineNo">383</span>                                {<a name="line.383"></a>
+<span class="sourceLineNo">384</span>                                        str.append("&lt;OPTION VALUE=\""+func.toString()+"\"");<a name="line.384"></a>
+<span class="sourceLineNo">385</span>                                        if(voteFuncs.contains(func.toString()))<a name="line.385"></a>
+<span class="sourceLineNo">386</span>                                                str.append(" SELECTED");<a name="line.386"></a>
+<span class="sourceLineNo">387</span>                                        str.append("&gt;"+func.toString());<a name="line.387"></a>
+<span class="sourceLineNo">388</span>                                }<a name="line.388"></a>
+<span class="sourceLineNo">389</span>                        }<a name="line.389"></a>
+<span class="sourceLineNo">390</span>                        if(parms.containsKey("LONGDESC"))<a name="line.390"></a>
+<span class="sourceLineNo">391</span>                        {<a name="line.391"></a>
+<span class="sourceLineNo">392</span>                                String old=httpReq.getUrlParameter("LONGDESC");<a name="line.392"></a>
+<span class="sourceLineNo">393</span>                                if(old==null)<a name="line.393"></a>
+<span class="sourceLineNo">394</span>                                        old=G.getLongDesc();<a name="line.394"></a>
+<span class="sourceLineNo">395</span>                                str.append(old+", ");<a name="line.395"></a>
+<span class="sourceLineNo">396</span>                        }<a name="line.396"></a>
+<span class="sourceLineNo">397</span>                        if(parms.containsKey("RABLE"))<a name="line.397"></a>
+<span class="sourceLineNo">398</span>                        {<a name="line.398"></a>
+<span class="sourceLineNo">399</span>                                final MOB mob=Authenticate.getAuthenticatedMob(httpReq);<a name="line.399"></a>
+<span class="sourceLineNo">400</span>                                str.append(RaceData.dynAbilities(mob,G.getClanLevelAbilities(null,null,Integer.valueOf(Integer.MAX_VALUE)),G.getName(),G,httpReq,parms,1,parms.get("FONT"))+", ");<a name="line.400"></a>
+<span class="sourceLineNo">401</span>                        }<a name="line.401"></a>
+<span class="sourceLineNo">402</span>                        if(parms.containsKey("REFFS"))<a name="line.402"></a>
+<span class="sourceLineNo">403</span>                                str.append(RaceData.dynEffects(G.getName(),G,httpReq,parms,1,parms.get("FONT"))+", ");<a name="line.403"></a>
+<span class="sourceLineNo">404</span><a name="line.404"></a>
+<span class="sourceLineNo">405</span>                        String strstr=str.toString();<a name="line.405"></a>
+<span class="sourceLineNo">406</span>                        if(strstr.endsWith(", "))<a name="line.406"></a>
+<span class="sourceLineNo">407</span>                                strstr=strstr.substring(0,strstr.length()-2);<a name="line.407"></a>
+<span class="sourceLineNo">408</span>                        return clearWebMacros(strstr);<a name="line.408"></a>
+<span class="sourceLineNo">409</span>                }<a name="line.409"></a>
+<span class="sourceLineNo">410</span>                return "";<a name="line.410"></a>
+<span class="sourceLineNo">411</span>        }<a name="line.411"></a>
+<span class="sourceLineNo">412</span>}<a name="line.412"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

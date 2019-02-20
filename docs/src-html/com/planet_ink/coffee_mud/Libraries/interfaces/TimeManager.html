@@ -1,0 +1,442 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Libraries.interfaces;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span><a name="line.16"></a>
+<span class="sourceLineNo">017</span>import java.util.*;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.concurrent.TimeUnit;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.text.*;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>/*<a name="line.21"></a>
+<span class="sourceLineNo">022</span>   Copyright 2005-2018 Bo Zimmerman<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   you may not use this file except in compliance with the License.<a name="line.25"></a>
+<span class="sourceLineNo">026</span>   You may obtain a copy of the License at<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.28"></a>
+<span class="sourceLineNo">029</span><a name="line.29"></a>
+<span class="sourceLineNo">030</span>   Unless required by applicable law or agreed to in writing, software<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   See the License for the specific language governing permissions and<a name="line.33"></a>
+<span class="sourceLineNo">034</span>   limitations under the License.<a name="line.34"></a>
+<span class="sourceLineNo">035</span>*/<a name="line.35"></a>
+<span class="sourceLineNo">036</span>public interface TimeManager extends CMLibrary<a name="line.36"></a>
+<span class="sourceLineNo">037</span>{<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        /**<a name="line.38"></a>
+<span class="sourceLineNo">039</span>         * Returns the numeric representation of the month<a name="line.39"></a>
+<span class="sourceLineNo">040</span>         *<a name="line.40"></a>
+<span class="sourceLineNo">041</span>         * Usage: month2MM("January");<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         * @param monthName The month name<a name="line.42"></a>
+<span class="sourceLineNo">043</span>         * @return String The number of the month as a string<a name="line.43"></a>
+<span class="sourceLineNo">044</span>         */<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        public String month2MM(String monthName);<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        /**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>         * Return the name of the month, given a number<a name="line.47"></a>
+<span class="sourceLineNo">048</span>         *<a name="line.48"></a>
+<span class="sourceLineNo">049</span>         * Usage: String Mnth=getMonthName(m,GiveShort).charStats();<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         * @param monthNum Month number to convert<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         * @param giveShort Give abbreviation if true<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         * @return String Month name<a name="line.52"></a>
+<span class="sourceLineNo">053</span>         */<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        public String getMonthName(int monthNum, boolean giveShort);<a name="line.54"></a>
+<span class="sourceLineNo">055</span><a name="line.55"></a>
+<span class="sourceLineNo">056</span>        /**<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * Returns whether the given string would parse to a valid<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * date.  If true is returned, the change of getting a valid<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         * date from string2Date is much higher.<a name="line.59"></a>
+<span class="sourceLineNo">060</span>         * @param dateTimeStr the strong to parse<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         * @return true if its possibly valid, false definitely not<a name="line.61"></a>
+<span class="sourceLineNo">062</span>         */<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        public boolean isValidDateString(String dateTimeStr);<a name="line.63"></a>
+<span class="sourceLineNo">064</span><a name="line.64"></a>
+<span class="sourceLineNo">065</span>        /**<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         * Converts a string of some form into a Calendar object.<a name="line.66"></a>
+<span class="sourceLineNo">067</span>         *<a name="line.67"></a>
+<span class="sourceLineNo">068</span>         * Usage: string2Millis(GetRes(Results,"StartDateTime"));<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         * @param dateTimeStr The string to retrieve from<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * @return Calendar Calendar object<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         */<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        public long string2Millis(String dateTimeStr);<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>        /**<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         * Converts a string of some form into a Calendar object.<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         *<a name="line.76"></a>
+<span class="sourceLineNo">077</span>         * Usage: Calendar.string2Date(GetRes(Results,"StartDateTime"));<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * @param dateTimeStr The string to retrieve from<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         * @return Calendar Calendar object<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         */<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        public Calendar string2Date(String dateTimeStr);<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>        /**<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         * Converts a number to two digits.<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         * @param num the number<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         * @return the number as two digits<a name="line.86"></a>
+<span class="sourceLineNo">087</span>         */<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        public String twoDigits(long num);<a name="line.88"></a>
+<span class="sourceLineNo">089</span><a name="line.89"></a>
+<span class="sourceLineNo">090</span>        /**<a name="line.90"></a>
+<span class="sourceLineNo">091</span>         * Returns the regular Hours given the hours in the<a name="line.91"></a>
+<span class="sourceLineNo">092</span>         * international format (military time)<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         *<a name="line.93"></a>
+<span class="sourceLineNo">094</span>         * Usage: ConvertHour(GetIn(req, "ENDHR"))<a name="line.94"></a>
+<span class="sourceLineNo">095</span>         * @param hours24 Hours in military format<a name="line.95"></a>
+<span class="sourceLineNo">096</span>         * @return String Hours in regular format<a name="line.96"></a>
+<span class="sourceLineNo">097</span>         **/<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        public String convertHour(String hours24);<a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span>        /**<a name="line.100"></a>
+<span class="sourceLineNo">101</span>         * Returns the AMPM stamp given the international Hours portion the Time<a name="line.101"></a>
+<span class="sourceLineNo">102</span>         *<a name="line.102"></a>
+<span class="sourceLineNo">103</span>         * Usage: getAMPM(GetIn(req, "ENDHR"))<a name="line.103"></a>
+<span class="sourceLineNo">104</span>         * @param TheHour Hours in military format<a name="line.104"></a>
+<span class="sourceLineNo">105</span>         * @return String AM or PM stamp<a name="line.105"></a>
+<span class="sourceLineNo">106</span>         **/<a name="line.106"></a>
+<span class="sourceLineNo">107</span>        public String getAMPM(String TheHour);<a name="line.107"></a>
+<span class="sourceLineNo">108</span><a name="line.108"></a>
+<span class="sourceLineNo">109</span>        /**<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         * Get the zone id given the timezone string<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         *<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         * Usage: GetTheZoneID(MeetTZ.getRawOffset())+"\n";<a name="line.112"></a>
+<span class="sourceLineNo">113</span>         * @param theRawOffset The time zone's raw offset to convert<a name="line.113"></a>
+<span class="sourceLineNo">114</span>         * @return String The time zone ID<a name="line.114"></a>
+<span class="sourceLineNo">115</span>         */<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        public String getTheIntZoneID(int theRawOffset);<a name="line.116"></a>
+<span class="sourceLineNo">117</span><a name="line.117"></a>
+<span class="sourceLineNo">118</span>        /**<a name="line.118"></a>
+<span class="sourceLineNo">119</span>         *  Returns the time zone of the given ID<a name="line.119"></a>
+<span class="sourceLineNo">120</span>         *<a name="line.120"></a>
+<span class="sourceLineNo">121</span>         * Usage: MEETZN = GetTheTimeZone(ID);<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         * @param theID The ID of the abbreviated time zone.<a name="line.122"></a>
+<span class="sourceLineNo">123</span>         * @return String The time zone name<a name="line.123"></a>
+<span class="sourceLineNo">124</span>         */<a name="line.124"></a>
+<span class="sourceLineNo">125</span>        public String getTheTimeZone(String theID);<a name="line.125"></a>
+<span class="sourceLineNo">126</span><a name="line.126"></a>
+<span class="sourceLineNo">127</span>        /**<a name="line.127"></a>
+<span class="sourceLineNo">128</span>         * Returns the month for a given date<a name="line.128"></a>
+<span class="sourceLineNo">129</span>         *<a name="line.129"></a>
+<span class="sourceLineNo">130</span>         * Usage: String ENDMM=date2MonthString(time,true);<a name="line.130"></a>
+<span class="sourceLineNo">131</span>         * @param time The time in miliseconds<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         * @param shortName true to use shortened months<a name="line.132"></a>
+<span class="sourceLineNo">133</span>         * @return String The month name<a name="line.133"></a>
+<span class="sourceLineNo">134</span>         **/<a name="line.134"></a>
+<span class="sourceLineNo">135</span>        public String date2MonthString(long time, boolean shortName);<a name="line.135"></a>
+<span class="sourceLineNo">136</span><a name="line.136"></a>
+<span class="sourceLineNo">137</span>        /**<a name="line.137"></a>
+<span class="sourceLineNo">138</span>         * Returns time in HH:MMap format, unless the day is other<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         * than today, in which case it prepends yy/m/d.<a name="line.139"></a>
+<span class="sourceLineNo">140</span>         *<a name="line.140"></a>
+<span class="sourceLineNo">141</span>         * Usage: String ENDMM=date2BriefString(time,true);<a name="line.141"></a>
+<span class="sourceLineNo">142</span>         * @param time The time in miliseconds<a name="line.142"></a>
+<span class="sourceLineNo">143</span>         * @return String The date string<a name="line.143"></a>
+<span class="sourceLineNo">144</span>         **/<a name="line.144"></a>
+<span class="sourceLineNo">145</span>        public String date2BriefString(long time);<a name="line.145"></a>
+<span class="sourceLineNo">146</span><a name="line.146"></a>
+<span class="sourceLineNo">147</span>        /**<a name="line.147"></a>
+<span class="sourceLineNo">148</span>         * Returns the month/day for a given date<a name="line.148"></a>
+<span class="sourceLineNo">149</span>         *<a name="line.149"></a>
+<span class="sourceLineNo">150</span>         * Usage: String ENDMM=date2MonthDateString();<a name="line.150"></a>
+<span class="sourceLineNo">151</span>         * @param time The time in miliseconds<a name="line.151"></a>
+<span class="sourceLineNo">152</span>         * @param shortName true to use shortened months<a name="line.152"></a>
+<span class="sourceLineNo">153</span>         * @return String the month/day name<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         **/<a name="line.154"></a>
+<span class="sourceLineNo">155</span>        public String date2MonthDateString(long time, boolean shortName);<a name="line.155"></a>
+<span class="sourceLineNo">156</span><a name="line.156"></a>
+<span class="sourceLineNo">157</span>        /**<a name="line.157"></a>
+<span class="sourceLineNo">158</span>         * Return the time in HH:MM AP format.<a name="line.158"></a>
+<span class="sourceLineNo">159</span>         * @param time the time in millis<a name="line.159"></a>
+<span class="sourceLineNo">160</span>         * @return the time in format<a name="line.160"></a>
+<span class="sourceLineNo">161</span>         */<a name="line.161"></a>
+<span class="sourceLineNo">162</span>        public String date2APTimeString(long time);<a name="line.162"></a>
+<span class="sourceLineNo">163</span><a name="line.163"></a>
+<span class="sourceLineNo">164</span>        /**<a name="line.164"></a>
+<span class="sourceLineNo">165</span>         * Returns the DD portion of a given date<a name="line.165"></a>
+<span class="sourceLineNo">166</span>         *<a name="line.166"></a>
+<span class="sourceLineNo">167</span>         * Usage: String ENDDD=date2DayOfMonthString();<a name="line.167"></a>
+<span class="sourceLineNo">168</span>         * @param time The time in miliseconds<a name="line.168"></a>
+<span class="sourceLineNo">169</span>         * @return String The day<a name="line.169"></a>
+<span class="sourceLineNo">170</span>         **/<a name="line.170"></a>
+<span class="sourceLineNo">171</span>        public String date2DayOfMonthString(long time);<a name="line.171"></a>
+<span class="sourceLineNo">172</span><a name="line.172"></a>
+<span class="sourceLineNo">173</span>        /**<a name="line.173"></a>
+<span class="sourceLineNo">174</span>        * Returns the YYYY portion of a given date<a name="line.174"></a>
+<span class="sourceLineNo">175</span>        * Returns the DD portion of a given date<a name="line.175"></a>
+<span class="sourceLineNo">176</span>        *<a name="line.176"></a>
+<span class="sourceLineNo">177</span>        * Usage: String ENDYYYY=date2YYYYString();<a name="line.177"></a>
+<span class="sourceLineNo">178</span>         * @param time The time in miliseconds<a name="line.178"></a>
+<span class="sourceLineNo">179</span>        * @return String The year<a name="line.179"></a>
+<span class="sourceLineNo">180</span>        **/<a name="line.180"></a>
+<span class="sourceLineNo">181</span>        public String date2YYYYString(long time);<a name="line.181"></a>
+<span class="sourceLineNo">182</span><a name="line.182"></a>
+<span class="sourceLineNo">183</span>        /**<a name="line.183"></a>
+<span class="sourceLineNo">184</span>        * Returns the Hours portion of a given Time<a name="line.184"></a>
+<span class="sourceLineNo">185</span>        *<a name="line.185"></a>
+<span class="sourceLineNo">186</span>        * Usage: String ENDHR=date2HRString();<a name="line.186"></a>
+<span class="sourceLineNo">187</span>        * @param time time used<a name="line.187"></a>
+<span class="sourceLineNo">188</span>        * @return String The hour<a name="line.188"></a>
+<span class="sourceLineNo">189</span>        **/<a name="line.189"></a>
+<span class="sourceLineNo">190</span>        public String date2HRString(long time);<a name="line.190"></a>
+<span class="sourceLineNo">191</span><a name="line.191"></a>
+<span class="sourceLineNo">192</span>        /**<a name="line.192"></a>
+<span class="sourceLineNo">193</span>        * Returns the Minutes portion of a given Time<a name="line.193"></a>
+<span class="sourceLineNo">194</span>        *<a name="line.194"></a>
+<span class="sourceLineNo">195</span>        * Usage: String ENDMIN=date2MINString();<a name="line.195"></a>
+<span class="sourceLineNo">196</span>        * @param time The time in miliseconds<a name="line.196"></a>
+<span class="sourceLineNo">197</span>        * @return String The minutes<a name="line.197"></a>
+<span class="sourceLineNo">198</span>        **/<a name="line.198"></a>
+<span class="sourceLineNo">199</span>        public String date2MINString(long time);<a name="line.199"></a>
+<span class="sourceLineNo">200</span><a name="line.200"></a>
+<span class="sourceLineNo">201</span>        /**<a name="line.201"></a>
+<span class="sourceLineNo">202</span>         * format the date for an smtp message<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         *<a name="line.203"></a>
+<span class="sourceLineNo">204</span>         * Usage:  smtpDateFormat(98374987234)<a name="line.204"></a>
+<span class="sourceLineNo">205</span>        * @param time The time in miliseconds<a name="line.205"></a>
+<span class="sourceLineNo">206</span>        * @return String The minutes<a name="line.206"></a>
+<span class="sourceLineNo">207</span>         */<a name="line.207"></a>
+<span class="sourceLineNo">208</span>         public String smtpDateFormat(long time);<a name="line.208"></a>
+<span class="sourceLineNo">209</span><a name="line.209"></a>
+<span class="sourceLineNo">210</span>        /**<a name="line.210"></a>
+<span class="sourceLineNo">211</span>         *  Returns the time zone of the server<a name="line.211"></a>
+<span class="sourceLineNo">212</span>         *<a name="line.212"></a>
+<span class="sourceLineNo">213</span>         * Usage: MEETZN = T2ZoneString();<a name="line.213"></a>
+<span class="sourceLineNo">214</span>         * @param time The time in miliseconds<a name="line.214"></a>
+<span class="sourceLineNo">215</span>         * @return String The time zone<a name="line.215"></a>
+<span class="sourceLineNo">216</span>         */<a name="line.216"></a>
+<span class="sourceLineNo">217</span>        public String date2ZoneString(long time);<a name="line.217"></a>
+<span class="sourceLineNo">218</span>        /**<a name="line.218"></a>
+<span class="sourceLineNo">219</span>         * Returns the Minutes portion of a given Time<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         *<a name="line.220"></a>
+<span class="sourceLineNo">221</span>         * Usage: String ST_AMPM=date2AMPMString(time);<a name="line.221"></a>
+<span class="sourceLineNo">222</span>         * @param time The time in miliseconds<a name="line.222"></a>
+<span class="sourceLineNo">223</span>         * @return String AM or PM stamp<a name="line.223"></a>
+<span class="sourceLineNo">224</span>         **/<a name="line.224"></a>
+<span class="sourceLineNo">225</span>        public String date2AMPMString(long time);<a name="line.225"></a>
+<span class="sourceLineNo">226</span>        /**<a name="line.226"></a>
+<span class="sourceLineNo">227</span>         * Converts a given date into a string of form:<a name="line.227"></a>
+<span class="sourceLineNo">228</span>         * MM/DD/YYYY HH:MM AP<a name="line.228"></a>
+<span class="sourceLineNo">229</span>         *<a name="line.229"></a>
+<span class="sourceLineNo">230</span>         * Usage: date2String()<a name="line.230"></a>
+<span class="sourceLineNo">231</span>         * @param C The time in calendar<a name="line.231"></a>
+<span class="sourceLineNo">232</span>         * @return String Formatted date/time<a name="line.232"></a>
+<span class="sourceLineNo">233</span>         */<a name="line.233"></a>
+<span class="sourceLineNo">234</span>        public String date2String(Calendar C);<a name="line.234"></a>
+<span class="sourceLineNo">235</span>        /**<a name="line.235"></a>
+<span class="sourceLineNo">236</span>         * Converts a given date into a string of form:<a name="line.236"></a>
+<span class="sourceLineNo">237</span>         * MM/DD/YYYY HH:MM AP<a name="line.237"></a>
+<span class="sourceLineNo">238</span>         *<a name="line.238"></a>
+<span class="sourceLineNo">239</span>         * Usage: date2String(time)<a name="line.239"></a>
+<span class="sourceLineNo">240</span>         * @param time The time in miliseconds<a name="line.240"></a>
+<span class="sourceLineNo">241</span>         * @return String Formatted date/time<a name="line.241"></a>
+<span class="sourceLineNo">242</span>         */<a name="line.242"></a>
+<span class="sourceLineNo">243</span>        public String date2String(long time);<a name="line.243"></a>
+<span class="sourceLineNo">244</span>        /**<a name="line.244"></a>
+<span class="sourceLineNo">245</span>         * Converts a given number of milliseconds,<a name="line.245"></a>
+<span class="sourceLineNo">246</span>         * into a number of rl years, months, days,<a name="line.246"></a>
+<span class="sourceLineNo">247</span>         * hours, minutes, and seconds.  If in short form,<a name="line.247"></a>
+<span class="sourceLineNo">248</span>         * returns y, m, d, h, m, and s.<a name="line.248"></a>
+<span class="sourceLineNo">249</span>         *<a name="line.249"></a>
+<span class="sourceLineNo">250</span>         * Usage: date2EllapsedTime(time)<a name="line.250"></a>
+<span class="sourceLineNo">251</span>         * @param time The time in miliseconds<a name="line.251"></a>
+<span class="sourceLineNo">252</span>         * @param minUnit The smallest unit to round down to<a name="line.252"></a>
+<span class="sourceLineNo">253</span>         * @param shortest true for short form, false otherwise<a name="line.253"></a>
+<span class="sourceLineNo">254</span>         * @return String Formatted ellapsed time<a name="line.254"></a>
+<span class="sourceLineNo">255</span>         */<a name="line.255"></a>
+<span class="sourceLineNo">256</span>        public String date2EllapsedTime(long time, TimeUnit minUnit, boolean shortest);<a name="line.256"></a>
+<span class="sourceLineNo">257</span><a name="line.257"></a>
+<span class="sourceLineNo">258</span>        /**<a name="line.258"></a>
+<span class="sourceLineNo">259</span>         * Picks the single best representation of the given ellapsed time, <a name="line.259"></a>
+<span class="sourceLineNo">260</span>         * from seconds to minutes to hours to days, and returns the correct<a name="line.260"></a>
+<span class="sourceLineNo">261</span>         * amount along with the single letter suffix<a name="line.261"></a>
+<span class="sourceLineNo">262</span>         * @param t time in milliseconds<a name="line.262"></a>
+<span class="sourceLineNo">263</span>         * @return ellapsed time approximation.<a name="line.263"></a>
+<span class="sourceLineNo">264</span>         */<a name="line.264"></a>
+<span class="sourceLineNo">265</span>        public String date2BestShortEllapsedTime(long t);<a name="line.265"></a>
+<span class="sourceLineNo">266</span>        /**<a name="line.266"></a>
+<span class="sourceLineNo">267</span>         * Converts a given number of milliseconds,<a name="line.267"></a>
+<span class="sourceLineNo">268</span>         * into a number of rl years, months, days,<a name="line.268"></a>
+<span class="sourceLineNo">269</span>         * hours, minutes, and seconds.  If in short form,<a name="line.269"></a>
+<span class="sourceLineNo">270</span>         * returns y, m, d, h, m, and s.  This method<a name="line.270"></a>
+<span class="sourceLineNo">271</span>         * will automatically determine the smallest reasonable<a name="line.271"></a>
+<span class="sourceLineNo">272</span>         * unit of time to show.<a name="line.272"></a>
+<span class="sourceLineNo">273</span>         *<a name="line.273"></a>
+<span class="sourceLineNo">274</span>         * Usage: date2SmartEllapsedTime(time)<a name="line.274"></a>
+<span class="sourceLineNo">275</span>         * @param time The time in miliseconds<a name="line.275"></a>
+<span class="sourceLineNo">276</span>         * @param shortest true for short form, false otherwise<a name="line.276"></a>
+<span class="sourceLineNo">277</span>         * @return String Formatted ellapsed time<a name="line.277"></a>
+<span class="sourceLineNo">278</span>         */<a name="line.278"></a>
+<span class="sourceLineNo">279</span>        public String date2SmartEllapsedTime(long time, boolean shortest);<a name="line.279"></a>
+<span class="sourceLineNo">280</span><a name="line.280"></a>
+<span class="sourceLineNo">281</span>        /**<a name="line.281"></a>
+<span class="sourceLineNo">282</span>         * Converts a given date into a string of form:<a name="line.282"></a>
+<span class="sourceLineNo">283</span>         * MM/DD/YYYY HH:MM AP<a name="line.283"></a>
+<span class="sourceLineNo">284</span>         *<a name="line.284"></a>
+<span class="sourceLineNo">285</span>         * Usage: date2SecondsString(time)<a name="line.285"></a>
+<span class="sourceLineNo">286</span>         * @param time The time in miliseconds<a name="line.286"></a>
+<span class="sourceLineNo">287</span>         * @return String Formatted date/time<a name="line.287"></a>
+<span class="sourceLineNo">288</span>         */<a name="line.288"></a>
+<span class="sourceLineNo">289</span>        public String date2SecondsString(long time);<a name="line.289"></a>
+<span class="sourceLineNo">290</span>        /**<a name="line.290"></a>
+<span class="sourceLineNo">291</span>         * Converts a given date into a string of form:<a name="line.291"></a>
+<span class="sourceLineNo">292</span>         * MM/DD/YYYY<a name="line.292"></a>
+<span class="sourceLineNo">293</span>         *<a name="line.293"></a>
+<span class="sourceLineNo">294</span>         * Usage: date2DateString(time)<a name="line.294"></a>
+<span class="sourceLineNo">295</span>         * @param time The time in miliseconds<a name="line.295"></a>
+<span class="sourceLineNo">296</span>         * @return String Formatted date<a name="line.296"></a>
+<span class="sourceLineNo">297</span>         */<a name="line.297"></a>
+<span class="sourceLineNo">298</span>        public String date2DateString(long time);<a name="line.298"></a>
+<span class="sourceLineNo">299</span>        /**<a name="line.299"></a>
+<span class="sourceLineNo">300</span>         * Converts a given date into a string of form:<a name="line.300"></a>
+<span class="sourceLineNo">301</span>         * MM/DD/YY<a name="line.301"></a>
+<span class="sourceLineNo">302</span>         *<a name="line.302"></a>
+<span class="sourceLineNo">303</span>         * Usage: date2Date2String(time)<a name="line.303"></a>
+<span class="sourceLineNo">304</span>         * @param time The time in miliseconds<a name="line.304"></a>
+<span class="sourceLineNo">305</span>         * @return String Formatted date<a name="line.305"></a>
+<span class="sourceLineNo">306</span>         */<a name="line.306"></a>
+<span class="sourceLineNo">307</span>        public String date2Date2String(long time);<a name="line.307"></a>
+<span class="sourceLineNo">308</span><a name="line.308"></a>
+<span class="sourceLineNo">309</span>        /**<a name="line.309"></a>
+<span class="sourceLineNo">310</span>         * Parses either a tick expression, or an<a name="line.310"></a>
+<span class="sourceLineNo">311</span>         * expression ending with the word minutes,<a name="line.311"></a>
+<span class="sourceLineNo">312</span>         * hours, seconds, days, mudhours, muddays,<a name="line.312"></a>
+<span class="sourceLineNo">313</span>         * mudweeks, mudmonths, or mudyears<a name="line.313"></a>
+<span class="sourceLineNo">314</span>         * @param val the expression<a name="line.314"></a>
+<span class="sourceLineNo">315</span>         * @return the number of ticks represented by the string<a name="line.315"></a>
+<span class="sourceLineNo">316</span>         */<a name="line.316"></a>
+<span class="sourceLineNo">317</span>        public int parseTickExpression(String val);<a name="line.317"></a>
+<span class="sourceLineNo">318</span><a name="line.318"></a>
+<span class="sourceLineNo">319</span>        /**<a name="line.319"></a>
+<span class="sourceLineNo">320</span>         * Parses whether a tick expression, or an<a name="line.320"></a>
+<span class="sourceLineNo">321</span>         * expression ending with the word minutes,<a name="line.321"></a>
+<span class="sourceLineNo">322</span>         * hours, seconds, days, mudhours, muddays,<a name="line.322"></a>
+<span class="sourceLineNo">323</span>         * mudweeks, mudmonths, or mudyears<a name="line.323"></a>
+<span class="sourceLineNo">324</span>         * @param val the expression<a name="line.324"></a>
+<span class="sourceLineNo">325</span>         * @return whether a number of ticks is represented by the string<a name="line.325"></a>
+<span class="sourceLineNo">326</span>         */<a name="line.326"></a>
+<span class="sourceLineNo">327</span>        public boolean isTickExpression(String val);<a name="line.327"></a>
+<span class="sourceLineNo">328</span><a name="line.328"></a>
+<span class="sourceLineNo">329</span>        /**<a name="line.329"></a>
+<span class="sourceLineNo">330</span>         * Returns the most local clock for the given object.<a name="line.330"></a>
+<span class="sourceLineNo">331</span>         * @param P an item, room, mob, whatever.<a name="line.331"></a>
+<span class="sourceLineNo">332</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.TimeClock<a name="line.332"></a>
+<span class="sourceLineNo">333</span>         * @return the local clock<a name="line.333"></a>
+<span class="sourceLineNo">334</span>         */<a name="line.334"></a>
+<span class="sourceLineNo">335</span>        public TimeClock localClock(Physical P);<a name="line.335"></a>
+<span class="sourceLineNo">336</span><a name="line.336"></a>
+<span class="sourceLineNo">337</span>        /**<a name="line.337"></a>
+<span class="sourceLineNo">338</span>         * Returns the mud wide global time clock<a name="line.338"></a>
+<span class="sourceLineNo">339</span>         * object as defined by the coffeemud.ini<a name="line.339"></a>
+<span class="sourceLineNo">340</span>         * file.<a name="line.340"></a>
+<span class="sourceLineNo">341</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.TimeClock<a name="line.341"></a>
+<span class="sourceLineNo">342</span>         * @return the global clock<a name="line.342"></a>
+<span class="sourceLineNo">343</span>         */<a name="line.343"></a>
+<span class="sourceLineNo">344</span>        public TimeClock globalClock();<a name="line.344"></a>
+<span class="sourceLineNo">345</span><a name="line.345"></a>
+<span class="sourceLineNo">346</span>        /** constant for the names of the months in a rl year */<a name="line.346"></a>
+<span class="sourceLineNo">347</span>        public final static String[] MONTHS={<a name="line.347"></a>
+<span class="sourceLineNo">348</span>                "January","February","March","April","May","June","July","August","September","October","November","December"<a name="line.348"></a>
+<span class="sourceLineNo">349</span>        };<a name="line.349"></a>
+<span class="sourceLineNo">350</span><a name="line.350"></a>
+<span class="sourceLineNo">351</span>        /** constant for the short names of the months in a rl year */<a name="line.351"></a>
+<span class="sourceLineNo">352</span>        public final static String[] SHORTMONTHS={<a name="line.352"></a>
+<span class="sourceLineNo">353</span>                "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"<a name="line.353"></a>
+<span class="sourceLineNo">354</span>        };<a name="line.354"></a>
+<span class="sourceLineNo">355</span><a name="line.355"></a>
+<span class="sourceLineNo">356</span>        /** constant for the number of milliseconds in a second */<a name="line.356"></a>
+<span class="sourceLineNo">357</span>        public final static long MILI_SECOND=1000;<a name="line.357"></a>
+<span class="sourceLineNo">358</span>        /** constant for the number of milliseconds in a minute */<a name="line.358"></a>
+<span class="sourceLineNo">359</span>        public final static long MILI_MINUTE=MILI_SECOND*60;<a name="line.359"></a>
+<span class="sourceLineNo">360</span>        /** constant for the number of milliseconds in a rl hour */<a name="line.360"></a>
+<span class="sourceLineNo">361</span>        public final static long MILI_HOUR=MILI_MINUTE*60;<a name="line.361"></a>
+<span class="sourceLineNo">362</span>        /** constant for the number of milliseconds in a rl day */<a name="line.362"></a>
+<span class="sourceLineNo">363</span>        public final static long MILI_DAY=MILI_HOUR*24;<a name="line.363"></a>
+<span class="sourceLineNo">364</span>        /** constant for the number of milliseconds in a rl week */<a name="line.364"></a>
+<span class="sourceLineNo">365</span>        public final static long MILI_WEEK=MILI_DAY*7;<a name="line.365"></a>
+<span class="sourceLineNo">366</span>        /** constant for the number of milliseconds in a rl month */<a name="line.366"></a>
+<span class="sourceLineNo">367</span>        public final static long MILI_MONTH=MILI_DAY*30;<a name="line.367"></a>
+<span class="sourceLineNo">368</span>        /** constant for the number of milliseconds in a rl year */<a name="line.368"></a>
+<span class="sourceLineNo">369</span>        public final static long MILI_YEAR=MILI_DAY*365;<a name="line.369"></a>
+<span class="sourceLineNo">370</span>}<a name="line.370"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

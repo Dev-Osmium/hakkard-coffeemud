@@ -1,0 +1,558 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Libraries.interfaces;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.exceptions.CMException;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Libraries.interfaces.XMLLibrary.XMLTag;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.Libraries.layouts.AbstractLayout;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.util.*;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>/*<a name="line.21"></a>
+<span class="sourceLineNo">022</span>   Copyright 2008-2018 Bo Zimmerman<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   you may not use this file except in compliance with the License.<a name="line.25"></a>
+<span class="sourceLineNo">026</span>   You may obtain a copy of the License at<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.28"></a>
+<span class="sourceLineNo">029</span><a name="line.29"></a>
+<span class="sourceLineNo">030</span>   Unless required by applicable law or agreed to in writing, software<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   See the License for the specific language governing permissions and<a name="line.33"></a>
+<span class="sourceLineNo">034</span>   limitations under the License.<a name="line.34"></a>
+<span class="sourceLineNo">035</span>*/<a name="line.35"></a>
+<span class="sourceLineNo">036</span>/**<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * The AreaGenerationLibrary is the random generator, which takes a special<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * flavor of xml as input to randomly generate anything from strings, to<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * mobs and items, whole populated rooms, or entire areas.  Most of the methods<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * in this library provide a finer control to the generation process. <a name="line.40"></a>
+<span class="sourceLineNo">041</span> * @author Bo Zimmerman<a name="line.41"></a>
+<span class="sourceLineNo">042</span> */<a name="line.42"></a>
+<span class="sourceLineNo">043</span>public interface AreaGenerationLibrary extends CMLibrary<a name="line.43"></a>
+<span class="sourceLineNo">044</span>{<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        /**<a name="line.45"></a>
+<span class="sourceLineNo">046</span>         * Given an area-generation xml file, this method will return all the defined tag ids. This<a name="line.46"></a>
+<span class="sourceLineNo">047</span>         * allows the caller to specifically select one of them for generation.<a name="line.47"></a>
+<span class="sourceLineNo">048</span>         * @param xmlRoot the root of the area-generation xml file<a name="line.48"></a>
+<span class="sourceLineNo">049</span>         * @param defined a map of ids to objects, whether strings or tags.<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         */<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        public void buildDefinedIDSet(List&lt;XMLTag&gt; xmlRoot, Map&lt;String,Object&gt; defined);<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>        /**<a name="line.53"></a>
+<span class="sourceLineNo">054</span>         * Given a specific ITEM generation tag, this method will return the items selected<a name="line.54"></a>
+<span class="sourceLineNo">055</span>         * by that tag piece.<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         * @see AreaGenerationLibrary#buildDefinedIDSet(List, Map)<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * @param piece the identified tag that can return items<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * @param defined the defined id set from the entire xml document<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         * @return the list of items generated from the tag.<a name="line.59"></a>
+<span class="sourceLineNo">060</span>         * @throws CMException any parsing or generation errors<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         */<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        public List&lt;Item&gt; findItems(XMLTag piece, Map&lt;String,Object&gt; defined) throws CMException;<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>        /**<a name="line.64"></a>
+<span class="sourceLineNo">065</span>         * Given a specific MOB generation tag, this method will return the MOBs selected<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         * by that tag piece.<a name="line.66"></a>
+<span class="sourceLineNo">067</span>         * @see AreaGenerationLibrary#buildDefinedIDSet(List, Map)<a name="line.67"></a>
+<span class="sourceLineNo">068</span>         * @param piece the identified tag that can return MOBs<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         * @param defined the defined id set from the entire xml document<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * @return the list of MOBs generated from the tag.<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * @throws CMException any parsing or generation errors<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        public List&lt;MOB&gt; findMobs(XMLTag piece, Map&lt;String,Object&gt; defined) throws CMException;<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>        /**<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         * Returns a string of the given tag name type, from the given top-level xml tag piece that<a name="line.76"></a>
+<span class="sourceLineNo">077</span>         * resolves to a string, and with the given pre-defined id set.<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * @see AreaGenerationLibrary#buildDefinedIDSet(List, Map)<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         * @param tagName the name of the string tag<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         * @param piece the top level piece, probably of type tagname<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * @param defined the pre-defined id set from the entire xml document<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         * @return the string this resolves to<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         * @throws CMException any parsing or generation errors<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         */<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        public String findString(String tagName, XMLTag piece, Map&lt;String,Object&gt; defined) throws CMException;<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>        /**<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         * Given a specific ROOM generation tag, this method will return the room selected<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         * by that tag piece, with the entrace to it being in the given direction<a name="line.89"></a>
+<span class="sourceLineNo">090</span>         * @see AreaGenerationLibrary#buildDefinedIDSet(List, Map)<a name="line.90"></a>
+<span class="sourceLineNo">091</span>         * @param piece the identified tag that can return a room<a name="line.91"></a>
+<span class="sourceLineNo">092</span>         * @param defined the defined id set from the entire xml document<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         * @param exits pre-defined exits from this room, if any<a name="line.93"></a>
+<span class="sourceLineNo">094</span>         * @param direction the direction of entrance to this room<a name="line.94"></a>
+<span class="sourceLineNo">095</span>         * @return the room generated from the tag.<a name="line.95"></a>
+<span class="sourceLineNo">096</span>         * @throws CMException any parsing or generation errors<a name="line.96"></a>
+<span class="sourceLineNo">097</span>         */<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        public Room buildRoom(XMLTag piece, Map&lt;String,Object&gt; defined, Exit[] exits, int direction) throws CMException;<a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span>        /**<a name="line.100"></a>
+<span class="sourceLineNo">101</span>         * Does nothing but check the requirements to build the given xml tag piece, and compares it with<a name="line.101"></a>
+<span class="sourceLineNo">102</span>         * the variables in the given id definition map, to see if all requirements are met.  If not,<a name="line.102"></a>
+<span class="sourceLineNo">103</span>         * it throws an exception.<a name="line.103"></a>
+<span class="sourceLineNo">104</span>         * @param piece the xml tag piece you want to build<a name="line.104"></a>
+<span class="sourceLineNo">105</span>         * @param defined the defined id set from the entire xml document, and the user<a name="line.105"></a>
+<span class="sourceLineNo">106</span>         * @throws CMException any parsing or generation errors<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         */<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        public void checkRequirements(XMLTag piece, Map&lt;String,Object&gt; defined) throws CMException;<a name="line.108"></a>
+<span class="sourceLineNo">109</span><a name="line.109"></a>
+<span class="sourceLineNo">110</span>        /**<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         * Check the requirements to build the given xml tag piece, and compares it with<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         * the variables in the given id definition map, to see if all requirements are met.  If not,<a name="line.112"></a>
+<span class="sourceLineNo">113</span>         * it returns a map of the undefined or mis-defined ids as keys, mapped to the data type name.<a name="line.113"></a>
+<span class="sourceLineNo">114</span>         * @param defined the defined id set from the entire xml document, and the user<a name="line.114"></a>
+<span class="sourceLineNo">115</span>         * @param piece the xml tag piece you want to build<a name="line.115"></a>
+<span class="sourceLineNo">116</span>         * @return a map of the undefined or mis-defined ids as keys, mapped to the data type name<a name="line.116"></a>
+<span class="sourceLineNo">117</span>         */<a name="line.117"></a>
+<span class="sourceLineNo">118</span>        public Map&lt;String,String&gt; getUnfilledRequirements(Map&lt;String,Object&gt; defined, XMLTag piece);<a name="line.118"></a>
+<span class="sourceLineNo">119</span>        <a name="line.119"></a>
+<span class="sourceLineNo">120</span>        /**<a name="line.120"></a>
+<span class="sourceLineNo">121</span>         * Given a specific AREA generation tag, this method will return the area selected<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         * by that tag piece, with the entrance to it being in the given direction<a name="line.122"></a>
+<span class="sourceLineNo">123</span>         * @see AreaGenerationLibrary#buildDefinedIDSet(List, Map)<a name="line.123"></a>
+<span class="sourceLineNo">124</span>         * @param piece the identified tag that can return a room<a name="line.124"></a>
+<span class="sourceLineNo">125</span>         * @param defined the defined id set from the entire xml document<a name="line.125"></a>
+<span class="sourceLineNo">126</span>         * @param directions the direction of entrance to this room<a name="line.126"></a>
+<span class="sourceLineNo">127</span>         * @return the area generated from the tag.<a name="line.127"></a>
+<span class="sourceLineNo">128</span>         * @throws CMException any parsing or generation errors<a name="line.128"></a>
+<span class="sourceLineNo">129</span>         */<a name="line.129"></a>
+<span class="sourceLineNo">130</span>        public Area findArea(XMLTag piece, Map&lt;String,Object&gt; defined, int directions) throws CMException;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>        <a name="line.131"></a>
+<span class="sourceLineNo">132</span>        /**<a name="line.132"></a>
+<span class="sourceLineNo">133</span>         * Given a specific AREA generation tag, and an empty area, this method will <a name="line.133"></a>
+<span class="sourceLineNo">134</span>         * populate the area with rooms from the given tag piece, with the entrance <a name="line.134"></a>
+<span class="sourceLineNo">135</span>         * to it being in the given direction.<a name="line.135"></a>
+<span class="sourceLineNo">136</span>         * @see AreaGenerationLibrary#buildDefinedIDSet(List, Map)<a name="line.136"></a>
+<span class="sourceLineNo">137</span>         * @param piece the identified tag that can return a room<a name="line.137"></a>
+<span class="sourceLineNo">138</span>         * @param defined the defined id set from the entire xml document<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         * @param A the area to put the rooms into<a name="line.139"></a>
+<span class="sourceLineNo">140</span>         * @param direction the direction of entrance to this room<a name="line.140"></a>
+<span class="sourceLineNo">141</span>         * @return true if everything went well, an exception otherwise<a name="line.141"></a>
+<span class="sourceLineNo">142</span>         * @throws CMException any parsing or generation errors<a name="line.142"></a>
+<span class="sourceLineNo">143</span>         */<a name="line.143"></a>
+<span class="sourceLineNo">144</span>        public boolean fillInArea(XMLTag piece, Map&lt;String,Object&gt; defined, Area A, int direction) throws CMException;<a name="line.144"></a>
+<span class="sourceLineNo">145</span>        <a name="line.145"></a>
+<span class="sourceLineNo">146</span>        /**<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         * Returns the layout manager of the given name.<a name="line.147"></a>
+<span class="sourceLineNo">148</span>         * @param named the name of the layout manager<a name="line.148"></a>
+<span class="sourceLineNo">149</span>         * @return the layout manager of the given name.<a name="line.149"></a>
+<span class="sourceLineNo">150</span>         */<a name="line.150"></a>
+<span class="sourceLineNo">151</span>        public LayoutManager getLayoutManager(String named);<a name="line.151"></a>
+<span class="sourceLineNo">152</span>        <a name="line.152"></a>
+<span class="sourceLineNo">153</span>        /**<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         * Sometimes an object cannot be generated at a given time because some tag which<a name="line.154"></a>
+<span class="sourceLineNo">155</span>         * will be defined later has not yet been defined, and cannot be resolved at<a name="line.155"></a>
+<span class="sourceLineNo">156</span>         * generation time.  In those cases, this method is called with the defined id<a name="line.156"></a>
+<span class="sourceLineNo">157</span>         * list as it was returned during primary area, room, item, mob, or string generation.<a name="line.157"></a>
+<span class="sourceLineNo">158</span>         * The post-processes will be extracted from the defined ids, and then processed<a name="line.158"></a>
+<span class="sourceLineNo">159</span>         * on those objects.<a name="line.159"></a>
+<span class="sourceLineNo">160</span>         * @param defined the defined ids after they've gone through generating an object<a name="line.160"></a>
+<span class="sourceLineNo">161</span>         * @throws CMException any parsing or generation errors<a name="line.161"></a>
+<span class="sourceLineNo">162</span>         */<a name="line.162"></a>
+<span class="sourceLineNo">163</span>        public void postProcess(final Map&lt;String,Object&gt; defined) throws CMException;<a name="line.163"></a>
+<span class="sourceLineNo">164</span>        <a name="line.164"></a>
+<span class="sourceLineNo">165</span>        /**<a name="line.165"></a>
+<span class="sourceLineNo">166</span>         * If an xml tag is selected manually, by something outside the library, then <a name="line.166"></a>
+<span class="sourceLineNo">167</span>         * certain post-selection processes are not properly done, making generation<a name="line.167"></a>
+<span class="sourceLineNo">168</span>         * based on the tag potentially impossible.  In those cases, before generation<a name="line.168"></a>
+<span class="sourceLineNo">169</span>         * of the object from the selected xml tag piece, this method is called to handle<a name="line.169"></a>
+<span class="sourceLineNo">170</span>         * post-selection processing (called rewarding, as in a reward for being picked).<a name="line.170"></a>
+<span class="sourceLineNo">171</span>         * @param piece the selected xml tag piece<a name="line.171"></a>
+<span class="sourceLineNo">172</span>         * @param defined the defined id set from the entire xml document<a name="line.172"></a>
+<span class="sourceLineNo">173</span>         * @throws CMException any parsing or generation errors<a name="line.173"></a>
+<span class="sourceLineNo">174</span>         */<a name="line.174"></a>
+<span class="sourceLineNo">175</span>        public void defineReward(XMLTag piece, Map&lt;String,Object&gt; defined) throws CMException;<a name="line.175"></a>
+<span class="sourceLineNo">176</span>        <a name="line.176"></a>
+<span class="sourceLineNo">177</span>        /**<a name="line.177"></a>
+<span class="sourceLineNo">178</span>         * If an xml tag is selected manually, by something outside the library, then <a name="line.178"></a>
+<span class="sourceLineNo">179</span>         * certain pre-selection processes are not properly done, making generation<a name="line.179"></a>
+<span class="sourceLineNo">180</span>         * based on the tag potentially impossible.  In those cases, before generation<a name="line.180"></a>
+<span class="sourceLineNo">181</span>         * of the object from the selected xml tag piece, this method is called to handle<a name="line.181"></a>
+<span class="sourceLineNo">182</span>         * pre-selection processing (called rewarding, as in a reward for being picked).<a name="line.182"></a>
+<span class="sourceLineNo">183</span>         * @param piece the selected xml tag piece<a name="line.183"></a>
+<span class="sourceLineNo">184</span>         * @param defined the defined id set from the entire xml document<a name="line.184"></a>
+<span class="sourceLineNo">185</span>         * @throws CMException any parsing or generation errors<a name="line.185"></a>
+<span class="sourceLineNo">186</span>         */<a name="line.186"></a>
+<span class="sourceLineNo">187</span>        public void preDefineReward(XMLTag piece, Map&lt;String,Object&gt; defined) throws CMException;<a name="line.187"></a>
+<span class="sourceLineNo">188</span>        <a name="line.188"></a>
+<span class="sourceLineNo">189</span>        /**<a name="line.189"></a>
+<span class="sourceLineNo">190</span>         * Given a root xml tag and a tag name, this method will return all matching xml tag pieces.<a name="line.190"></a>
+<span class="sourceLineNo">191</span>         * @param tagName the name of the tag to search for<a name="line.191"></a>
+<span class="sourceLineNo">192</span>         * @param piece the root xml tag piece<a name="line.192"></a>
+<span class="sourceLineNo">193</span>         * @param defined the defined id set from the entire xml document<a name="line.193"></a>
+<span class="sourceLineNo">194</span>         * @return the list of found xml tags that match the tag name<a name="line.194"></a>
+<span class="sourceLineNo">195</span>         * @throws CMException any parsing or generation errors<a name="line.195"></a>
+<span class="sourceLineNo">196</span>         */<a name="line.196"></a>
+<span class="sourceLineNo">197</span>        public List&lt;XMLTag&gt; getAllChoices(String tagName, XMLTag piece, Map&lt;String,Object&gt; defined) throws CMException;<a name="line.197"></a>
+<span class="sourceLineNo">198</span><a name="line.198"></a>
+<span class="sourceLineNo">199</span>        /**<a name="line.199"></a>
+<span class="sourceLineNo">200</span>         * Adjusts the levels of all mobs, items, and mob-items in the room by adjusting <a name="line.200"></a>
+<span class="sourceLineNo">201</span>         * them from their place in an existing range to a new range.Does not save -- that's up to you.<a name="line.201"></a>
+<span class="sourceLineNo">202</span>         * @param room the room to adjust<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         * @param oldMin current minimum level range for the rooms area<a name="line.203"></a>
+<span class="sourceLineNo">204</span>         * @param oldMax current maximum level range for the rooms area<a name="line.204"></a>
+<span class="sourceLineNo">205</span>         * @param newMin new minimum level range for the rooms area<a name="line.205"></a>
+<span class="sourceLineNo">206</span>         * @param newMax new maximum level range for the rooms area <a name="line.206"></a>
+<span class="sourceLineNo">207</span>         * @return true if the room was modified, false otherwise.<a name="line.207"></a>
+<span class="sourceLineNo">208</span>         */<a name="line.208"></a>
+<span class="sourceLineNo">209</span>        public boolean relevelRoom(Room room, int oldMin, int oldMax, int newMin, int newMax);<a name="line.209"></a>
+<span class="sourceLineNo">210</span>        <a name="line.210"></a>
+<span class="sourceLineNo">211</span>        /**<a name="line.211"></a>
+<span class="sourceLineNo">212</span>         * Area generators work by first laying out a set of rooms into a<a name="line.212"></a>
+<span class="sourceLineNo">213</span>         * configuration called a Layout. Layouts are scalable configurations<a name="line.213"></a>
+<span class="sourceLineNo">214</span>         * that can handle any size, or originating direction of entry. <a name="line.214"></a>
+<span class="sourceLineNo">215</span>         * A Layout Manager then, is an algorithm for generating the room set<a name="line.215"></a>
+<span class="sourceLineNo">216</span>         * given a size and initial direction.  Each Layout Manager then <a name="line.216"></a>
+<span class="sourceLineNo">217</span>         * generates a layout of rooms according to its kind.<a name="line.217"></a>
+<span class="sourceLineNo">218</span>         * @author Bo Zimmerman<a name="line.218"></a>
+<span class="sourceLineNo">219</span>         *<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         */<a name="line.220"></a>
+<span class="sourceLineNo">221</span>        public static interface LayoutManager<a name="line.221"></a>
+<span class="sourceLineNo">222</span>        {<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                /**<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                 * The name of the layout manager<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                 * @return name of the layout manager<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                 */<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                public String name();<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                <a name="line.228"></a>
+<span class="sourceLineNo">229</span>                /**<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                 * Generates a list of layout nodes, each<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                 * of which reprents a single room in the area.<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                 * The first node is always the entry room, which<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                 * is entered from the direction given to this method.<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                 * @see AreaGenerationLibrary.LayoutNode<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                 * @param num the number of nodes to generate<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                 * @param dir the direction of entry into this group of nodes.<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                 * @return a list of layout nodes<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                 */<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                public List&lt;LayoutNode&gt; generate(int num, int dir);<a name="line.239"></a>
+<span class="sourceLineNo">240</span>        }<a name="line.240"></a>
+<span class="sourceLineNo">241</span><a name="line.241"></a>
+<span class="sourceLineNo">242</span>        /**<a name="line.242"></a>
+<span class="sourceLineNo">243</span>         * A layout node represents a single room in a layout<a name="line.243"></a>
+<span class="sourceLineNo">244</span>         * manager.  It contains numerous methods for linking<a name="line.244"></a>
+<span class="sourceLineNo">245</span>         * nodes together the way rooms are, and for flagging<a name="line.245"></a>
+<span class="sourceLineNo">246</span>         * nodes to give some idea of where the node fits in<a name="line.246"></a>
+<span class="sourceLineNo">247</span>         * various layouts.<a name="line.247"></a>
+<span class="sourceLineNo">248</span>         * @see AreaGenerationLibrary.LayoutTags<a name="line.248"></a>
+<span class="sourceLineNo">249</span>         * @see AreaGenerationLibrary.LayoutTypes<a name="line.249"></a>
+<span class="sourceLineNo">250</span>         * @see AreaGenerationLibrary.LayoutFlags<a name="line.250"></a>
+<span class="sourceLineNo">251</span>         * @see AreaGenerationLibrary.LayoutRuns<a name="line.251"></a>
+<span class="sourceLineNo">252</span>         * @author Bo Zimmerman<a name="line.252"></a>
+<span class="sourceLineNo">253</span>         *<a name="line.253"></a>
+<span class="sourceLineNo">254</span>         */<a name="line.254"></a>
+<span class="sourceLineNo">255</span>        public static interface LayoutNode<a name="line.255"></a>
+<span class="sourceLineNo">256</span>        {<a name="line.256"></a>
+<span class="sourceLineNo">257</span>                /**<a name="line.257"></a>
+<span class="sourceLineNo">258</span>                 * Uses this nodes coordinates, as well as the coordinates<a name="line.258"></a>
+<span class="sourceLineNo">259</span>                 * of the given connected node, this method will create a <a name="line.259"></a>
+<span class="sourceLineNo">260</span>                 * link between them of the appropriate direction<a name="line.260"></a>
+<span class="sourceLineNo">261</span>                 * see delLink(LayoutNode)<a name="line.261"></a>
+<span class="sourceLineNo">262</span>                 * @see AreaGenerationLibrary.LayoutNode#getLink(int)<a name="line.262"></a>
+<span class="sourceLineNo">263</span>                 * @see AreaGenerationLibrary.LayoutNode#links()<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                 * @see AreaGenerationLibrary.LayoutNode#deLink()<a name="line.264"></a>
+<span class="sourceLineNo">265</span>                 * @param to the node to connect this one to.<a name="line.265"></a>
+<span class="sourceLineNo">266</span>                 */<a name="line.266"></a>
+<span class="sourceLineNo">267</span>                public void crossLink(LayoutNode to);<a name="line.267"></a>
+<span class="sourceLineNo">268</span>                <a name="line.268"></a>
+<span class="sourceLineNo">269</span>                /**<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                 * Removes all directional links between this node and the<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                 * given node.<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                 * see crossLink(LayoutNode)<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                 * @see AreaGenerationLibrary.LayoutNode#getLink(int)<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                 * @see AreaGenerationLibrary.LayoutNode#links()<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                 * @see AreaGenerationLibrary.LayoutNode#deLink()<a name="line.275"></a>
+<span class="sourceLineNo">276</span>                 * @param linkNode the node to de-link from.<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                 */<a name="line.277"></a>
+<span class="sourceLineNo">278</span>                public void delLink(LayoutNode linkNode);<a name="line.278"></a>
+<span class="sourceLineNo">279</span>                <a name="line.279"></a>
+<span class="sourceLineNo">280</span>                /**<a name="line.280"></a>
+<span class="sourceLineNo">281</span>                 * Returns a link from this node in the given direction.  <a name="line.281"></a>
+<span class="sourceLineNo">282</span>                 * crossLink must have already been called to establish the <a name="line.282"></a>
+<span class="sourceLineNo">283</span>                 * link.<a name="line.283"></a>
+<span class="sourceLineNo">284</span>                 * see crossLink(LayoutNode)<a name="line.284"></a>
+<span class="sourceLineNo">285</span>                 * see delLink(LayoutNode)<a name="line.285"></a>
+<span class="sourceLineNo">286</span>                 * @see AreaGenerationLibrary.LayoutNode#links()<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                 * @see AreaGenerationLibrary.LayoutNode#deLink()<a name="line.287"></a>
+<span class="sourceLineNo">288</span>                 * @param d the direction code<a name="line.288"></a>
+<span class="sourceLineNo">289</span>                 * @return the node in the given direction<a name="line.289"></a>
+<span class="sourceLineNo">290</span>                 */<a name="line.290"></a>
+<span class="sourceLineNo">291</span>                public LayoutNode getLink(int d);<a name="line.291"></a>
+<span class="sourceLineNo">292</span>                <a name="line.292"></a>
+<span class="sourceLineNo">293</span>                /**<a name="line.293"></a>
+<span class="sourceLineNo">294</span>                 * Removes all links from other nodes to this one, and removes<a name="line.294"></a>
+<span class="sourceLineNo">295</span>                 * all links from this node to others.  crossLink must have been<a name="line.295"></a>
+<span class="sourceLineNo">296</span>                 * called for there to be any links.<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                 * see crossLink(LayoutNode)<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                 * see delLink(LayoutNode)<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                 * @see AreaGenerationLibrary.LayoutNode#links()<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                 * @see AreaGenerationLibrary.LayoutNode#getLink(int)<a name="line.300"></a>
+<span class="sourceLineNo">301</span>                 */<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                public void deLink();<a name="line.302"></a>
+<span class="sourceLineNo">303</span>                <a name="line.303"></a>
+<span class="sourceLineNo">304</span>                /**<a name="line.304"></a>
+<span class="sourceLineNo">305</span>                 * Returns a map of directions to other layoutnodes.  These<a name="line.305"></a>
+<span class="sourceLineNo">306</span>                 * being the established links between nodes. crossLink must have been<a name="line.306"></a>
+<span class="sourceLineNo">307</span>                 * called for there to be any links.<a name="line.307"></a>
+<span class="sourceLineNo">308</span>                 * see crossLink(LayoutNode)<a name="line.308"></a>
+<span class="sourceLineNo">309</span>                 * see delLink(LayoutNode)<a name="line.309"></a>
+<span class="sourceLineNo">310</span>                 * @see AreaGenerationLibrary.LayoutNode#deLink()<a name="line.310"></a>
+<span class="sourceLineNo">311</span>                 * @see AreaGenerationLibrary.LayoutNode#getLink(int)<a name="line.311"></a>
+<span class="sourceLineNo">312</span>                 * @return the map of links<a name="line.312"></a>
+<span class="sourceLineNo">313</span>                 */<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                public Map&lt;Integer, LayoutNode&gt; links();<a name="line.314"></a>
+<span class="sourceLineNo">315</span>                <a name="line.315"></a>
+<span class="sourceLineNo">316</span>                /**<a name="line.316"></a>
+<span class="sourceLineNo">317</span>                 * Returns comma-delimited values of each LayoutTag type,<a name="line.317"></a>
+<span class="sourceLineNo">318</span>                 * through a may of layouttag to string mapping.<a name="line.318"></a>
+<span class="sourceLineNo">319</span>                 * @see AreaGenerationLibrary.LayoutTags<a name="line.319"></a>
+<span class="sourceLineNo">320</span>                 * @return the map of layouttags to strings<a name="line.320"></a>
+<span class="sourceLineNo">321</span>                 */<a name="line.321"></a>
+<span class="sourceLineNo">322</span>                public Map&lt;LayoutTags, String&gt; tags();<a name="line.322"></a>
+<span class="sourceLineNo">323</span>                <a name="line.323"></a>
+<span class="sourceLineNo">324</span>                /**<a name="line.324"></a>
+<span class="sourceLineNo">325</span>                 * Returns x,y coordinates of this node.<a name="line.325"></a>
+<span class="sourceLineNo">326</span>                 * These are generated by the layout manager.<a name="line.326"></a>
+<span class="sourceLineNo">327</span>                 * @return x,y coordinates of this node<a name="line.327"></a>
+<span class="sourceLineNo">328</span>                 */<a name="line.328"></a>
+<span class="sourceLineNo">329</span>                public long[] coord();<a name="line.329"></a>
+<span class="sourceLineNo">330</span>                <a name="line.330"></a>
+<span class="sourceLineNo">331</span>                /**<a name="line.331"></a>
+<span class="sourceLineNo">332</span>                 * Returns true if the first two linked nodes to this<a name="line.332"></a>
+<span class="sourceLineNo">333</span>                 * node are in the same general direction, this making<a name="line.333"></a>
+<span class="sourceLineNo">334</span>                 * this node look like a street node.<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                 * @return true if this node is part of a street.<a name="line.335"></a>
+<span class="sourceLineNo">336</span>                 */<a name="line.336"></a>
+<span class="sourceLineNo">337</span>                public boolean isStreetLike();<a name="line.337"></a>
+<span class="sourceLineNo">338</span>                <a name="line.338"></a>
+<span class="sourceLineNo">339</span>                /**<a name="line.339"></a>
+<span class="sourceLineNo">340</span>                 * Flags this node with one of the visual layout flags,<a name="line.340"></a>
+<span class="sourceLineNo">341</span>                 * telling whether it is at an intersection, or on a<a name="line.341"></a>
+<span class="sourceLineNo">342</span>                 * corner, or something like that.<a name="line.342"></a>
+<span class="sourceLineNo">343</span>                 * @param flag the flag to set.<a name="line.343"></a>
+<span class="sourceLineNo">344</span>                 */<a name="line.344"></a>
+<span class="sourceLineNo">345</span>                public void flag(LayoutFlags flag);<a name="line.345"></a>
+<span class="sourceLineNo">346</span>                <a name="line.346"></a>
+<span class="sourceLineNo">347</span>                /**<a name="line.347"></a>
+<span class="sourceLineNo">348</span>                 * Returns whether this node is flagged with one of the<a name="line.348"></a>
+<span class="sourceLineNo">349</span>                 * visual layout flags, telling whether it is an intersectino,<a name="line.349"></a>
+<span class="sourceLineNo">350</span>                 * or on a corner, or something like that.<a name="line.350"></a>
+<span class="sourceLineNo">351</span>                 * see flag(LayoutFlags)<a name="line.351"></a>
+<span class="sourceLineNo">352</span>                 * @param flag the flag to check for<a name="line.352"></a>
+<span class="sourceLineNo">353</span>                 * @return true if this node is flagged, false otherwise<a name="line.353"></a>
+<span class="sourceLineNo">354</span>                 */<a name="line.354"></a>
+<span class="sourceLineNo">355</span>                public boolean isFlagged(LayoutFlags flag);<a name="line.355"></a>
+<span class="sourceLineNo">356</span>                <a name="line.356"></a>
+<span class="sourceLineNo">357</span>                /**<a name="line.357"></a>
+<span class="sourceLineNo">358</span>                 * Flags this node as being part of a street-like run.<a name="line.358"></a>
+<span class="sourceLineNo">359</span>                 * @see AreaGenerationLibrary.LayoutRuns<a name="line.359"></a>
+<span class="sourceLineNo">360</span>                 * @param dirs the direction of the run<a name="line.360"></a>
+<span class="sourceLineNo">361</span>                 */<a name="line.361"></a>
+<span class="sourceLineNo">362</span>                public void flagRun(LayoutRuns dirs);<a name="line.362"></a>
+<span class="sourceLineNo">363</span>                <a name="line.363"></a>
+<span class="sourceLineNo">364</span>                /**<a name="line.364"></a>
+<span class="sourceLineNo">365</span>                 * Return whether this node is flagged as being part of a <a name="line.365"></a>
+<span class="sourceLineNo">366</span>                 * street-like run.<a name="line.366"></a>
+<span class="sourceLineNo">367</span>                 * @see AreaGenerationLibrary.LayoutRuns<a name="line.367"></a>
+<span class="sourceLineNo">368</span>                 * @return the direction of the run, or null<a name="line.368"></a>
+<span class="sourceLineNo">369</span>                 */<a name="line.369"></a>
+<span class="sourceLineNo">370</span>                public LayoutRuns getFlagRuns();<a name="line.370"></a>
+<span class="sourceLineNo">371</span>                <a name="line.371"></a>
+<span class="sourceLineNo">372</span>                /**<a name="line.372"></a>
+<span class="sourceLineNo">373</span>                 * Returns the layout type flag that this node represents,<a name="line.373"></a>
+<span class="sourceLineNo">374</span>                 * denoting whether it is a leaf, a street, or some other<a name="line.374"></a>
+<span class="sourceLineNo">375</span>                 * role.<a name="line.375"></a>
+<span class="sourceLineNo">376</span>                 * @see AreaGenerationLibrary.LayoutTypes<a name="line.376"></a>
+<span class="sourceLineNo">377</span>                 * @return the type of this node<a name="line.377"></a>
+<span class="sourceLineNo">378</span>                 */<a name="line.378"></a>
+<span class="sourceLineNo">379</span>                public LayoutTypes type();<a name="line.379"></a>
+<span class="sourceLineNo">380</span>                <a name="line.380"></a>
+<span class="sourceLineNo">381</span>                /**<a name="line.381"></a>
+<span class="sourceLineNo">382</span>                 * Sets the layout type flag that this node represents,<a name="line.382"></a>
+<span class="sourceLineNo">383</span>                 * denoting whether it is a leaf, a street, or some other<a name="line.383"></a>
+<span class="sourceLineNo">384</span>                 * role.<a name="line.384"></a>
+<span class="sourceLineNo">385</span>                 * @see LayoutTypes<a name="line.385"></a>
+<span class="sourceLineNo">386</span>                 * @param type the type of this node<a name="line.386"></a>
+<span class="sourceLineNo">387</span>                 */<a name="line.387"></a>
+<span class="sourceLineNo">388</span>                public void reType(LayoutTypes type);<a name="line.388"></a>
+<span class="sourceLineNo">389</span>                <a name="line.389"></a>
+<span class="sourceLineNo">390</span>                /**<a name="line.390"></a>
+<span class="sourceLineNo">391</span>                 * Sets the exit available link directions, without setting<a name="line.391"></a>
+<span class="sourceLineNo">392</span>                 * the nodes they are linked to -- what good is this? <a name="line.392"></a>
+<span class="sourceLineNo">393</span>                 * Well, it sets the LayoutTags.NODEEXITS string, which<a name="line.393"></a>
+<span class="sourceLineNo">394</span>                 * makes some sense I guess.<a name="line.394"></a>
+<span class="sourceLineNo">395</span>                 * @param dirs the array of Direction codes to set.<a name="line.395"></a>
+<span class="sourceLineNo">396</span>                 */<a name="line.396"></a>
+<span class="sourceLineNo">397</span>                public void setExits(int[] dirs);<a name="line.397"></a>
+<span class="sourceLineNo">398</span>                <a name="line.398"></a>
+<span class="sourceLineNo">399</span>                /**<a name="line.399"></a>
+<span class="sourceLineNo">400</span>                 * Returns one line of a 3x3 character representation. Each call<a name="line.400"></a>
+<span class="sourceLineNo">401</span>                 * returns 3 characters, with the middle being the roomchar, and<a name="line.401"></a>
+<span class="sourceLineNo">402</span>                 * the rest depending on the links.  Call this three times with<a name="line.402"></a>
+<span class="sourceLineNo">403</span>                 * 0, 1, and 2, to get all three lines.<a name="line.403"></a>
+<span class="sourceLineNo">404</span>                 * @param roomChar the char to use for this room<a name="line.404"></a>
+<span class="sourceLineNo">405</span>                 * @param line which line, 0, 1, or 2<a name="line.405"></a>
+<span class="sourceLineNo">406</span>                 * @return the 3 character string for this line.<a name="line.406"></a>
+<span class="sourceLineNo">407</span>                 */<a name="line.407"></a>
+<span class="sourceLineNo">408</span>                public String getColorRepresentation(char roomChar, int line);<a name="line.408"></a>
+<span class="sourceLineNo">409</span>                <a name="line.409"></a>
+<span class="sourceLineNo">410</span>                /**<a name="line.410"></a>
+<span class="sourceLineNo">411</span>                 * Returns the room object assigned to this node.<a name="line.411"></a>
+<span class="sourceLineNo">412</span>                 * @see AreaGenerationLibrary.LayoutNode#setRoom(Room)<a name="line.412"></a>
+<span class="sourceLineNo">413</span>                 * @return the room object assigned to this node.<a name="line.413"></a>
+<span class="sourceLineNo">414</span>                 */<a name="line.414"></a>
+<span class="sourceLineNo">415</span>                public Room room();<a name="line.415"></a>
+<span class="sourceLineNo">416</span>                <a name="line.416"></a>
+<span class="sourceLineNo">417</span>                /**<a name="line.417"></a>
+<span class="sourceLineNo">418</span>                 * Sets the room object assigned to this node.<a name="line.418"></a>
+<span class="sourceLineNo">419</span>                 * @see AreaGenerationLibrary.LayoutNode#room()<a name="line.419"></a>
+<span class="sourceLineNo">420</span>                 * @param room the room object assigned to this node.<a name="line.420"></a>
+<span class="sourceLineNo">421</span>                 */<a name="line.421"></a>
+<span class="sourceLineNo">422</span>                public void setRoom(Room room);<a name="line.422"></a>
+<span class="sourceLineNo">423</span>        }<a name="line.423"></a>
+<span class="sourceLineNo">424</span><a name="line.424"></a>
+<span class="sourceLineNo">425</span>        /**<a name="line.425"></a>
+<span class="sourceLineNo">426</span>         * Enum of the types of tags that room layoutnodes can<a name="line.426"></a>
+<span class="sourceLineNo">427</span>         * be flagged with.<a name="line.427"></a>
+<span class="sourceLineNo">428</span>         * @see AreaGenerationLibrary.LayoutNode<a name="line.428"></a>
+<span class="sourceLineNo">429</span>         * @author Bo Zimmerman<a name="line.429"></a>
+<span class="sourceLineNo">430</span>         *<a name="line.430"></a>
+<span class="sourceLineNo">431</span>         */<a name="line.431"></a>
+<span class="sourceLineNo">432</span>        public enum LayoutTags<a name="line.432"></a>
+<span class="sourceLineNo">433</span>        {<a name="line.433"></a>
+<span class="sourceLineNo">434</span>                NODERUN,<a name="line.434"></a>
+<span class="sourceLineNo">435</span>                NODEFLAGS,<a name="line.435"></a>
+<span class="sourceLineNo">436</span>                NODETYPE,<a name="line.436"></a>
+<span class="sourceLineNo">437</span>                NODEEXITS<a name="line.437"></a>
+<span class="sourceLineNo">438</span>        }<a name="line.438"></a>
+<span class="sourceLineNo">439</span><a name="line.439"></a>
+<span class="sourceLineNo">440</span>        /**<a name="line.440"></a>
+<span class="sourceLineNo">441</span>         * Enum of the type of room layoutnode.<a name="line.441"></a>
+<span class="sourceLineNo">442</span>         * @see AreaGenerationLibrary.LayoutNode<a name="line.442"></a>
+<span class="sourceLineNo">443</span>         * @author Bo Zimmerman<a name="line.443"></a>
+<span class="sourceLineNo">444</span>         *<a name="line.444"></a>
+<span class="sourceLineNo">445</span>         */<a name="line.445"></a>
+<span class="sourceLineNo">446</span>        public enum LayoutTypes<a name="line.446"></a>
+<span class="sourceLineNo">447</span>        {<a name="line.447"></a>
+<span class="sourceLineNo">448</span>                surround,<a name="line.448"></a>
+<span class="sourceLineNo">449</span>                leaf,<a name="line.449"></a>
+<span class="sourceLineNo">450</span>                street,<a name="line.450"></a>
+<span class="sourceLineNo">451</span>                square,<a name="line.451"></a>
+<span class="sourceLineNo">452</span>                interior<a name="line.452"></a>
+<span class="sourceLineNo">453</span>        }<a name="line.453"></a>
+<span class="sourceLineNo">454</span><a name="line.454"></a>
+<span class="sourceLineNo">455</span>        /**<a name="line.455"></a>
+<span class="sourceLineNo">456</span>         * Enum of the type of room layoutnode<a name="line.456"></a>
+<span class="sourceLineNo">457</span>         * @see AreaGenerationLibrary.LayoutNode<a name="line.457"></a>
+<span class="sourceLineNo">458</span>         * @author Bo Zimmerman<a name="line.458"></a>
+<span class="sourceLineNo">459</span>         *<a name="line.459"></a>
+<span class="sourceLineNo">460</span>         */<a name="line.460"></a>
+<span class="sourceLineNo">461</span>        public enum LayoutFlags<a name="line.461"></a>
+<span class="sourceLineNo">462</span>        {<a name="line.462"></a>
+<span class="sourceLineNo">463</span>                corner,<a name="line.463"></a>
+<span class="sourceLineNo">464</span>                gate,<a name="line.464"></a>
+<span class="sourceLineNo">465</span>                intersection,<a name="line.465"></a>
+<span class="sourceLineNo">466</span>                tee,<a name="line.466"></a>
+<span class="sourceLineNo">467</span>                offleaf<a name="line.467"></a>
+<span class="sourceLineNo">468</span>        }<a name="line.468"></a>
+<span class="sourceLineNo">469</span><a name="line.469"></a>
+<span class="sourceLineNo">470</span>        /**<a name="line.470"></a>
+<span class="sourceLineNo">471</span>         * If this room layoutnode is a street type, what<a name="line.471"></a>
+<span class="sourceLineNo">472</span>         * direction does it run?<a name="line.472"></a>
+<span class="sourceLineNo">473</span>         * @see AreaGenerationLibrary.LayoutNode<a name="line.473"></a>
+<span class="sourceLineNo">474</span>         * @author Bo Zimmerman<a name="line.474"></a>
+<span class="sourceLineNo">475</span>         *<a name="line.475"></a>
+<span class="sourceLineNo">476</span>         */<a name="line.476"></a>
+<span class="sourceLineNo">477</span>        public enum LayoutRuns<a name="line.477"></a>
+<span class="sourceLineNo">478</span>        {<a name="line.478"></a>
+<span class="sourceLineNo">479</span>                ew,<a name="line.479"></a>
+<span class="sourceLineNo">480</span>                ns,<a name="line.480"></a>
+<span class="sourceLineNo">481</span>                ud,<a name="line.481"></a>
+<span class="sourceLineNo">482</span>                nesw,<a name="line.482"></a>
+<span class="sourceLineNo">483</span>                nwse<a name="line.483"></a>
+<span class="sourceLineNo">484</span>        }<a name="line.484"></a>
+<span class="sourceLineNo">485</span>        <a name="line.485"></a>
+<span class="sourceLineNo">486</span>}<a name="line.486"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

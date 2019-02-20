@@ -1,0 +1,491 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Commands;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/*<a name="line.20"></a>
+<span class="sourceLineNo">021</span>   Copyright 2004-2018 Bo Zimmerman<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.23"></a>
+<span class="sourceLineNo">024</span>   you may not use this file except in compliance with the License.<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   You may obtain a copy of the License at<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>   Unless required by applicable law or agreed to in writing, software<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   See the License for the specific language governing permissions and<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   limitations under the License.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>*/<a name="line.34"></a>
+<span class="sourceLineNo">035</span>public class Train extends StdCommand<a name="line.35"></a>
+<span class="sourceLineNo">036</span>{<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        public Train()<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        {<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        }<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>        private final String[] access=I(new String[]{"TRAIN","TR","TRA"});<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        @Override<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        public String[] getAccessWords()<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        {<a name="line.44"></a>
+<span class="sourceLineNo">045</span>                return access;<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        }<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>        private static final int        TRAIN_HITPOINTS = 101;<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        private static final int        TRAIN_MANA              = 102;<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        private static final int        TRAIN_MOVE              = 103;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        private static final int        TRAIN_GAIN              = 104;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        private static final int        TRAIN_PRACTICES = 105;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        private static final int        TRAIN_CCLASS    = 106;<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        <a name="line.54"></a>
+<span class="sourceLineNo">055</span>        public static List&lt;String&gt; getAllPossibleThingsToTrainFor()<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        {<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                final List&lt;String&gt; V=new Vector&lt;String&gt;();<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                V.add("HIT POINTS");<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                V.add("MANA");<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                V.add("MOVEMENT");<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                V.add("GAIN");<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                V.add("PRACTICES");<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                for(final int i: CharStats.CODES.BASECODES())<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                        V.add(CharStats.CODES.DESC(i));<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                for(final Enumeration&lt;CharClass&gt; c=CMClass.charClasses();c.hasMoreElements();)<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                {<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                        final CharClass C=c.nextElement();<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                        if(CMLib.login().isAvailableCharClass(C))<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                                V.add(C.name().toUpperCase().trim());<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                }<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                return V;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        }<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>        @Override<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        public boolean execute(MOB mob, List&lt;String&gt; commands, int metaFlags)<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                throws java.io.IOException<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                List&lt;String&gt; origCmds=new StringXVector(commands);<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                if(commands.size()&lt;2)<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                {<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                        CMLib.commands().postCommandFail(mob,origCmds,L("You have @x1 training sessions. Enter HELP TRAIN for more information.",""+mob.getTrains()));<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                        return false;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                }<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                commands.remove(0);<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                String teacherName=null;<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                if(commands.size()&gt;1)<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                {<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                        teacherName=commands.get(commands.size()-1);<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                        if(teacherName.length()&gt;1)<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                                commands.remove(commands.size()-1);<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                        else<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                                teacherName=null;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                }<a name="line.93"></a>
+<span class="sourceLineNo">094</span><a name="line.94"></a>
+<span class="sourceLineNo">095</span>                final String abilityName=CMParms.combine(commands,0).toUpperCase();<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                final StringBuffer thingsToTrainFor=new StringBuffer("");<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                for(final int i: CharStats.CODES.BASECODES())<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                        thingsToTrainFor.append(CharStats.CODES.DESC(i)+", ");<a name="line.98"></a>
+<span class="sourceLineNo">099</span><a name="line.99"></a>
+<span class="sourceLineNo">100</span>                int trainsRequired=1;<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                int abilityCode=mob.baseCharStats().getCode(abilityName);<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                int curStat=-1;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                if((abilityCode&gt;=0)&amp;&amp;(CharStats.CODES.isBASE(abilityCode)))<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                {<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                        curStat=mob.baseCharStats().getRacialStat(mob, abilityCode);<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                        trainsRequired=CMLib.login().getTrainingCost(mob, abilityCode, false);<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                        if(trainsRequired&lt;0)<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                                return false;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                }<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                else<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                        abilityCode=-1;<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                CharClass theClass=null;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                if((!CMSecurity.isDisabled(CMSecurity.DisFlag.CLASSTRAINING))&amp;&amp;(abilityCode&lt;0))<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                        for(final Enumeration&lt;CharClass&gt; c=CMClass.charClasses();c.hasMoreElements();)<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                        {<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                                final CharClass C=c.nextElement();<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                                int classLevel=mob.charStats().getClassLevel(C);<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                                if(classLevel&lt;0)<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                                        classLevel=0;<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                                if((C.name().toUpperCase().startsWith(abilityName.toUpperCase()))<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                                ||(C.name(classLevel).toUpperCase().startsWith(abilityName.toUpperCase())))<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                                {<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                                        if((C.qualifiesForThisClass(mob,false))<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                                        &amp;&amp;(CMLib.login().isAvailableCharClass(C)))<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                                        {<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                                                abilityCode=TRAIN_CCLASS;<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                                                theClass=C;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                                        }<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                                        break;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                                }<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                                else<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                                if((C.qualifiesForThisClass(mob,true))<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                                &amp;&amp;(CMLib.login().isAvailableCharClass(C)))<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                                        thingsToTrainFor.append(C.name()+", ");<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                        }<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                }<a name="line.137"></a>
+<span class="sourceLineNo">138</span><a name="line.138"></a>
+<span class="sourceLineNo">139</span>                if(abilityCode&lt;0)<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                {<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                        if("HIT POINTS".startsWith(abilityName.toUpperCase()))<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                                abilityCode=TRAIN_HITPOINTS;<a name="line.142"></a>
+<span class="sourceLineNo">143</span>                        else<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                        if("MANA".startsWith(abilityName.toUpperCase()))<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                                abilityCode=TRAIN_MANA;<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                        else<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                        if("MOVE".startsWith(abilityName.toUpperCase()))<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                                abilityCode=TRAIN_MOVE;<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                        else<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                        if("GAIN".startsWith(abilityName.toUpperCase()))<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                                abilityCode=TRAIN_GAIN;<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                        else<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                        if("PRACTICES".startsWith(abilityName.toUpperCase()))<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                                abilityCode=TRAIN_PRACTICES;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                        else<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                        {<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                                if(abilityCode&lt;0)<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                                {<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                                        CMLib.commands().postCommandFail(mob,origCmds,L("You can't train for '@x1'. Try @x2HIT POINTS, MANA, MOVE, GAIN, or PRACTICES.",abilityName,thingsToTrainFor.toString()));<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                                        return false;<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                                }<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                        }<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                }<a name="line.163"></a>
+<span class="sourceLineNo">164</span><a name="line.164"></a>
+<span class="sourceLineNo">165</span>                if(abilityCode==TRAIN_GAIN)<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                {<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                        if(mob.getPractices()&lt;7)<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                        {<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                                CMLib.commands().postCommandFail(mob,origCmds,L("You don't seem to have enough practices to do that."));<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                                return false;<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                        }<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                }<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                else<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                if(mob.getTrains()&lt;=0)<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                {<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                        CMLib.commands().postCommandFail(mob,origCmds,L("You don't seem to have enough training sessions to do that."));<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                        return false;<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                }<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                else<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                if(mob.getTrains()&lt;trainsRequired)<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                {<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                        if(trainsRequired&gt;1)<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                        {<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                                CMLib.commands().postCommandFail(mob,origCmds,L("Training that ability further will require @x1 training points.",""+trainsRequired));<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                                return false;<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                        }<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                        else<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                        if(trainsRequired==1)<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                        {<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                                CMLib.commands().postCommandFail(mob,origCmds,L("Training that ability further will require @x1 training points.",""+trainsRequired));<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                                return false;<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                        }<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                }<a name="line.193"></a>
+<span class="sourceLineNo">194</span><a name="line.194"></a>
+<span class="sourceLineNo">195</span>                MOB teacher=null;<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                if(teacherName!=null)<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                        teacher=mob.location().fetchInhabitant(teacherName);<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                if(teacher==null)<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                for(int i=0;i&lt;mob.location().numInhabitants();i++)<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                {<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                        final MOB possTeach=mob.location().fetchInhabitant(i);<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                        if((possTeach!=null)&amp;&amp;(possTeach!=mob))<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                        {<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                                teacher=possTeach;<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                                break;<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                        }<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                }<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                if((teacher==null)||(!CMLib.flags().canBeSeenBy(teacher,mob)))<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                {<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                        mob.tell(teacher,null,null,L("You can't see &lt;S-NAME&gt;!"));<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                        return false;<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                }<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                if(!CMLib.flags().canBeSeenBy(mob,teacher))<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                {<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                        mob.tell(teacher,null,null,L("&lt;S-NAME&gt; can't see you!"));<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                        return false;<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                }<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                if(teacher==mob)<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                {<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                        CMLib.commands().postCommandFail(mob,origCmds,L("You cannot train with yourself!"));<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                        return false;<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                }<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                if(teacher.isAttributeSet(MOB.Attrib.NOTEACH))<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                {<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                        CMLib.commands().postCommandFail(mob,origCmds,L("@x1 is refusing to teach right now.",teacher.name()));<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                        return false;<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                }<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                if(mob.isAttributeSet(MOB.Attrib.NOTEACH))<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                {<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                        CMLib.commands().postCommandFail(mob,origCmds,L("You are refusing training at this time."));<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                        return false;<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                }<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                if(CMLib.flags().isSleeping(mob)||CMLib.flags().isSitting(mob))<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                {<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                        CMLib.commands().postCommandFail(mob,origCmds,L("You need to stand up for your training."));<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                        return false;<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                }<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                if(CMLib.flags().isSleeping(teacher)||CMLib.flags().isSitting(teacher))<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                {<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                        if(teacher.isMonster())<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                                CMLib.commands().postStand(teacher,true, false);<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                        if(CMLib.flags().isSleeping(teacher)||CMLib.flags().isSitting(teacher))<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                        {<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                                CMLib.commands().postCommandFail(mob,origCmds,L("@x1 looks a bit too relaxed to train with you.",teacher.name()));<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                                return false;<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                        }<a name="line.246"></a>
+<span class="sourceLineNo">247</span>                }<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                if(mob.isInCombat())<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                {<a name="line.249"></a>
+<span class="sourceLineNo">250</span>                        CMLib.commands().postCommandFail(mob,origCmds,L("Not while you are fighting!"));<a name="line.250"></a>
+<span class="sourceLineNo">251</span>                        return false;<a name="line.251"></a>
+<span class="sourceLineNo">252</span>                }<a name="line.252"></a>
+<span class="sourceLineNo">253</span>                if(teacher.isInCombat())<a name="line.253"></a>
+<span class="sourceLineNo">254</span>                {<a name="line.254"></a>
+<span class="sourceLineNo">255</span>                        CMLib.commands().postCommandFail(mob,origCmds,L("Your teacher seems busy right now."));<a name="line.255"></a>
+<span class="sourceLineNo">256</span>                        return false;<a name="line.256"></a>
+<span class="sourceLineNo">257</span>                }<a name="line.257"></a>
+<span class="sourceLineNo">258</span><a name="line.258"></a>
+<span class="sourceLineNo">259</span>                if(abilityCode==TRAIN_CCLASS)<a name="line.259"></a>
+<span class="sourceLineNo">260</span>                {<a name="line.260"></a>
+<span class="sourceLineNo">261</span>                        boolean canTeach=false;<a name="line.261"></a>
+<span class="sourceLineNo">262</span>                        for(int c=0;c&lt;teacher.charStats().numClasses();c++)<a name="line.262"></a>
+<span class="sourceLineNo">263</span>                        {<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                                if(teacher.charStats().getMyClass(c).baseClass().equals(mob.charStats().getCurrentClass().baseClass()))<a name="line.264"></a>
+<span class="sourceLineNo">265</span>                                        canTeach=true;<a name="line.265"></a>
+<span class="sourceLineNo">266</span>                        }<a name="line.266"></a>
+<span class="sourceLineNo">267</span>                        if((!canTeach)<a name="line.267"></a>
+<span class="sourceLineNo">268</span>                        &amp;&amp;(teacher.charStats().getClassLevel(theClass)&lt;1))<a name="line.268"></a>
+<span class="sourceLineNo">269</span>                        {<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                                if((!CMProps.getVar(CMProps.Str.MULTICLASS).startsWith("MULTI"))<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                                &amp;&amp;(!CMProps.getVar(CMProps.Str.MULTICLASS).endsWith("MULTI")))<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                                {<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                                        final CharClass C=CMClass.getCharClass(mob.charStats().getCurrentClass().baseClass());<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                                        final String baseClassName=(C!=null)?C.name():mob.charStats().getCurrentClass().baseClass();<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                                        CMLib.commands().postCommandFail(mob,origCmds,L("You can only learn that from another @x1.",baseClassName));<a name="line.275"></a>
+<span class="sourceLineNo">276</span>                                }<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                                else<a name="line.277"></a>
+<span class="sourceLineNo">278</span>                                if(theClass!=null)<a name="line.278"></a>
+<span class="sourceLineNo">279</span>                                {<a name="line.279"></a>
+<span class="sourceLineNo">280</span>                                        int classLevel=mob.charStats().getClassLevel(theClass);<a name="line.280"></a>
+<span class="sourceLineNo">281</span>                                        if(classLevel&lt;0)<a name="line.281"></a>
+<span class="sourceLineNo">282</span>                                                classLevel=0;<a name="line.282"></a>
+<span class="sourceLineNo">283</span>                                        CMLib.commands().postCommandFail(mob,origCmds,L("You can only learn that from another @x1.",theClass.name(classLevel)));<a name="line.283"></a>
+<span class="sourceLineNo">284</span>                                }<a name="line.284"></a>
+<span class="sourceLineNo">285</span>                                return false;<a name="line.285"></a>
+<span class="sourceLineNo">286</span>                        }<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                }<a name="line.287"></a>
+<span class="sourceLineNo">288</span><a name="line.288"></a>
+<span class="sourceLineNo">289</span>                if(abilityCode&lt;100)<a name="line.289"></a>
+<span class="sourceLineNo">290</span>                {<a name="line.290"></a>
+<span class="sourceLineNo">291</span>                        final int teachStat=teacher.charStats().getStat(abilityCode);<a name="line.291"></a>
+<span class="sourceLineNo">292</span>                        if(curStat&gt;=teachStat)<a name="line.292"></a>
+<span class="sourceLineNo">293</span>                        {<a name="line.293"></a>
+<span class="sourceLineNo">294</span>                                CMLib.commands().postCommandFail(mob,origCmds,L("You can only train with someone whose score is higher than yours."));<a name="line.294"></a>
+<span class="sourceLineNo">295</span>                                return false;<a name="line.295"></a>
+<span class="sourceLineNo">296</span>                        }<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                        curStat=mob.baseCharStats().getStat(abilityCode);<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                }<a name="line.298"></a>
+<span class="sourceLineNo">299</span><a name="line.299"></a>
+<span class="sourceLineNo">300</span>                final CMMsg msg=CMClass.getMsg(teacher,mob,null,CMMsg.MSG_NOISYMOVEMENT,L("&lt;S-NAME&gt; train(s) with &lt;T-NAMESELF&gt;."));<a name="line.300"></a>
+<span class="sourceLineNo">301</span>                if(!mob.location().okMessage(mob,msg))<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                        return false;<a name="line.302"></a>
+<span class="sourceLineNo">303</span>                mob.location().send(mob,msg);<a name="line.303"></a>
+<span class="sourceLineNo">304</span>                switch(abilityCode)<a name="line.304"></a>
+<span class="sourceLineNo">305</span>                {<a name="line.305"></a>
+<span class="sourceLineNo">306</span>                case CharStats.STAT_STRENGTH:<a name="line.306"></a>
+<span class="sourceLineNo">307</span>                        mob.tell(L("You feel stronger!"));<a name="line.307"></a>
+<span class="sourceLineNo">308</span>                        mob.baseCharStats().setStat(CharStats.STAT_STRENGTH,curStat+1);<a name="line.308"></a>
+<span class="sourceLineNo">309</span>                        mob.recoverCharStats();<a name="line.309"></a>
+<span class="sourceLineNo">310</span>                        mob.setTrains(mob.getTrains()-trainsRequired);<a name="line.310"></a>
+<span class="sourceLineNo">311</span>                        break;<a name="line.311"></a>
+<span class="sourceLineNo">312</span>                case CharStats.STAT_INTELLIGENCE:<a name="line.312"></a>
+<span class="sourceLineNo">313</span>                        mob.tell(L("You feel smarter!"));<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                        mob.baseCharStats().setStat(CharStats.STAT_INTELLIGENCE,curStat+1);<a name="line.314"></a>
+<span class="sourceLineNo">315</span>                        mob.recoverCharStats();<a name="line.315"></a>
+<span class="sourceLineNo">316</span>                        mob.setTrains(mob.getTrains()-trainsRequired);<a name="line.316"></a>
+<span class="sourceLineNo">317</span>                        break;<a name="line.317"></a>
+<span class="sourceLineNo">318</span>                case CharStats.STAT_DEXTERITY:<a name="line.318"></a>
+<span class="sourceLineNo">319</span>                        mob.tell(L("You feel more dextrous!"));<a name="line.319"></a>
+<span class="sourceLineNo">320</span>                        mob.baseCharStats().setStat(CharStats.STAT_DEXTERITY,curStat+1);<a name="line.320"></a>
+<span class="sourceLineNo">321</span>                        mob.recoverCharStats();<a name="line.321"></a>
+<span class="sourceLineNo">322</span>                        mob.setTrains(mob.getTrains()-trainsRequired);<a name="line.322"></a>
+<span class="sourceLineNo">323</span>                        break;<a name="line.323"></a>
+<span class="sourceLineNo">324</span>                case CharStats.STAT_CONSTITUTION:<a name="line.324"></a>
+<span class="sourceLineNo">325</span>                        mob.tell(L("You feel healthier!"));<a name="line.325"></a>
+<span class="sourceLineNo">326</span>                        mob.baseCharStats().setStat(CharStats.STAT_CONSTITUTION,curStat+1);<a name="line.326"></a>
+<span class="sourceLineNo">327</span>                        mob.recoverCharStats();<a name="line.327"></a>
+<span class="sourceLineNo">328</span>                        mob.setTrains(mob.getTrains()-trainsRequired);<a name="line.328"></a>
+<span class="sourceLineNo">329</span>                        break;<a name="line.329"></a>
+<span class="sourceLineNo">330</span>                case CharStats.STAT_CHARISMA:<a name="line.330"></a>
+<span class="sourceLineNo">331</span>                        mob.tell(L("You feel more charismatic!"));<a name="line.331"></a>
+<span class="sourceLineNo">332</span>                        mob.baseCharStats().setStat(CharStats.STAT_CHARISMA,curStat+1);<a name="line.332"></a>
+<span class="sourceLineNo">333</span>                        mob.recoverCharStats();<a name="line.333"></a>
+<span class="sourceLineNo">334</span>                        mob.setTrains(mob.getTrains()-trainsRequired);<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                        break;<a name="line.335"></a>
+<span class="sourceLineNo">336</span>                case CharStats.STAT_WISDOM:<a name="line.336"></a>
+<span class="sourceLineNo">337</span>                        mob.tell(L("You feel wiser!"));<a name="line.337"></a>
+<span class="sourceLineNo">338</span>                        mob.baseCharStats().setStat(CharStats.STAT_WISDOM,curStat+1);<a name="line.338"></a>
+<span class="sourceLineNo">339</span>                        mob.recoverCharStats();<a name="line.339"></a>
+<span class="sourceLineNo">340</span>                        mob.setTrains(mob.getTrains()-trainsRequired);<a name="line.340"></a>
+<span class="sourceLineNo">341</span>                        break;<a name="line.341"></a>
+<span class="sourceLineNo">342</span>                case TRAIN_HITPOINTS:<a name="line.342"></a>
+<span class="sourceLineNo">343</span>                        mob.tell(L("You feel even healthier!"));<a name="line.343"></a>
+<span class="sourceLineNo">344</span>                        mob.baseState().setHitPoints(mob.baseState().getHitPoints()+10);<a name="line.344"></a>
+<span class="sourceLineNo">345</span>                        mob.maxState().setHitPoints(mob.maxState().getHitPoints()+10);<a name="line.345"></a>
+<span class="sourceLineNo">346</span>                        mob.curState().setHitPoints(mob.curState().getHitPoints()+10);<a name="line.346"></a>
+<span class="sourceLineNo">347</span>                        mob.setTrains(mob.getTrains()-1);<a name="line.347"></a>
+<span class="sourceLineNo">348</span>                        break;<a name="line.348"></a>
+<span class="sourceLineNo">349</span>                case TRAIN_MANA:<a name="line.349"></a>
+<span class="sourceLineNo">350</span>                        mob.tell(L("You feel more powerful!"));<a name="line.350"></a>
+<span class="sourceLineNo">351</span>                        mob.baseState().setMana(mob.baseState().getMana()+20);<a name="line.351"></a>
+<span class="sourceLineNo">352</span>                        mob.maxState().setMana(mob.maxState().getMana()+20);<a name="line.352"></a>
+<span class="sourceLineNo">353</span>                        mob.curState().setMana(mob.curState().getMana()+20);<a name="line.353"></a>
+<span class="sourceLineNo">354</span>                        mob.setTrains(mob.getTrains()-1);<a name="line.354"></a>
+<span class="sourceLineNo">355</span>                        break;<a name="line.355"></a>
+<span class="sourceLineNo">356</span>                case TRAIN_MOVE:<a name="line.356"></a>
+<span class="sourceLineNo">357</span>                        mob.tell(L("You feel more rested!"));<a name="line.357"></a>
+<span class="sourceLineNo">358</span>                        mob.baseState().setMovement(mob.baseState().getMovement()+20);<a name="line.358"></a>
+<span class="sourceLineNo">359</span>                        mob.maxState().setMovement(mob.maxState().getMovement()+20);<a name="line.359"></a>
+<span class="sourceLineNo">360</span>                        mob.curState().setMovement(mob.curState().getMovement()+20);<a name="line.360"></a>
+<span class="sourceLineNo">361</span>                        mob.setTrains(mob.getTrains()-1);<a name="line.361"></a>
+<span class="sourceLineNo">362</span>                        break;<a name="line.362"></a>
+<span class="sourceLineNo">363</span>                case TRAIN_GAIN:<a name="line.363"></a>
+<span class="sourceLineNo">364</span>                        mob.tell(L("You feel more trainable!"));<a name="line.364"></a>
+<span class="sourceLineNo">365</span>                        mob.setTrains(mob.getTrains()+1);<a name="line.365"></a>
+<span class="sourceLineNo">366</span>                        mob.setPractices(mob.getPractices()-7);<a name="line.366"></a>
+<span class="sourceLineNo">367</span>                        break;<a name="line.367"></a>
+<span class="sourceLineNo">368</span>                case TRAIN_PRACTICES:<a name="line.368"></a>
+<span class="sourceLineNo">369</span>                        mob.tell(L("You feel more educatable!"));<a name="line.369"></a>
+<span class="sourceLineNo">370</span>                        mob.setTrains(mob.getTrains()-1);<a name="line.370"></a>
+<span class="sourceLineNo">371</span>                        mob.setPractices(mob.getPractices()+5);<a name="line.371"></a>
+<span class="sourceLineNo">372</span>                        break;<a name="line.372"></a>
+<span class="sourceLineNo">373</span>                default:<a name="line.373"></a>
+<span class="sourceLineNo">374</span>                        if(CMParms.contains(CharStats.CODES.BASECODES(), abilityCode))<a name="line.374"></a>
+<span class="sourceLineNo">375</span>                        {<a name="line.375"></a>
+<span class="sourceLineNo">376</span>                                mob.tell(L("You feel more @x1!",CharStats.CODES.NAME(abilityCode)));<a name="line.376"></a>
+<span class="sourceLineNo">377</span>                                mob.baseCharStats().setStat(abilityCode,curStat+1);<a name="line.377"></a>
+<span class="sourceLineNo">378</span>                                mob.recoverCharStats();<a name="line.378"></a>
+<span class="sourceLineNo">379</span>                                mob.setTrains(mob.getTrains()-trainsRequired);<a name="line.379"></a>
+<span class="sourceLineNo">380</span>                        }<a name="line.380"></a>
+<span class="sourceLineNo">381</span>                        break;<a name="line.381"></a>
+<span class="sourceLineNo">382</span>                case TRAIN_CCLASS:<a name="line.382"></a>
+<span class="sourceLineNo">383</span>                        if(theClass!=null)<a name="line.383"></a>
+<span class="sourceLineNo">384</span>                        {<a name="line.384"></a>
+<span class="sourceLineNo">385</span>                                int classLevel=mob.charStats().getClassLevel(theClass);<a name="line.385"></a>
+<span class="sourceLineNo">386</span>                                if(classLevel&lt;0)<a name="line.386"></a>
+<span class="sourceLineNo">387</span>                                        classLevel=0;<a name="line.387"></a>
+<span class="sourceLineNo">388</span>                                mob.tell(L("You have undergone @x1 training!",theClass.name(classLevel)));<a name="line.388"></a>
+<span class="sourceLineNo">389</span>                                mob.setTrains(mob.getTrains()-1);<a name="line.389"></a>
+<span class="sourceLineNo">390</span>                                mob.baseCharStats().getCurrentClass().endCharacter(mob);<a name="line.390"></a>
+<span class="sourceLineNo">391</span>                                mob.baseCharStats().setCurrentClass(theClass);<a name="line.391"></a>
+<span class="sourceLineNo">392</span>                                if((!mob.isMonster())&amp;&amp;(mob.soulMate()==null))<a name="line.392"></a>
+<span class="sourceLineNo">393</span>                                        CMLib.coffeeTables().bump(mob,CoffeeTableRow.STAT_CLASSCHANGE);<a name="line.393"></a>
+<span class="sourceLineNo">394</span>                                mob.recoverCharStats();<a name="line.394"></a>
+<span class="sourceLineNo">395</span>                                mob.charStats().getCurrentClass().startCharacter(mob,false,true);<a name="line.395"></a>
+<span class="sourceLineNo">396</span>                        }<a name="line.396"></a>
+<span class="sourceLineNo">397</span>                        break;<a name="line.397"></a>
+<span class="sourceLineNo">398</span>                }<a name="line.398"></a>
+<span class="sourceLineNo">399</span>                return false;<a name="line.399"></a>
+<span class="sourceLineNo">400</span>        }<a name="line.400"></a>
+<span class="sourceLineNo">401</span>        <a name="line.401"></a>
+<span class="sourceLineNo">402</span>        @Override<a name="line.402"></a>
+<span class="sourceLineNo">403</span>        public double combatActionsCost(final MOB mob, final List&lt;String&gt; cmds)<a name="line.403"></a>
+<span class="sourceLineNo">404</span>        {<a name="line.404"></a>
+<span class="sourceLineNo">405</span>                return CMProps.getCommandCombatActionCost(ID());<a name="line.405"></a>
+<span class="sourceLineNo">406</span>        }<a name="line.406"></a>
+<span class="sourceLineNo">407</span><a name="line.407"></a>
+<span class="sourceLineNo">408</span>        @Override<a name="line.408"></a>
+<span class="sourceLineNo">409</span>        public double actionsCost(final MOB mob, final List&lt;String&gt; cmds)<a name="line.409"></a>
+<span class="sourceLineNo">410</span>        {<a name="line.410"></a>
+<span class="sourceLineNo">411</span>                return CMProps.getCommandActionCost(ID());<a name="line.411"></a>
+<span class="sourceLineNo">412</span>        }<a name="line.412"></a>
+<span class="sourceLineNo">413</span><a name="line.413"></a>
+<span class="sourceLineNo">414</span>        @Override<a name="line.414"></a>
+<span class="sourceLineNo">415</span>        public boolean canBeOrdered()<a name="line.415"></a>
+<span class="sourceLineNo">416</span>        {<a name="line.416"></a>
+<span class="sourceLineNo">417</span>                return false;<a name="line.417"></a>
+<span class="sourceLineNo">418</span>        }<a name="line.418"></a>
+<span class="sourceLineNo">419</span>}<a name="line.419"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

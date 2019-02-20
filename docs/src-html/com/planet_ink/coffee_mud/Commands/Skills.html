@@ -1,0 +1,416 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Commands;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Libraries.interfaces.ListingLibrary;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/*<a name="line.20"></a>
+<span class="sourceLineNo">021</span>   Copyright 2004-2018 Bo Zimmerman<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.23"></a>
+<span class="sourceLineNo">024</span>   you may not use this file except in compliance with the License.<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   You may obtain a copy of the License at<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>   Unless required by applicable law or agreed to in writing, software<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   See the License for the specific language governing permissions and<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   limitations under the License.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>*/<a name="line.34"></a>
+<span class="sourceLineNo">035</span>public class Skills extends StdCommand<a name="line.35"></a>
+<span class="sourceLineNo">036</span>{<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        public Skills()<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        {<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        }<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>        private final String[]  access  = I(new String[] { "SKILLS", "SK" });<a name="line.41"></a>
+<span class="sourceLineNo">042</span><a name="line.42"></a>
+<span class="sourceLineNo">043</span>        @Override<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        public String[] getAccessWords()<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        {<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                return access;<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        }<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span>        protected boolean parsedOutIndividualSkill(MOB mob, String qual, int acode)<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        {<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                return parsedOutIndividualSkill(mob, qual, new XVector&lt;Integer&gt;(Integer.valueOf(acode)));<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        }<a name="line.52"></a>
+<span class="sourceLineNo">053</span><a name="line.53"></a>
+<span class="sourceLineNo">054</span>        protected boolean parsedOutIndividualSkill(MOB mob, String qual, List&lt;Integer&gt; acodes)<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        {<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                if((qual==null)||(qual.length()==0)||(qual.equalsIgnoreCase("all")))<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                        return false;<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                if(qual.length()&gt;0)<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                {<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                        for(int i=1;i&lt;Ability.DOMAIN_DESCS.length;i++)<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                        {<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                                if(Ability.DOMAIN_DESCS[i].replace('_',' ').equalsIgnoreCase(qual))<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                                        return false;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                                else<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                                if((Ability.DOMAIN_DESCS[i].replace('_',' ').indexOf('/')&gt;=0)<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                                &amp;&amp;(Ability.DOMAIN_DESCS[i].replace('_',' ').substring(Ability.DOMAIN_DESCS[i].indexOf('/')+1).equalsIgnoreCase(qual)))<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                                        return false;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                        }<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                }<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                final Ability A=CMClass.findAbility(qual);<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                if((A!=null)<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                &amp;&amp;(acodes.contains(Integer.valueOf(A.classificationCode()&amp;Ability.ALL_ACODES))))<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                {<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                        final Ability A2=mob.fetchAbility(A.ID());<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                        if(A2==null)<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                                mob.tell(L("You don't know '@x1'.",A.name()));<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                        else<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                        {<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                                int level=CMLib.ableMapper().qualifyingLevel(mob,A2);<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                                if(level&lt;0)<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                                        level=0;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                                final StringBuffer line=new StringBuffer("");<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                                line.append("\n\rLevel ^!"+level+"^?:\n\r");<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                                line.append("^N[^H"+CMStrings.padRight(Integer.toString(A2.proficiency()),3)+"%^?]^N "+CMStrings.padRight("^&lt;HELP^&gt;"+A2.name()+"^&lt;/HELP^&gt;",19));<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                                line.append("^?\n\r");<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                                if(mob.session()!=null)<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                                        mob.session().wraplessPrintln(line.toString());<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                        }<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                        return true;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                }<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                return false;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        }<a name="line.92"></a>
+<span class="sourceLineNo">093</span><a name="line.93"></a>
+<span class="sourceLineNo">094</span>        protected int parseOutLevel(List&lt;String&gt; commands)<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        {<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                if((commands.size()&gt;1)<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                &amp;&amp;(CMath.isNumber(commands.get(commands.size()-1))))<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                {<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                        final int x=CMath.s_int(commands.get(commands.size()-1));<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                        commands.remove(commands.size()-1);<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                        return x;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                }<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                return -1;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        }<a name="line.104"></a>
+<span class="sourceLineNo">105</span><a name="line.105"></a>
+<span class="sourceLineNo">106</span>        /**<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         * Returns whether there are any crossings between a particular Ability type<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         * and a particular Ability domain.<a name="line.108"></a>
+<span class="sourceLineNo">109</span>         * @see com.planet_ink.coffee_mud.Abilities.interfaces.Ability#abilityCode()<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         * @see com.planet_ink.coffee_mud.Abilities.interfaces.Ability#DOMAIN_DESCS<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         * @see com.planet_ink.coffee_mud.Abilities.interfaces.Ability#ACODE_DESCS<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         * <a name="line.112"></a>
+<span class="sourceLineNo">113</span>         * @param domain the domain mask <a name="line.113"></a>
+<span class="sourceLineNo">114</span>         * @param acode the ability code<a name="line.114"></a>
+<span class="sourceLineNo">115</span>         * @return true if they meet somewhere<a name="line.115"></a>
+<span class="sourceLineNo">116</span>         */<a name="line.116"></a>
+<span class="sourceLineNo">117</span>        public boolean isDomainIncludedInAnyAbility(int domain, int acode)<a name="line.117"></a>
+<span class="sourceLineNo">118</span>        {<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                @SuppressWarnings("unchecked")<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                Map&lt;Integer, Set&lt;Integer&gt;&gt; completeDomainMap = (Map&lt;Integer, Set&lt;Integer&gt;&gt;)Resources.getResource("SYSYETM_ABLEDOMAINMAP");<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                if(completeDomainMap == null)<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                {<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                        completeDomainMap = new SHashtable&lt;Integer,Set&lt;Integer&gt;&gt;();<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                        Resources.submitResource("SYSYETM_ABLEDOMAINMAP",completeDomainMap);<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                }<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                STreeSet&lt;Integer&gt; V=(STreeSet&lt;Integer&gt;)completeDomainMap.get(Integer.valueOf(domain));<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                if(V==null)<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                {<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                        Ability A=null;<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                        V=new STreeSet&lt;Integer&gt;();<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                        for(final Enumeration&lt;Ability&gt; e=CMClass.abilities();e.hasMoreElements();)<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                        {<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                                A=e.nextElement();<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                                if(((A.classificationCode()&amp;Ability.ALL_DOMAINS)==domain)<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                                &amp;&amp;(!V.contains(Integer.valueOf((A.classificationCode()&amp;Ability.ALL_ACODES)))))<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                                        V.add(Integer.valueOf((A.classificationCode()&amp;Ability.ALL_ACODES)));<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                        }<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                        completeDomainMap.put(Integer.valueOf(domain),V);<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                }<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                return V.contains(Integer.valueOf(acode));<a name="line.140"></a>
+<span class="sourceLineNo">141</span>        }<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        <a name="line.142"></a>
+<span class="sourceLineNo">143</span>        protected void parseDomainInfo(MOB mob, List&lt;String&gt; commands, Vector&lt;Integer&gt; acodes, int[] level, int[] domain, String[] domainName)<a name="line.143"></a>
+<span class="sourceLineNo">144</span>        {<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                level[0]=parseOutLevel(commands);<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                final String qual=CMParms.combine(commands,1).toUpperCase();<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                domain[0]=-1;<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                if(qual.length()&gt;0)<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                for(int i=1;i&lt;Ability.DOMAIN_DESCS.length;i++)<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                {<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                        if(Ability.DOMAIN_DESCS[i].replace('_',' ').startsWith(qual))<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                        {<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                                domain[0] = i &lt;&lt; 5;<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                                break;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                        }<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                        else<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                        if((Ability.DOMAIN_DESCS[i].replace('_',' ').indexOf('/')&gt;=0)<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                        &amp;&amp;(Ability.DOMAIN_DESCS[i].replace('_',' ').substring(Ability.DOMAIN_DESCS[i].indexOf('/')+1).startsWith(qual)))<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                        {<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                                domain[0] = i &lt;&lt; 5;<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                                break;<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                        }<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                }<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                if(domain[0]&gt;0)<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                        domainName[0]=Ability.DOMAIN_DESCS[domain[0]&gt;&gt;5].toLowerCase();<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                if((domain[0]&lt;0)&amp;&amp;(qual.length()&gt;0))<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                {<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                        StringBuffer domains=new StringBuffer("");<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                        domains.append("\n\rValid schools/domains are: ");<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                        for(int i=1;i&lt;Ability.DOMAIN_DESCS.length;i++)<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                        {<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                                boolean found=false;<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                                for(int a=0;a&lt;acodes.size();a++)<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                                        found=found||isDomainIncludedInAnyAbility(i&lt;&lt;5,acodes.get(a).intValue());<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                                if(found)<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                                        domains.append(Ability.DOMAIN_DESCS[i].toLowerCase().replace('_',' ')+", ");<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                        }<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                        if(domains.toString().endsWith(", "))<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                                domains=new StringBuffer(domains.substring(0,domains.length()-2));<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                        if(!mob.isMonster())<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                                mob.session().wraplessPrintln(domains.toString()+"\n\r");<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                }<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                else<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                if(qual.length()&gt;0)<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                        domainName[0]+=" ";<a name="line.185"></a>
+<span class="sourceLineNo">186</span>        }<a name="line.186"></a>
+<span class="sourceLineNo">187</span><a name="line.187"></a>
+<span class="sourceLineNo">188</span>        protected StringBuilder getAbilities(MOB viewerM, MOB ableM, int ofType, int ofDomain, boolean addQualLine, int maxLevel)<a name="line.188"></a>
+<span class="sourceLineNo">189</span>        {<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                final ArrayList&lt;Integer&gt; V=new ArrayList&lt;Integer&gt;();<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                int mask=Ability.ALL_ACODES;<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                if(ofDomain&gt;=0)<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                {<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                        mask=Ability.ALL_ACODES|Ability.ALL_DOMAINS;<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                        ofType=ofType|ofDomain;<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                }<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                V.add(Integer.valueOf(ofType));<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                return getAbilities(viewerM,ableM,V,mask,addQualLine,maxLevel);<a name="line.198"></a>
+<span class="sourceLineNo">199</span>        }<a name="line.199"></a>
+<span class="sourceLineNo">200</span><a name="line.200"></a>
+<span class="sourceLineNo">201</span>        protected final static Comparator&lt;Ability&gt; nameComparator=new Comparator&lt;Ability&gt;()<a name="line.201"></a>
+<span class="sourceLineNo">202</span>        {<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                @Override<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                public int compare(Ability o1, Ability o2)<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                {<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                        if(o1==null)<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                                return o2==null?0:-1;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                        if(o2==null)<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                                return 1;<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                        return o1.Name().compareTo(o2.Name());<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                }<a name="line.211"></a>
+<span class="sourceLineNo">212</span>        };<a name="line.212"></a>
+<span class="sourceLineNo">213</span>        <a name="line.213"></a>
+<span class="sourceLineNo">214</span>        protected StringBuilder getAbilities(MOB viewerM, MOB ableM, List&lt;Integer&gt; ofTypes, int mask, boolean addQualLine, int maxLevel)<a name="line.214"></a>
+<span class="sourceLineNo">215</span>        {<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                final int COL_LEN1=CMLib.lister().fixColWidth(3.0,viewerM);<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                final int COL_LEN2=CMLib.lister().fixColWidth(18.0,viewerM);<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                final int COL_LEN3=CMLib.lister().fixColWidth(18.0,viewerM);<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                int highestLevel=0;<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                final int lowestLevel=ableM.phyStats().level()+1;<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                final StringBuilder msg=new StringBuilder("");<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                for(final Enumeration&lt;Ability&gt; a=ableM.allAbilities();a.hasMoreElements();)<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                {<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                        final Ability A=a.nextElement();<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                        int level=CMLib.ableMapper().qualifyingLevel(ableM,A);<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                        if(level&lt;0)<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                                level=0;<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                        if((A!=null)<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                        &amp;&amp;(level&gt;highestLevel)<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                        &amp;&amp;(level&lt;lowestLevel)<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                        &amp;&amp;(ofTypes.contains(Integer.valueOf(A.classificationCode()&amp;mask))))<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                                highestLevel=level;<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                }<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                if((maxLevel&gt;=0)&amp;&amp;(maxLevel&lt;highestLevel))<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                        highestLevel=maxLevel;<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                final int prowessCode = CMProps.getIntVar(CMProps.Int.COMBATPROWESS);<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                final boolean useWords=CMProps.Int.Prowesses.SKILL_PROFICIENCY.is(prowessCode);<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                final int[] proficiencyRanges=new int[]{5,10,20,30,40,50,60,70,75,80,85,90,95,100};<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                int MAX_COLS=useWords?2:3;<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                final List&lt;Ability&gt; sortedAllAbilities = new XVector&lt;Ability&gt;(ableM.allAbilities());<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                Collections.sort(sortedAllAbilities,nameComparator);<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                for(int l=0;l&lt;=highestLevel;l++)<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                {<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                        final StringBuilder thisLine=new StringBuilder("");<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                        int col=0;<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                        <a name="line.246"></a>
+<span class="sourceLineNo">247</span>                        for(final Ability A : sortedAllAbilities)<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                        {<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                                int level=CMLib.ableMapper().qualifyingLevel(ableM,A);<a name="line.249"></a>
+<span class="sourceLineNo">250</span>                                if(level&lt;0)<a name="line.250"></a>
+<span class="sourceLineNo">251</span>                                        level=0;<a name="line.251"></a>
+<span class="sourceLineNo">252</span>                                if((A!=null)<a name="line.252"></a>
+<span class="sourceLineNo">253</span>                                &amp;&amp;(level==l)<a name="line.253"></a>
+<span class="sourceLineNo">254</span>                                &amp;&amp;(ofTypes.contains(Integer.valueOf(A.classificationCode()&amp;mask))))<a name="line.254"></a>
+<span class="sourceLineNo">255</span>                                {<a name="line.255"></a>
+<span class="sourceLineNo">256</span>                                        if(thisLine.length()==0)<a name="line.256"></a>
+<span class="sourceLineNo">257</span>                                                thisLine.append("\n\rLevel ^!"+l+"^?:\n\r");<a name="line.257"></a>
+<span class="sourceLineNo">258</span>                                        col++;<a name="line.258"></a>
+<span class="sourceLineNo">259</span>                                        if(!useWords)<a name="line.259"></a>
+<span class="sourceLineNo">260</span>                                        {<a name="line.260"></a>
+<span class="sourceLineNo">261</span>                                                thisLine.append("^N[^H").append(CMStrings.padRight(Integer.toString(A.proficiency()),COL_LEN1));<a name="line.261"></a>
+<span class="sourceLineNo">262</span>                                                thisLine.append("%^?]^N");<a name="line.262"></a>
+<span class="sourceLineNo">263</span>                                                thisLine.append(" ");//+(A.isAutoInvoked()?"^H.^N":" ")<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                                                if(col &lt; MAX_COLS)<a name="line.264"></a>
+<span class="sourceLineNo">265</span>                                                        thisLine.append(CMStrings.padRight("^&lt;HELP^&gt;",A.name(),"^&lt;/HELP^&gt;",COL_LEN2));<a name="line.265"></a>
+<span class="sourceLineNo">266</span>                                                else<a name="line.266"></a>
+<span class="sourceLineNo">267</span>                                                {<a name="line.267"></a>
+<span class="sourceLineNo">268</span>                                                        thisLine.append(CMStrings.limit("^&lt;HELP^&gt;",A.name(),"^&lt;/HELP^&gt;\n\r",COL_LEN3));<a name="line.268"></a>
+<span class="sourceLineNo">269</span>                                                        col=0;<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                                                }<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                                        }<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                                        else<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                                        {<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                                                thisLine.append(CMStrings.padRight("^&lt;HELP^&gt;",A.name(),"^&lt;/HELP^&gt;",COL_LEN2));<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                                                int ordinal=0;<a name="line.275"></a>
+<span class="sourceLineNo">276</span>                                                for(int i=0;i&lt;proficiencyRanges.length;i++)<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                                                {<a name="line.277"></a>
+<span class="sourceLineNo">278</span>                                                        if(A.proficiency()&lt;=proficiencyRanges[i])<a name="line.278"></a>
+<span class="sourceLineNo">279</span>                                                        {<a name="line.279"></a>
+<span class="sourceLineNo">280</span>                                                                ordinal=i;<a name="line.280"></a>
+<span class="sourceLineNo">281</span>                                                                break;<a name="line.281"></a>
+<span class="sourceLineNo">282</span>                                                        }<a name="line.282"></a>
+<span class="sourceLineNo">283</span>                                                }<a name="line.283"></a>
+<span class="sourceLineNo">284</span>                                                final String message=CMProps.getListFileChoiceFromIndexedList(CMProps.ListFile.SKILL_PROFICIENCY_DESC, ordinal);<a name="line.284"></a>
+<span class="sourceLineNo">285</span>                                                if(col &lt; MAX_COLS)<a name="line.285"></a>
+<span class="sourceLineNo">286</span>                                                        thisLine.append(CMStrings.padRight("^N(^H",message,"^?)^N",COL_LEN2));<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                                                else<a name="line.287"></a>
+<span class="sourceLineNo">288</span>                                                {<a name="line.288"></a>
+<span class="sourceLineNo">289</span>                                                        thisLine.append(CMStrings.limit("^N(^H",message,"^?)^N\n\r",COL_LEN3));<a name="line.289"></a>
+<span class="sourceLineNo">290</span>                                                        col=0;<a name="line.290"></a>
+<span class="sourceLineNo">291</span>                                                }<a name="line.291"></a>
+<span class="sourceLineNo">292</span>                                        }<a name="line.292"></a>
+<span class="sourceLineNo">293</span>                                }<a name="line.293"></a>
+<span class="sourceLineNo">294</span>                        }<a name="line.294"></a>
+<span class="sourceLineNo">295</span>                        if(thisLine.length()&gt;0)<a name="line.295"></a>
+<span class="sourceLineNo">296</span>                                msg.append(thisLine);<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                }<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                if(msg.length()==0)<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                        msg.append(L("^!None!^?"));<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                else<a name="line.300"></a>
+<span class="sourceLineNo">301</span>                if(addQualLine)<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                        msg.append(L("\n\r\n\rUse QUALIFY to see additional skills you can GAIN."));// ^H.^N = passive/auto-invoked."));<a name="line.302"></a>
+<span class="sourceLineNo">303</span>                return msg;<a name="line.303"></a>
+<span class="sourceLineNo">304</span>        }<a name="line.304"></a>
+<span class="sourceLineNo">305</span><a name="line.305"></a>
+<span class="sourceLineNo">306</span>        @Override<a name="line.306"></a>
+<span class="sourceLineNo">307</span>        public boolean execute(MOB mob, List&lt;String&gt; commands, int metaFlags)<a name="line.307"></a>
+<span class="sourceLineNo">308</span>                throws java.io.IOException<a name="line.308"></a>
+<span class="sourceLineNo">309</span>        {<a name="line.309"></a>
+<span class="sourceLineNo">310</span>                final StringBuilder msg=new StringBuilder("");<a name="line.310"></a>
+<span class="sourceLineNo">311</span>                final Vector&lt;Integer&gt; V=new Vector&lt;Integer&gt;();<a name="line.311"></a>
+<span class="sourceLineNo">312</span>                V.add(Integer.valueOf(Ability.ACODE_THIEF_SKILL));<a name="line.312"></a>
+<span class="sourceLineNo">313</span>                V.add(Integer.valueOf(Ability.ACODE_SKILL));<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                V.add(Integer.valueOf(Ability.ACODE_COMMON_SKILL));<a name="line.314"></a>
+<span class="sourceLineNo">315</span>                final String qual=CMParms.combine(commands,1).toUpperCase();<a name="line.315"></a>
+<span class="sourceLineNo">316</span>                if(parsedOutIndividualSkill(mob,qual,V))<a name="line.316"></a>
+<span class="sourceLineNo">317</span>                        return true;<a name="line.317"></a>
+<span class="sourceLineNo">318</span>                final int[] level=new int[1];<a name="line.318"></a>
+<span class="sourceLineNo">319</span>                final int[] domain=new int[1];<a name="line.319"></a>
+<span class="sourceLineNo">320</span>                final String[] domainName=new String[1];<a name="line.320"></a>
+<span class="sourceLineNo">321</span>                domainName[0]="";<a name="line.321"></a>
+<span class="sourceLineNo">322</span>                level[0]=-1;<a name="line.322"></a>
+<span class="sourceLineNo">323</span>                parseDomainInfo(mob,commands,V,level,domain,domainName);<a name="line.323"></a>
+<span class="sourceLineNo">324</span>                int mask=Ability.ALL_ACODES;<a name="line.324"></a>
+<span class="sourceLineNo">325</span>                if(domain[0]&gt;=0)<a name="line.325"></a>
+<span class="sourceLineNo">326</span>                {<a name="line.326"></a>
+<span class="sourceLineNo">327</span>                        mask=mask|Ability.ALL_DOMAINS;<a name="line.327"></a>
+<span class="sourceLineNo">328</span>                        for(int v=0;v&lt;V.size();v++)<a name="line.328"></a>
+<span class="sourceLineNo">329</span>                                V.setElementAt(Integer.valueOf(V.get(v).intValue()+domain[0]),v);<a name="line.329"></a>
+<span class="sourceLineNo">330</span>                }<a name="line.330"></a>
+<span class="sourceLineNo">331</span>                if((domain[0]&gt;=0)||(qual.length()==0))<a name="line.331"></a>
+<span class="sourceLineNo">332</span>                        msg.append(L("\n\r^HYour @x1skills:^? @x2",domainName[0].replace('_',' '),getAbilities(mob,mob,V,mask,true,level[0]).toString()));<a name="line.332"></a>
+<span class="sourceLineNo">333</span>                if(!mob.isMonster())<a name="line.333"></a>
+<span class="sourceLineNo">334</span>                        mob.session().wraplessPrintln(msg.toString());<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                return false;<a name="line.335"></a>
+<span class="sourceLineNo">336</span>        }<a name="line.336"></a>
+<span class="sourceLineNo">337</span><a name="line.337"></a>
+<span class="sourceLineNo">338</span>        @Override<a name="line.338"></a>
+<span class="sourceLineNo">339</span>        public boolean canBeOrdered()<a name="line.339"></a>
+<span class="sourceLineNo">340</span>        {<a name="line.340"></a>
+<span class="sourceLineNo">341</span>                return true;<a name="line.341"></a>
+<span class="sourceLineNo">342</span>        }<a name="line.342"></a>
+<span class="sourceLineNo">343</span><a name="line.343"></a>
+<span class="sourceLineNo">344</span>}<a name="line.344"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

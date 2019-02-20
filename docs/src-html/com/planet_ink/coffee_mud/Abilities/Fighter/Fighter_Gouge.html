@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Abilities.Fighter;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/*<a name="line.20"></a>
+<span class="sourceLineNo">021</span>   Copyright 2004-2018 Bo Zimmerman<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.23"></a>
+<span class="sourceLineNo">024</span>   you may not use this file except in compliance with the License.<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   You may obtain a copy of the License at<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>   Unless required by applicable law or agreed to in writing, software<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   See the License for the specific language governing permissions and<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   limitations under the License.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>*/<a name="line.34"></a>
+<span class="sourceLineNo">035</span><a name="line.35"></a>
+<span class="sourceLineNo">036</span>public class Fighter_Gouge extends MonkSkill<a name="line.36"></a>
+<span class="sourceLineNo">037</span>{<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        boolean doneTicking=false;<a name="line.38"></a>
+<span class="sourceLineNo">039</span><a name="line.39"></a>
+<span class="sourceLineNo">040</span>        @Override<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        public String ID()<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        {<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                return "Fighter_Gouge";<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        }<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>        private final static String localizedName = CMLib.lang().L("Gouge");<a name="line.46"></a>
+<span class="sourceLineNo">047</span><a name="line.47"></a>
+<span class="sourceLineNo">048</span>        @Override<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        public String name()<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        {<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                return localizedName;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        }<a name="line.52"></a>
+<span class="sourceLineNo">053</span><a name="line.53"></a>
+<span class="sourceLineNo">054</span>        private final static String localizedStaticDisplay = CMLib.lang().L("(Gouged Eyes)");<a name="line.54"></a>
+<span class="sourceLineNo">055</span><a name="line.55"></a>
+<span class="sourceLineNo">056</span>        @Override<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        public String displayText()<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                return localizedStaticDisplay;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        }<a name="line.60"></a>
+<span class="sourceLineNo">061</span><a name="line.61"></a>
+<span class="sourceLineNo">062</span>        @Override<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        protected int canAffectCode()<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        {<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                return CAN_MOBS;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        }<a name="line.66"></a>
+<span class="sourceLineNo">067</span><a name="line.67"></a>
+<span class="sourceLineNo">068</span>        @Override<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        protected int canTargetCode()<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        {<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                return CAN_MOBS;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        }<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>        @Override<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        public int abstractQuality()<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        {<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                return Ability.QUALITY_MALICIOUS;<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        }<a name="line.78"></a>
+<span class="sourceLineNo">079</span><a name="line.79"></a>
+<span class="sourceLineNo">080</span>        private static final String[] triggerStrings =I(new String[] {"GOUGE"});<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        @Override<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        public String[] triggerStrings()<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        {<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                return triggerStrings;<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        }<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>        @Override<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        public int classificationCode()<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        {<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                return Ability.ACODE_SKILL|Ability.DOMAIN_DIRTYFIGHTING;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        }<a name="line.91"></a>
+<span class="sourceLineNo">092</span><a name="line.92"></a>
+<span class="sourceLineNo">093</span>        @Override<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        protected int overrideMana()<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        {<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                return 100;<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        }<a name="line.97"></a>
+<span class="sourceLineNo">098</span><a name="line.98"></a>
+<span class="sourceLineNo">099</span>        @Override<a name="line.99"></a>
+<span class="sourceLineNo">100</span>        public int usageType()<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        {<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                return USAGE_MOVEMENT;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        }<a name="line.103"></a>
+<span class="sourceLineNo">104</span><a name="line.104"></a>
+<span class="sourceLineNo">105</span>        @Override<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        public void affectPhyStats(final Physical affected, final PhyStats affectableStats)<a name="line.106"></a>
+<span class="sourceLineNo">107</span>        {<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                super.affectPhyStats(affected,affectableStats);<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                if(!doneTicking)<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                        affectableStats.setSensesMask(affectableStats.sensesMask()|PhyStats.CAN_NOT_SEE);<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        }<a name="line.111"></a>
+<span class="sourceLineNo">112</span><a name="line.112"></a>
+<span class="sourceLineNo">113</span>        @Override<a name="line.113"></a>
+<span class="sourceLineNo">114</span>        public boolean okMessage(final Environmental myHost, final CMMsg msg)<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        {<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                if(!(affected instanceof MOB))<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                        return true;<a name="line.117"></a>
+<span class="sourceLineNo">118</span><a name="line.118"></a>
+<span class="sourceLineNo">119</span>                final MOB mob=(MOB)affected;<a name="line.119"></a>
+<span class="sourceLineNo">120</span><a name="line.120"></a>
+<span class="sourceLineNo">121</span>                if((doneTicking)&amp;&amp;(msg.amISource(mob)))<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                        unInvoke();<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                return true;<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        }<a name="line.124"></a>
+<span class="sourceLineNo">125</span><a name="line.125"></a>
+<span class="sourceLineNo">126</span>        @Override<a name="line.126"></a>
+<span class="sourceLineNo">127</span>        public void unInvoke()<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        {<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                if(!(affected instanceof MOB))<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                        return;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                final MOB mob=(MOB)affected;<a name="line.131"></a>
+<span class="sourceLineNo">132</span><a name="line.132"></a>
+<span class="sourceLineNo">133</span>                super.unInvoke();<a name="line.133"></a>
+<span class="sourceLineNo">134</span><a name="line.134"></a>
+<span class="sourceLineNo">135</span>                if(canBeUninvoked())<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                        mob.tell(L("Your eyes feel better."));<a name="line.136"></a>
+<span class="sourceLineNo">137</span>        }<a name="line.137"></a>
+<span class="sourceLineNo">138</span><a name="line.138"></a>
+<span class="sourceLineNo">139</span>        @Override<a name="line.139"></a>
+<span class="sourceLineNo">140</span>        public int castingQuality(MOB mob, Physical target)<a name="line.140"></a>
+<span class="sourceLineNo">141</span>        {<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                if((mob!=null)&amp;&amp;(target!=null))<a name="line.142"></a>
+<span class="sourceLineNo">143</span>                {<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                        if(mob.isInCombat()&amp;&amp;(mob.rangeToTarget()&gt;0))<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                                return Ability.QUALITY_INDIFFERENT;<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                        if(((mob.charStats().getBodyPart(Race.BODY_HAND)&lt;=0))<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                        ||((mob.charStats().getMyRace().bodyMask()[Race.BODY_HAND]&lt;=0)<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                           &amp;&amp;(mob.charStats().getBodyPart(Race.BODY_FOOT)&lt;=0)))<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                                return Ability.QUALITY_INDIFFERENT;<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                        if((target instanceof MOB)&amp;&amp;(((MOB)target).charStats().getBodyPart(Race.BODY_EYE)&lt;=0))<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                                return Ability.QUALITY_INDIFFERENT;<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                        if((target instanceof MOB)&amp;&amp;(!CMLib.flags().canSee((MOB)target)))<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                                return Ability.QUALITY_INDIFFERENT;<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                        if(anyWeapons(mob))<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                                return Ability.QUALITY_INDIFFERENT;<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                        if(target.fetchEffect(ID())!=null)<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                                return Ability.QUALITY_INDIFFERENT;<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                }<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                return super.castingQuality(mob,target);<a name="line.159"></a>
+<span class="sourceLineNo">160</span>        }<a name="line.160"></a>
+<span class="sourceLineNo">161</span><a name="line.161"></a>
+<span class="sourceLineNo">162</span>        @Override<a name="line.162"></a>
+<span class="sourceLineNo">163</span>        public boolean invoke(MOB mob, List&lt;String&gt; commands, Physical givenTarget, boolean auto, int asLevel)<a name="line.163"></a>
+<span class="sourceLineNo">164</span>        {<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                final MOB target=this.getTarget(mob,commands,givenTarget);<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                if(target==null)<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                        return false;<a name="line.167"></a>
+<span class="sourceLineNo">168</span><a name="line.168"></a>
+<span class="sourceLineNo">169</span>                if((!auto)<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                &amp;&amp;((mob.charStats().getBodyPart(Race.BODY_HAND)&lt;=0))<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                ||((mob.charStats().getMyRace().bodyMask()[Race.BODY_HAND]&lt;=0)<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                   &amp;&amp;(mob.charStats().getBodyPart(Race.BODY_FOOT)&lt;=0)))<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                {<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                        mob.tell(L("You need hands to gouge."));<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                        return false;<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                }<a name="line.176"></a>
+<span class="sourceLineNo">177</span><a name="line.177"></a>
+<span class="sourceLineNo">178</span>                if((!auto)&amp;&amp;(target.charStats().getBodyPart(Race.BODY_EYE)&lt;=0))<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                {<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                        mob.tell(L("@x1 has no eyes!",target.name(mob)));<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                        return false;<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                }<a name="line.182"></a>
+<span class="sourceLineNo">183</span><a name="line.183"></a>
+<span class="sourceLineNo">184</span>                if((!auto)&amp;&amp;(anyWeapons(mob)))<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                {<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                        mob.tell(L("Your hands must be free to gouge."));<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                        return false;<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                }<a name="line.188"></a>
+<span class="sourceLineNo">189</span><a name="line.189"></a>
+<span class="sourceLineNo">190</span>                if(!super.invoke(mob,commands,givenTarget,auto,asLevel))<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                        return false;<a name="line.191"></a>
+<span class="sourceLineNo">192</span><a name="line.192"></a>
+<span class="sourceLineNo">193</span>                final boolean success=proficiencyCheck(mob,0,auto);<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                final boolean hit=(auto)||CMLib.combat().rollToHit(mob,target);<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                if((success)&amp;&amp;(hit))<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                {<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                        final CMMsg msg=CMClass.getMsg(mob,target,this,CMMsg.MSK_MALICIOUS_MOVE|CMMsg.TYP_JUSTICE|(auto?CMMsg.MASK_ALWAYS:0),auto?"":L("^F^&lt;FIGHT^&gt;&lt;S-NAME&gt; gouge(s) at &lt;T-YOUPOSS&gt; eyes!^&lt;/FIGHT^&gt;^?"));<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                        CMLib.color().fixSourceFightColor(msg);<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                        if(mob.location().okMessage(mob,msg))<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                        {<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                                mob.location().send(mob,msg);<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                                mob.location().show(target,null,CMMsg.MSG_OK_VISUAL,L("&lt;S-NAME&gt; &lt;S-IS-ARE&gt; blinded!"));<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                                maliciousAffect(mob,target,asLevel,5,-1);<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                                LimbDamage ampuA=(LimbDamage)target.fetchEffect("Amputation");<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                                if(ampuA==null)<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                                {<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                                        ampuA=(LimbDamage)CMClass.getAbility("Amputation");<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                                        ampuA.setAffectedOne(target);<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                                }<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                                final List&lt;String&gt; remainingLimbList=ampuA.unaffectedLimbSet();<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                                String gone=null;<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                                for(int i=0;i&lt;remainingLimbList.size();i++)<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                                {<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                                        if(remainingLimbList.get(i).toUpperCase().endsWith("EYE"))<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                                        {<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                                                gone=remainingLimbList.get(i);<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                                                break;<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                                        }<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                                }<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                                if(gone!=null)<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                                {<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                                        LimbDamage injuryA=(LimbDamage)CMClass.getAbility("Injury");<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                                        if(injuryA!=null)<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                                        {<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                                                injuryA.setMiscText(mob.Name()+"/"+gone);<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                                                final CMMsg msg2=CMClass.getMsg(mob,target,this,CMMsg.MSG_DAMAGE,L("&lt;S-NAME&gt; &lt;DAMAGE&gt; &lt;T-NAME&gt;."));<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                                                msg2.setValue(target.maxState().getHitPoints()/(20-getXLEVELLevel(mob)));<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                                                injuryA.invoke(mob,target,true,0);<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                                                injuryA=(LimbDamage)target.fetchEffect("Injury");<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                                                if( injuryA != null )<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                                                {<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                                                        injuryA.setMiscText(mob.Name()+"/"+gone);<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                                                        injuryA.okMessage(target,msg2);<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                                                }<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                                        }<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                                }<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                        }<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                }<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                else<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                        return maliciousFizzle(mob,target,L("&lt;S-NAME&gt; attempt(s) to gouge &lt;T-YOUPOSS&gt; eyes, but fail(s)."));<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                return success;<a name="line.241"></a>
+<span class="sourceLineNo">242</span>        }<a name="line.242"></a>
+<span class="sourceLineNo">243</span>}<a name="line.243"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

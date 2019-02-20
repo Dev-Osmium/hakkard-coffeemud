@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Locales.interfaces;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.Iterator;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.util.List;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.util.Vector;<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>/*<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   Copyright 2001-2018 Bo Zimmerman<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.27"></a>
+<span class="sourceLineNo">028</span>   you may not use this file except in compliance with the License.<a name="line.28"></a>
+<span class="sourceLineNo">029</span>   You may obtain a copy of the License at<a name="line.29"></a>
+<span class="sourceLineNo">030</span><a name="line.30"></a>
+<span class="sourceLineNo">031</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.31"></a>
+<span class="sourceLineNo">032</span><a name="line.32"></a>
+<span class="sourceLineNo">033</span>   Unless required by applicable law or agreed to in writing, software<a name="line.33"></a>
+<span class="sourceLineNo">034</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.34"></a>
+<span class="sourceLineNo">035</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.35"></a>
+<span class="sourceLineNo">036</span>   See the License for the specific language governing permissions and<a name="line.36"></a>
+<span class="sourceLineNo">037</span>   limitations under the License.<a name="line.37"></a>
+<span class="sourceLineNo">038</span> */<a name="line.38"></a>
+<span class="sourceLineNo">039</span>/**<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * Interface for a Room that virtually contains other rooms, which are <a name="line.40"></a>
+<span class="sourceLineNo">041</span> * called grid-child rooms. This is for producing substantially identical <a name="line.41"></a>
+<span class="sourceLineNo">042</span> * rooms in grid formations, or mazes, or other groupings where unique <a name="line.42"></a>
+<span class="sourceLineNo">043</span> * control of exits and content is not desired.<a name="line.43"></a>
+<span class="sourceLineNo">044</span> *<a name="line.44"></a>
+<span class="sourceLineNo">045</span> * Grids have the following general features: They are rectangular with a <a name="line.45"></a>
+<span class="sourceLineNo">046</span> * defineable width and length.  All rooms in the grid are of the same<a name="line.46"></a>
+<span class="sourceLineNo">047</span> * locale type.  Grid children can only have exits to each other, or to<a name="line.47"></a>
+<span class="sourceLineNo">048</span> * the GridLocale's exiting rooms, unless "outer exits" are defined.<a name="line.48"></a>
+<span class="sourceLineNo">049</span> * @author Bo Zimmerman<a name="line.49"></a>
+<span class="sourceLineNo">050</span> */<a name="line.50"></a>
+<span class="sourceLineNo">051</span>public interface GridLocale extends Room, GridZones <a name="line.51"></a>
+<span class="sourceLineNo">052</span>{<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        /**<a name="line.53"></a>
+<span class="sourceLineNo">054</span>         * Gets the Room ID() for the type of Java room class used to<a name="line.54"></a>
+<span class="sourceLineNo">055</span>         * populate the grid.  For example: StdRoom.<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         * @return the Room ID() for the type of Java room class<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         */<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        public String getGridChildLocaleID();<a name="line.58"></a>
+<span class="sourceLineNo">059</span><a name="line.59"></a>
+<span class="sourceLineNo">060</span>        /**<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         * Returns the room found in the given direction from the from-room, <a name="line.61"></a>
+<span class="sourceLineNo">062</span>         * where the stand-in room is the to-room.<a name="line.62"></a>
+<span class="sourceLineNo">063</span>         * <a name="line.63"></a>
+<span class="sourceLineNo">064</span>         * Grids are not required to actually fill themselves in at boot<a name="line.64"></a>
+<span class="sourceLineNo">065</span>         * time, nor are they required to remain filled in.  Therefore,<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         * rooms can be constructed in real time.<a name="line.66"></a>
+<span class="sourceLineNo">067</span>         * <a name="line.67"></a>
+<span class="sourceLineNo">068</span>         * This method is called whenever a player wants to move into another<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         * room from a room that is part of a grid to some other room.<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * @param fromRoom the room moving from, also the grid child<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * @param toRoom the room ostensibly being moved into<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * @param direction the direction from the from room moving<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * @return the new to-room, the actual room to move into<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         */<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        public Room prepareGridLocale(Room fromRoom, Room toRoom, int direction);<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>        /**<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * Called whenever structural changes are made to either the grid<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         * room, or one of the adjacent connecting rooms, this method will<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         * "rebuild" the grids internal structure as necessary.<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         */<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        public void buildGrid();<a name="line.82"></a>
+<span class="sourceLineNo">083</span><a name="line.83"></a>
+<span class="sourceLineNo">084</span>        /**<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         * Empties the grid-children rooms of all contents, mob and item,<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         * and then destroys the internal grid-children rooms themselves.<a name="line.86"></a>
+<span class="sourceLineNo">087</span>         * This puts the grid back into a default state.<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         * @param bringBackHere a room to teleport *ALL* mobs and items to<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         */<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        public void clearGrid(Room bringBackHere);<a name="line.90"></a>
+<span class="sourceLineNo">091</span><a name="line.91"></a>
+<span class="sourceLineNo">092</span>        /**<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         * Returns a read-only list of grid-child rooms.  You are guaranteed<a name="line.93"></a>
+<span class="sourceLineNo">094</span>         * at least one room, even from grids that create them as-needed.<a name="line.94"></a>
+<span class="sourceLineNo">095</span>         * @return a read-only list of grid-child rooms.<a name="line.95"></a>
+<span class="sourceLineNo">096</span>         */<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        public List&lt;Room&gt; getAllRooms();<a name="line.97"></a>
+<span class="sourceLineNo">098</span><a name="line.98"></a>
+<span class="sourceLineNo">099</span>        /**<a name="line.99"></a>
+<span class="sourceLineNo">100</span>         * Returns a read-only list of grid-child rooms, and any skys or seas<a name="line.100"></a>
+<span class="sourceLineNo">101</span>         * attached to them.<a name="line.101"></a>
+<span class="sourceLineNo">102</span>         * @return a read-only list of all rooms around here.<a name="line.102"></a>
+<span class="sourceLineNo">103</span>         */<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        public List&lt;Room&gt; getAllRoomsFilled();<a name="line.104"></a>
+<span class="sourceLineNo">105</span>        <a name="line.105"></a>
+<span class="sourceLineNo">106</span>        /**<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         * Returns a read-only iterator over the existing grid-child rooms.<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         * This iterator may be empty if the grid creates children as-needed.<a name="line.108"></a>
+<span class="sourceLineNo">109</span>         * @return a read-only iterator over the existing grid-child rooms.<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         */<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        public Iterator&lt;Room&gt; getExistingRooms();<a name="line.111"></a>
+<span class="sourceLineNo">112</span><a name="line.112"></a>
+<span class="sourceLineNo">113</span>        /**<a name="line.113"></a>
+<span class="sourceLineNo">114</span>         * Normally the grid-child rooms can only exit to each other, or to<a name="line.114"></a>
+<span class="sourceLineNo">115</span>         * the same places as the gridlocale host.  Outer Exits are a way around<a name="line.115"></a>
+<span class="sourceLineNo">116</span>         * this by pre-defining exits from grid children to elsewhere on the <a name="line.116"></a>
+<span class="sourceLineNo">117</span>         * map, including into other gridlocales.<a name="line.117"></a>
+<span class="sourceLineNo">118</span>         * @see GridLocale.CrossExit<a name="line.118"></a>
+<span class="sourceLineNo">119</span>         * @see com.planet_ink.coffee_mud.Locales.interfaces.GridLocale#addOuterExit(GridLocale.CrossExit)<a name="line.119"></a>
+<span class="sourceLineNo">120</span>         * @see com.planet_ink.coffee_mud.Locales.interfaces.GridLocale#delOuterExit(GridLocale.CrossExit)<a name="line.120"></a>
+<span class="sourceLineNo">121</span>         * @return an iterator of cross ("outer") exits.<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         */<a name="line.122"></a>
+<span class="sourceLineNo">123</span>        public Iterator&lt;CrossExit&gt; outerExits();<a name="line.123"></a>
+<span class="sourceLineNo">124</span><a name="line.124"></a>
+<span class="sourceLineNo">125</span>        /**<a name="line.125"></a>
+<span class="sourceLineNo">126</span>         * Normally the grid-child rooms can only exit to each other, or to<a name="line.126"></a>
+<span class="sourceLineNo">127</span>         * the same places as the gridlocale host.  Outer Exits are a way around<a name="line.127"></a>
+<span class="sourceLineNo">128</span>         * this by pre-defining exits from grid children to elsewhere on the <a name="line.128"></a>
+<span class="sourceLineNo">129</span>         * map, including into other gridlocales.<a name="line.129"></a>
+<span class="sourceLineNo">130</span>         * This method will add a new one.<a name="line.130"></a>
+<span class="sourceLineNo">131</span>         * @see GridLocale.CrossExit<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         * @see GridLocale#outerExits()<a name="line.132"></a>
+<span class="sourceLineNo">133</span>         * @see com.planet_ink.coffee_mud.Locales.interfaces.GridLocale#delOuterExit(GridLocale.CrossExit)<a name="line.133"></a>
+<span class="sourceLineNo">134</span>         * @param x the new cross ("outer") exit<a name="line.134"></a>
+<span class="sourceLineNo">135</span>         */<a name="line.135"></a>
+<span class="sourceLineNo">136</span>        public void addOuterExit(CrossExit x);<a name="line.136"></a>
+<span class="sourceLineNo">137</span><a name="line.137"></a>
+<span class="sourceLineNo">138</span>        /**<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         * Normally the grid-child rooms can only exit to each other, or to<a name="line.139"></a>
+<span class="sourceLineNo">140</span>         * the same places as the gridlocale host.  Outer Exits are a way around<a name="line.140"></a>
+<span class="sourceLineNo">141</span>         * this by pre-defining exits from grid children to elsewhere on the <a name="line.141"></a>
+<span class="sourceLineNo">142</span>         * map, including into other gridlocales.<a name="line.142"></a>
+<span class="sourceLineNo">143</span>         * This method will remove an existing one<a name="line.143"></a>
+<span class="sourceLineNo">144</span>         * @see GridLocale.CrossExit<a name="line.144"></a>
+<span class="sourceLineNo">145</span>         * @see GridLocale#outerExits()<a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * @see com.planet_ink.coffee_mud.Locales.interfaces.GridLocale#addOuterExit(GridLocale.CrossExit)<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         * @param x the existing cross ("outer") exit to delete<a name="line.147"></a>
+<span class="sourceLineNo">148</span>         */<a name="line.148"></a>
+<span class="sourceLineNo">149</span>        public void delOuterExit(CrossExit x);<a name="line.149"></a>
+<span class="sourceLineNo">150</span>        <a name="line.150"></a>
+<span class="sourceLineNo">151</span>        /**<a name="line.151"></a>
+<span class="sourceLineNo">152</span>         * class definition for an exit that goes from inside a grid locale child to a place <a name="line.152"></a>
+<span class="sourceLineNo">153</span>         * outside the parent gridlocale room<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         * @author Bo Zimmerman<a name="line.154"></a>
+<span class="sourceLineNo">155</span>         */<a name="line.155"></a>
+<span class="sourceLineNo">156</span>        public static class CrossExit<a name="line.156"></a>
+<span class="sourceLineNo">157</span>        {<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                public int x;<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                public int y;<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                public int dir;<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                public String destRoomID="";<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                public boolean out=false;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>        <a name="line.163"></a>
+<span class="sourceLineNo">164</span>                public static CrossExit make(int xx, int xy, int xdir, String xdestRoomID, boolean xout)<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                {<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                        final CrossExit EX = new CrossExit();<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                        EX.x = xx;<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                        EX.y = xy;<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                        EX.dir = xdir;<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                        EX.destRoomID = xdestRoomID;<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                        EX.out = xout;<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                        return EX;<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                }<a name="line.173"></a>
+<span class="sourceLineNo">174</span>        }<a name="line.174"></a>
+<span class="sourceLineNo">175</span>}<a name="line.175"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

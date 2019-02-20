@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Libraries.interfaces;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.exceptions.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Libraries.CMChannels;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.Libraries.EnglishParser;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.io.IOException;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.util.*;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>/*<a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Copyright 2005-2018 Bo Zimmerman<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.25"></a>
+<span class="sourceLineNo">026</span>   you may not use this file except in compliance with the License.<a name="line.26"></a>
+<span class="sourceLineNo">027</span>   You may obtain a copy of the License at<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.29"></a>
+<span class="sourceLineNo">030</span><a name="line.30"></a>
+<span class="sourceLineNo">031</span>   Unless required by applicable law or agreed to in writing, software<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>   See the License for the specific language governing permissions and<a name="line.34"></a>
+<span class="sourceLineNo">035</span>   limitations under the License.<a name="line.35"></a>
+<span class="sourceLineNo">036</span>*/<a name="line.36"></a>
+<span class="sourceLineNo">037</span>public interface EnglishParsing extends CMLibrary<a name="line.37"></a>
+<span class="sourceLineNo">038</span>{<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        public boolean isAnArticle(String s);<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        public String removeArticleLead(String s);<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        public String cleanPrepositions(String s);<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        public boolean startsWithAnArticle(String s);<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        public String stripPunctuation(String str);<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        public boolean isPunctuation(final byte b);<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        public boolean hasPunctuation(String str);<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        public String makePlural(String str);<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        public String makeSingular(String str);<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        public String getFirstWord(final String str);<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        public String properIndefiniteArticle(String str);<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        public String toEnglishStringList(final String[] V);<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        public String toEnglishStringList(final Class&lt;? extends Enum&lt;?&gt;&gt; enumer, boolean andOr);<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        public String toEnglishStringList(final Collection&lt;? extends Object&gt; V);<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        public String insertUnColoredAdjective(String str, String adjective);<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        public String insertAdjectives(String paragraph, String[] adjsToChoose, int pctChance);<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        public String startWithAorAn(String str);<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        public CMObject findCommand(MOB mob, List&lt;String&gt; commands);<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        public boolean evokedBy(Ability thisAbility, String thisWord);<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        public boolean evokedBy(Ability thisAbility, String thisWord, String secondWord);<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        public String getAnEvokeWord(MOB mob, String word);<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        public Ability getToEvoke(MOB mob, List&lt;String&gt; commands);<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        public boolean preEvoke(MOB mob, List&lt;String&gt; commands, int secondsElapsed, double actionsRemaining);<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        public void evoke(MOB mob, Vector&lt;String&gt; commands);<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        public boolean containsString(final String toSrchStr, final String srchStr);<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        public String bumpDotNumber(String srchStr);<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        public List&lt;String&gt; parseWords(final String thisStr);<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        public Exit fetchExit(Iterable&lt;? extends Environmental&gt; list, String srchStr, boolean exactOnly);<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        public Environmental fetchEnvironmental(Iterable&lt;? extends Environmental&gt; list, String srchStr, boolean exactOnly);<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        public Environmental fetchEnvironmental(Enumeration&lt;? extends Environmental&gt; iter, String srchStr, boolean exactOnly);<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        public Environmental fetchEnvironmental(Map&lt;String, ? extends Environmental&gt; list, String srchStr, boolean exactOnly);<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        public List&lt;Environmental&gt; fetchEnvironmentals(List&lt;? extends Environmental&gt; list, String srchStr, boolean exactOnly);<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        public Environmental fetchEnvironmental(Iterator&lt;? extends Environmental&gt; iter, String srchStr, boolean exactOnly);<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        public Item fetchAvailableItem(List&lt;Item&gt; list, String srchStr, Item goodLocation, Filterer&lt;Environmental&gt; filter, boolean exactOnly);<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        public List&lt;Item&gt; fetchAvailableItems(List&lt;Item&gt; list, String srchStr, Item goodLocation, Filterer&lt;Environmental&gt; filter, boolean exactOnly);<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        public int getContextNumber(Environmental[] list, Environmental E);<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        public int getContextNumber(Collection&lt;? extends Environmental&gt; list, Environmental E);<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        public int getContextNumber(ItemCollection cont, Environmental E);<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        public String getContextName(Collection&lt;? extends Environmental&gt; list, Environmental E);<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        public List&lt;String&gt; getAllContextNames(Collection&lt;? extends Environmental&gt; list, Filterer&lt;Environmental&gt; filter);<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        public String getContextName(Environmental[] list, Environmental E);<a name="line.79"></a>
+<span class="sourceLineNo">080</span>        public String getContextName(ItemCollection cont, Environmental E);<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        public int getContextSameNumber(Environmental[] list, Environmental E);<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        public int getContextSameNumber(Collection&lt;? extends Environmental&gt; list, Environmental E);<a name="line.82"></a>
+<span class="sourceLineNo">083</span>        public int getContextSameNumber(ItemCollection cont, Environmental E);<a name="line.83"></a>
+<span class="sourceLineNo">084</span>        public String getContextSameName(Collection&lt;? extends Environmental&gt; list, Environmental E);<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        public String getContextSameName(Environmental[] list, Environmental E);<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        public String getContextSameName(ItemCollection cont, Environmental E);<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        public Environmental fetchAvailable(Collection&lt;? extends Environmental&gt; list, String srchStr, Item goodLocation, Filterer&lt;Environmental&gt; filter, boolean exactOnly);<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        public Environmental fetchAvailable(Collection&lt;? extends Environmental&gt; list, String srchStr, Item goodLocation, Filterer&lt;Environmental&gt; filter, boolean exactOnly, int[] counterSlap);<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        public Environmental parseShopkeeper(MOB mob, List&lt;String&gt; commands, String error);<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        public List&lt;Item&gt; fetchItemList(Environmental from, MOB mob, Item container, List&lt;String&gt; commands, Filterer&lt;Environmental&gt; filter, boolean visionMatters);<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        public long numPossibleGold(Environmental mine, String itemID);<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        public String numPossibleGoldCurrency(Environmental mine, String itemID);<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        public double numPossibleGoldDenomination(Environmental mine, String currency, String itemID);<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        public Triad&lt;String, Double, Long&gt; parseMoneyStringSDL(MOB mob, String amount, String correctCurrency);<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        public long getMillisMultiplierByName(String timeName);<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        public String matchAnyCurrencySet(String moneyStr);<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        public double matchAnyDenomination(String currency, String moneyStr);<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        public Item possibleRoomGold(MOB seer, Room room, Container container, String moneyStr);<a name="line.98"></a>
+<span class="sourceLineNo">099</span>        public Item bestPossibleGold(MOB mob, Container container, String moneyStr);<a name="line.99"></a>
+<span class="sourceLineNo">100</span>        public List&lt;Container&gt; possibleContainers(MOB mob, List&lt;String&gt; commands, Filterer&lt;Environmental&gt; filter, boolean withContentOnly);<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        public Item possibleContainer(MOB mob, List&lt;String&gt; commands, boolean withStuff, Filterer&lt;Environmental&gt; filter);<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        public String returnTime(long millis, long ticks);<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        public int calculateMaxToGive(MOB mob, List&lt;String&gt; commands, boolean breakPackages, Environmental checkWhat, boolean getOnly);<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        public int probabilityOfBeingEnglish(String str);<a name="line.104"></a>
+<span class="sourceLineNo">105</span>        public String sizeDescShort(long size);<a name="line.105"></a>
+<span class="sourceLineNo">106</span>        public String distanceDescShort(long distance);<a name="line.106"></a>
+<span class="sourceLineNo">107</span>        public String coordDescShort(long[] coords);<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        public String speedDescShort(double speed);<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        public String directionDescShort(double[] dir);<a name="line.109"></a>
+<span class="sourceLineNo">110</span>        public String directionDescShortest(double[] dir);<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        public Long parseSpaceDistance(String dist);<a name="line.111"></a>
+<span class="sourceLineNo">112</span>}<a name="line.112"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

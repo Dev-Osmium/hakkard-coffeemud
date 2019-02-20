@@ -1,0 +1,423 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Behaviors.interfaces;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Libraries.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>import java.util.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/*<a name="line.20"></a>
+<span class="sourceLineNo">021</span>   Copyright 2005-2018 Bo Zimmerman<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.23"></a>
+<span class="sourceLineNo">024</span>   you may not use this file except in compliance with the License.<a name="line.24"></a>
+<span class="sourceLineNo">025</span>   You may obtain a copy of the License at<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>   Unless required by applicable law or agreed to in writing, software<a name="line.29"></a>
+<span class="sourceLineNo">030</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.30"></a>
+<span class="sourceLineNo">031</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   See the License for the specific language governing permissions and<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   limitations under the License.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>*/<a name="line.34"></a>
+<span class="sourceLineNo">035</span>/**<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * A LegalBehavior is a Behavior that provides functionality related to law and<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * order within a given geographic sphere, which is usually an Area with a<a name="line.37"></a>
+<span class="sourceLineNo">038</span> * LegalBehavior behavior.  A LegalBehavior keeps track of Warrants against<a name="line.38"></a>
+<span class="sourceLineNo">039</span> * players and mobs which persist only in memory.  It also controls the behavior<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * of arresting officers and judges, and dispenses justice by taking mobs and<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * players to jail, putting them on parole, or issuing warnings or other<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * punishments.<a name="line.42"></a>
+<span class="sourceLineNo">043</span> * @see com.planet_ink.coffee_mud.Behaviors.interfaces.Behavior<a name="line.43"></a>
+<span class="sourceLineNo">044</span> * @see com.planet_ink.coffee_mud.Common.interfaces.LegalWarrant<a name="line.44"></a>
+<span class="sourceLineNo">045</span> * @see com.planet_ink.coffee_mud.Common.interfaces.Law<a name="line.45"></a>
+<span class="sourceLineNo">046</span> */<a name="line.46"></a>
+<span class="sourceLineNo">047</span>public interface LegalBehavior extends Behavior<a name="line.47"></a>
+<span class="sourceLineNo">048</span>{<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        /** constant for the number of miliseconds in a real-life day */<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        public static final long ONE_REAL_DAY=(long)1000*60*60*24;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        /** constant for the number of miliseconds before a warrant expires */<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        public static final long EXPIRATION_MILLIS=ONE_REAL_DAY*7; // 7 real days<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        /** constant for the number of miliseconds before an area is under legal control */<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        public static final long CONTROLTIME=ONE_REAL_DAY*3;<a name="line.54"></a>
+<span class="sourceLineNo">055</span><a name="line.55"></a>
+<span class="sourceLineNo">056</span>        /**<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * Returns whether or not the given legal warrant is still a valid, timely<a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * warrant that can be acted upon by law enforcement.<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.LegalWarrant<a name="line.59"></a>
+<span class="sourceLineNo">060</span>         * @param W the legal warrant to inspect<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         * @param debugging whether debug information should be sent to the log<a name="line.61"></a>
+<span class="sourceLineNo">062</span>         * @return whether the given warrant is still a valid, timely crime.<a name="line.62"></a>
+<span class="sourceLineNo">063</span>         */<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        public boolean isStillACrime(LegalWarrant W, boolean debugging);<a name="line.64"></a>
+<span class="sourceLineNo">065</span><a name="line.65"></a>
+<span class="sourceLineNo">066</span>        /**<a name="line.66"></a>
+<span class="sourceLineNo">067</span>         * Inspects the circumstances of, and if necessary, assigns a warrant to<a name="line.67"></a>
+<span class="sourceLineNo">068</span>         * be handled by local law enforcement and judges.  Call this method<a name="line.68"></a>
+<span class="sourceLineNo">069</span>         * if you want to add a warrant for a custom crime with your own qualifying<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * flags.  For recognized crimes with crime keys, however, use the accuse<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * command.<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#accuse(Area, MOB, MOB, String[])<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.Law<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.Law#PUNISHMENTMASK_DESCS<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         * @param mob the accused character<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         * @param laws the system of laws to use as a basis<a name="line.76"></a>
+<span class="sourceLineNo">077</span>         * @param myArea the geographical domain that the laws apply to<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * @param target the victim of a crime, if any<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         * @param crimeLocs string of location flags, e.g. !indoors !home keyword !keyword<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         * @param crimeFlags string of crime situation flags, e.g. !recently !combat<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * @param crime string description of the crime, e.g. robbing T-NAME<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         * @param sentence string sentence action, e.g. warn, parole1, jail1, death<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         * @param warnMsg string the officer will say to explain the seriousness of the crime<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         * @return whether or not the warrant was successfully issued<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         */<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        public boolean fillOutWarrant(MOB mob,<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                                                                  Law laws,<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                                                                  Area myArea,<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                                                                  Environmental target,<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                                                                  String crimeLocs,<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                                                                  String crimeFlags,<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                                                                  String crime,<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                                                                  String sentence,<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                                                                  String warnMsg);<a name="line.94"></a>
+<span class="sourceLineNo">095</span><a name="line.95"></a>
+<span class="sourceLineNo">096</span>        /**<a name="line.96"></a>
+<span class="sourceLineNo">097</span>         * A method that transfers a warrant out on the accused to a different<a name="line.97"></a>
+<span class="sourceLineNo">098</span>         * framed individual<a name="line.98"></a>
+<span class="sourceLineNo">099</span>         * @param myArea the geographical legal area<a name="line.99"></a>
+<span class="sourceLineNo">100</span>         * @param accused the mob with actual warrants out on him/her<a name="line.100"></a>
+<span class="sourceLineNo">101</span>         * @param framed the person to transfer the first warrant to.<a name="line.101"></a>
+<span class="sourceLineNo">102</span>         * @return whether warrants were actually transferred from the accused to the framed<a name="line.102"></a>
+<span class="sourceLineNo">103</span>         */<a name="line.103"></a>
+<span class="sourceLineNo">104</span>        public boolean frame(Area myArea, MOB accused, MOB framed);<a name="line.104"></a>
+<span class="sourceLineNo">105</span><a name="line.105"></a>
+<span class="sourceLineNo">106</span>        /**<a name="line.106"></a>
+<span class="sourceLineNo">107</span>         * Assigns an officer and begins the automated arresting procedure. The<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         * target criminal must have a warrant out for this to end well for the<a name="line.108"></a>
+<span class="sourceLineNo">109</span>         * state.<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         * @param myArea the geographic legal area<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         * @param officer the mob to assign as the arresting officer<a name="line.111"></a>
+<span class="sourceLineNo">112</span>         * @param mob the mob to arrest<a name="line.112"></a>
+<span class="sourceLineNo">113</span>         * @return whether the arrest began successfully.<a name="line.113"></a>
+<span class="sourceLineNo">114</span>         */<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        public boolean arrest(Area myArea, MOB officer, MOB mob);<a name="line.115"></a>
+<span class="sourceLineNo">116</span><a name="line.116"></a>
+<span class="sourceLineNo">117</span>        /**<a name="line.117"></a>
+<span class="sourceLineNo">118</span>         * Returns the set of laws governing the given geographic legal area,<a name="line.118"></a>
+<span class="sourceLineNo">119</span>         * assuming that this LegalBehavior is the behavior governing the same.<a name="line.119"></a>
+<span class="sourceLineNo">120</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.Law<a name="line.120"></a>
+<span class="sourceLineNo">121</span>         * @param myArea  the geographic legal area<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         * @return the Law object that governs the area and behavior<a name="line.122"></a>
+<span class="sourceLineNo">123</span>         */<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        public Law legalInfo(Area myArea);<a name="line.124"></a>
+<span class="sourceLineNo">125</span><a name="line.125"></a>
+<span class="sourceLineNo">126</span>        /**<a name="line.126"></a>
+<span class="sourceLineNo">127</span>         * Returns whether the given mob is both an officer of the law, and not<a name="line.127"></a>
+<span class="sourceLineNo">128</span>         * otherwise engaged in an arrest, and so is available to make one<a name="line.128"></a>
+<span class="sourceLineNo">129</span>         * @param myArea the geographic legal area<a name="line.129"></a>
+<span class="sourceLineNo">130</span>         * @param mob the pc/npc to test<a name="line.130"></a>
+<span class="sourceLineNo">131</span>         * @return whether the mob is an officer of the law<a name="line.131"></a>
+<span class="sourceLineNo">132</span>         */<a name="line.132"></a>
+<span class="sourceLineNo">133</span>        public boolean isElligibleOfficer(Area myArea, MOB mob);<a name="line.133"></a>
+<span class="sourceLineNo">134</span><a name="line.134"></a>
+<span class="sourceLineNo">135</span>        /**<a name="line.135"></a>
+<span class="sourceLineNo">136</span>         * Returns whether the given mob has a valid warrant out for his/her arrest.<a name="line.136"></a>
+<span class="sourceLineNo">137</span>         * @param myArea the geographic legal area<a name="line.137"></a>
+<span class="sourceLineNo">138</span>         * @param accused the mob to test<a name="line.138"></a>
+<span class="sourceLineNo">139</span>         * @return whether a warrant is available for the accused<a name="line.139"></a>
+<span class="sourceLineNo">140</span>         */<a name="line.140"></a>
+<span class="sourceLineNo">141</span>        public boolean hasWarrant(Area myArea, MOB accused);<a name="line.141"></a>
+<span class="sourceLineNo">142</span><a name="line.142"></a>
+<span class="sourceLineNo">143</span>        /**<a name="line.143"></a>
+<span class="sourceLineNo">144</span>         * Returns whether the given mob qualifies as an arresting officer of any<a name="line.144"></a>
+<span class="sourceLineNo">145</span>         * sort in the given legal area.<a name="line.145"></a>
+<span class="sourceLineNo">146</span>         * @param myArea the geographic legal area<a name="line.146"></a>
+<span class="sourceLineNo">147</span>         * @param mob the mob to test for officerhood<a name="line.147"></a>
+<span class="sourceLineNo">148</span>         * @return true if the mob is an officer, false otherwise<a name="line.148"></a>
+<span class="sourceLineNo">149</span>         */<a name="line.149"></a>
+<span class="sourceLineNo">150</span>        public boolean isAnyOfficer(Area myArea, MOB mob);<a name="line.150"></a>
+<span class="sourceLineNo">151</span><a name="line.151"></a>
+<span class="sourceLineNo">152</span>        /**<a name="line.152"></a>
+<span class="sourceLineNo">153</span>         * Returns whether the given mob qualifies as the judge in the given legal<a name="line.153"></a>
+<span class="sourceLineNo">154</span>         * area.<a name="line.154"></a>
+<span class="sourceLineNo">155</span>         * @param myArea the geographic legal area<a name="line.155"></a>
+<span class="sourceLineNo">156</span>         * @param mob the mob to test for judgehood<a name="line.156"></a>
+<span class="sourceLineNo">157</span>         * @return true if the mob is a judge, false otherwise<a name="line.157"></a>
+<span class="sourceLineNo">158</span>         */<a name="line.158"></a>
+<span class="sourceLineNo">159</span>        public boolean isJudge(Area myArea, MOB mob);<a name="line.159"></a>
+<span class="sourceLineNo">160</span><a name="line.160"></a>
+<span class="sourceLineNo">161</span>        /**<a name="line.161"></a>
+<span class="sourceLineNo">162</span>         * A method to change the amount of base currency currently<a name="line.162"></a>
+<span class="sourceLineNo">163</span>         * listed as fines owed by the given mob.  A value of 0 erases.<a name="line.163"></a>
+<span class="sourceLineNo">164</span>         * @param d the amount of base currency the mob owes<a name="line.164"></a>
+<span class="sourceLineNo">165</span>         * @param mob the mob who owes money to the state<a name="line.165"></a>
+<span class="sourceLineNo">166</span>         */<a name="line.166"></a>
+<span class="sourceLineNo">167</span>        public void modifyAssessedFines(double d, MOB mob);<a name="line.167"></a>
+<span class="sourceLineNo">168</span><a name="line.168"></a>
+<span class="sourceLineNo">169</span>        /**<a name="line.169"></a>
+<span class="sourceLineNo">170</span>         * Returns the amount of base currency owed by the given mob, if any.<a name="line.170"></a>
+<span class="sourceLineNo">171</span>         * @param mob the mob who might owe money<a name="line.171"></a>
+<span class="sourceLineNo">172</span>         * @return the amount owed, or 0 if none.<a name="line.172"></a>
+<span class="sourceLineNo">173</span>         */<a name="line.173"></a>
+<span class="sourceLineNo">174</span>        public double finesOwed(MOB mob);<a name="line.174"></a>
+<span class="sourceLineNo">175</span><a name="line.175"></a>
+<span class="sourceLineNo">176</span>        /**<a name="line.176"></a>
+<span class="sourceLineNo">177</span>         * This method notifies the legal behavior that its laws have changed<a name="line.177"></a>
+<span class="sourceLineNo">178</span>         * and need to be updated.  Call this method whenever the behaviors/<a name="line.178"></a>
+<span class="sourceLineNo">179</span>         * areas laws have changed.<a name="line.179"></a>
+<span class="sourceLineNo">180</span>         * @param myArea the geographic legal area<a name="line.180"></a>
+<span class="sourceLineNo">181</span>         * @return Whether the update was necessary due to the legal parameters<a name="line.181"></a>
+<span class="sourceLineNo">182</span>         */<a name="line.182"></a>
+<span class="sourceLineNo">183</span>        public boolean updateLaw(Area myArea);<a name="line.183"></a>
+<span class="sourceLineNo">184</span><a name="line.184"></a>
+<span class="sourceLineNo">185</span>        /**<a name="line.185"></a>
+<span class="sourceLineNo">186</span>         * Get the name of the clan that currently rules this area, if applicable.<a name="line.186"></a>
+<span class="sourceLineNo">187</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.Clan<a name="line.187"></a>
+<span class="sourceLineNo">188</span>         * @return Empty string if the area is unruled, or ruled by the system. ClanID otherwise.<a name="line.188"></a>
+<span class="sourceLineNo">189</span>         */<a name="line.189"></a>
+<span class="sourceLineNo">190</span>        public String rulingOrganization();<a name="line.190"></a>
+<span class="sourceLineNo">191</span><a name="line.191"></a>
+<span class="sourceLineNo">192</span>        /**<a name="line.192"></a>
+<span class="sourceLineNo">193</span>         * If the legal behavior and area are conquerable by clans or foreign organizations,<a name="line.193"></a>
+<span class="sourceLineNo">194</span>         * this method will return the name of the current controlling clan, and some information<a name="line.194"></a>
+<span class="sourceLineNo">195</span>         * about the state of the conquest, such as control points achieved.<a name="line.195"></a>
+<span class="sourceLineNo">196</span>         * @param myArea the geographic legal area<a name="line.196"></a>
+<span class="sourceLineNo">197</span>         * @return information about the conquest of this area, in readable form.<a name="line.197"></a>
+<span class="sourceLineNo">198</span>         */<a name="line.198"></a>
+<span class="sourceLineNo">199</span>        public String conquestInfo(Area myArea);<a name="line.199"></a>
+<span class="sourceLineNo">200</span><a name="line.200"></a>
+<span class="sourceLineNo">201</span>        /**<a name="line.201"></a>
+<span class="sourceLineNo">202</span>         * Returns whether this legalbehavior governs an area that is presently<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         * legally stable.  Unconquerable areas are always stable, and areas conquered<a name="line.203"></a>
+<span class="sourceLineNo">204</span>         * and controlled for a sufficient amount of time are also stable.<a name="line.204"></a>
+<span class="sourceLineNo">205</span>         * @return Whether order has been restored.<a name="line.205"></a>
+<span class="sourceLineNo">206</span>         */<a name="line.206"></a>
+<span class="sourceLineNo">207</span>        public boolean isFullyControlled();<a name="line.207"></a>
+<span class="sourceLineNo">208</span><a name="line.208"></a>
+<span class="sourceLineNo">209</span>        /**<a name="line.209"></a>
+<span class="sourceLineNo">210</span>         * Returns the number of control points necessary to conquer the area governed<a name="line.210"></a>
+<span class="sourceLineNo">211</span>         * by this legal behavior.  Not applicable if the legal behavior doesn't permit<a name="line.211"></a>
+<span class="sourceLineNo">212</span>         * government changes or conquest.<a name="line.212"></a>
+<span class="sourceLineNo">213</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#setControlPoints(String, int)<a name="line.213"></a>
+<span class="sourceLineNo">214</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#getControlPoints(String)<a name="line.214"></a>
+<span class="sourceLineNo">215</span>         * @return the number of control points needed to control this legal behavior<a name="line.215"></a>
+<span class="sourceLineNo">216</span>         */<a name="line.216"></a>
+<span class="sourceLineNo">217</span>        public int controlPoints();<a name="line.217"></a>
+<span class="sourceLineNo">218</span><a name="line.218"></a>
+<span class="sourceLineNo">219</span>        /**<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         * The present chance (percent) that the area may collapse into revolt and<a name="line.220"></a>
+<span class="sourceLineNo">221</span>         * remove itself from control.  Not applicable if the legal behavior doesn't permit<a name="line.221"></a>
+<span class="sourceLineNo">222</span>         * government changes or conquest.<a name="line.222"></a>
+<span class="sourceLineNo">223</span>         * @return the percent chance of revolt<a name="line.223"></a>
+<span class="sourceLineNo">224</span>         */<a name="line.224"></a>
+<span class="sourceLineNo">225</span>        public int revoltChance();<a name="line.225"></a>
+<span class="sourceLineNo">226</span><a name="line.226"></a>
+<span class="sourceLineNo">227</span>        /**<a name="line.227"></a>
+<span class="sourceLineNo">228</span>         * Modify the number of control points earned by the given clanID. Not<a name="line.228"></a>
+<span class="sourceLineNo">229</span>         * applicable if the legal behavior doesn't permit government changes or conquest.<a name="line.229"></a>
+<span class="sourceLineNo">230</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#controlPoints()<a name="line.230"></a>
+<span class="sourceLineNo">231</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#getControlPoints(String)<a name="line.231"></a>
+<span class="sourceLineNo">232</span>         * @param clanID the clan to assign the control points to<a name="line.232"></a>
+<span class="sourceLineNo">233</span>         * @param newControlPoints the number of points to assign<a name="line.233"></a>
+<span class="sourceLineNo">234</span>         */<a name="line.234"></a>
+<span class="sourceLineNo">235</span>        public void setControlPoints(String clanID, int newControlPoints);<a name="line.235"></a>
+<span class="sourceLineNo">236</span><a name="line.236"></a>
+<span class="sourceLineNo">237</span>        /**<a name="line.237"></a>
+<span class="sourceLineNo">238</span>         * Returns the number of control points earned by the given clanID. Not<a name="line.238"></a>
+<span class="sourceLineNo">239</span>         * applicable if the legal behavior doesn't permit government changes or conquest.<a name="line.239"></a>
+<span class="sourceLineNo">240</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#controlPoints()<a name="line.240"></a>
+<span class="sourceLineNo">241</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#setControlPoints(String, int)<a name="line.241"></a>
+<span class="sourceLineNo">242</span>         * @param clanID the clan to assign the control points to<a name="line.242"></a>
+<span class="sourceLineNo">243</span>         * @return The number of control points earned by this clan/organization<a name="line.243"></a>
+<span class="sourceLineNo">244</span>         */<a name="line.244"></a>
+<span class="sourceLineNo">245</span>        public int getControlPoints(String clanID);<a name="line.245"></a>
+<span class="sourceLineNo">246</span><a name="line.246"></a>
+<span class="sourceLineNo">247</span>        /**<a name="line.247"></a>
+<span class="sourceLineNo">248</span>         * Searches the list of warrants, returning those criminal mobs whose names<a name="line.248"></a>
+<span class="sourceLineNo">249</span>         * match the search string, and still have legal warrants available for them.<a name="line.249"></a>
+<span class="sourceLineNo">250</span>         * Use a search name of NULL to return all criminals.<a name="line.250"></a>
+<span class="sourceLineNo">251</span>         * @see com.planet_ink.coffee_mud.MOBS.interfaces.MOB<a name="line.251"></a>
+<span class="sourceLineNo">252</span>         * @param myArea the geographic legal area<a name="line.252"></a>
+<span class="sourceLineNo">253</span>         * @param searchStr the name/search string to use<a name="line.253"></a>
+<span class="sourceLineNo">254</span>         * @return a list of MOB objects<a name="line.254"></a>
+<span class="sourceLineNo">255</span>         */<a name="line.255"></a>
+<span class="sourceLineNo">256</span>        public List&lt;MOB&gt; getCriminals(Area myArea, String searchStr);<a name="line.256"></a>
+<span class="sourceLineNo">257</span><a name="line.257"></a>
+<span class="sourceLineNo">258</span>        /**<a name="line.258"></a>
+<span class="sourceLineNo">259</span>         * Returns a list of all active legal warrants available on the given<a name="line.259"></a>
+<span class="sourceLineNo">260</span>         * mob.<a name="line.260"></a>
+<span class="sourceLineNo">261</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.LegalWarrant<a name="line.261"></a>
+<span class="sourceLineNo">262</span>         * @param myArea the geographic legal area<a name="line.262"></a>
+<span class="sourceLineNo">263</span>         * @param accused the mob to look for warrants for<a name="line.263"></a>
+<span class="sourceLineNo">264</span>         * @return a list of LegalWarrant objects<a name="line.264"></a>
+<span class="sourceLineNo">265</span>         */<a name="line.265"></a>
+<span class="sourceLineNo">266</span>        public List&lt;LegalWarrant&gt; getWarrantsOf(Area myArea, MOB accused);<a name="line.266"></a>
+<span class="sourceLineNo">267</span><a name="line.267"></a>
+<span class="sourceLineNo">268</span>        /**<a name="line.268"></a>
+<span class="sourceLineNo">269</span>         * Puts a warrant on the official docket so that officers can act<a name="line.269"></a>
+<span class="sourceLineNo">270</span>         * on them.  This method is called by other methods to finish off<a name="line.270"></a>
+<span class="sourceLineNo">271</span>         * their work.  Any WARRANTS channels are also notified.<a name="line.271"></a>
+<span class="sourceLineNo">272</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#fillOutWarrant(MOB, Law, Area, Environmental, String, String, String, String, String)<a name="line.272"></a>
+<span class="sourceLineNo">273</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#addWarrant(Area, MOB, MOB, String, String, String, String, String)<a name="line.273"></a>
+<span class="sourceLineNo">274</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.LegalWarrant<a name="line.274"></a>
+<span class="sourceLineNo">275</span>         * @param myArea the geographic legal area<a name="line.275"></a>
+<span class="sourceLineNo">276</span>         * @param W the LegalWarrant to put on the docket<a name="line.276"></a>
+<span class="sourceLineNo">277</span>         * @return whether the warrant was successfully added<a name="line.277"></a>
+<span class="sourceLineNo">278</span>         */<a name="line.278"></a>
+<span class="sourceLineNo">279</span>        public boolean addWarrant(Area myArea, LegalWarrant W);<a name="line.279"></a>
+<span class="sourceLineNo">280</span><a name="line.280"></a>
+<span class="sourceLineNo">281</span>        /**<a name="line.281"></a>
+<span class="sourceLineNo">282</span>         * Fills out and, if possible, issues a warrant for arrest using the given<a name="line.282"></a>
+<span class="sourceLineNo">283</span>         * crime data.  Calls fillOutWarrant to do its work.<a name="line.283"></a>
+<span class="sourceLineNo">284</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#fillOutWarrant(MOB, Law, Area, Environmental, String, String, String, String, String)<a name="line.284"></a>
+<span class="sourceLineNo">285</span>         * @param myArea the geographic legal area<a name="line.285"></a>
+<span class="sourceLineNo">286</span>         * @param accused the accused character<a name="line.286"></a>
+<span class="sourceLineNo">287</span>         * @param victim the victim of a crime, if any<a name="line.287"></a>
+<span class="sourceLineNo">288</span>         * @param crimeLocs string of location flags, e.g. !indoors !home keyword !keyword<a name="line.288"></a>
+<span class="sourceLineNo">289</span>         * @param crimeFlags string of crime situation flags, e.g. !recently !combat<a name="line.289"></a>
+<span class="sourceLineNo">290</span>         * @param crime string description of the crime, e.g. robbing T-NAME<a name="line.290"></a>
+<span class="sourceLineNo">291</span>         * @param sentence string sentence action, e.g. warn, parole1, jail1, death<a name="line.291"></a>
+<span class="sourceLineNo">292</span>         * @param warnMsg string the officer will say to explain the seriousness of the crime<a name="line.292"></a>
+<span class="sourceLineNo">293</span>         * @return whether or not the warrant was successfully issued<a name="line.293"></a>
+<span class="sourceLineNo">294</span>         */<a name="line.294"></a>
+<span class="sourceLineNo">295</span>        public boolean addWarrant(Area myArea, MOB accused, MOB victim, String crimeLocs, String crimeFlags, String crime, String sentence, String warnMsg);<a name="line.295"></a>
+<span class="sourceLineNo">296</span><a name="line.296"></a>
+<span class="sourceLineNo">297</span>        /**<a name="line.297"></a>
+<span class="sourceLineNo">298</span>         * Removes the given warrants from the list of issued warrants.  Does not update<a name="line.298"></a>
+<span class="sourceLineNo">299</span>         * the old-warrants (prior convictions) record, but erases the warrant completely.<a name="line.299"></a>
+<span class="sourceLineNo">300</span>         * @see com.planet_ink.coffee_mud.Common.interfaces.LegalWarrant<a name="line.300"></a>
+<span class="sourceLineNo">301</span>         * @param myArea the geographic legal area<a name="line.301"></a>
+<span class="sourceLineNo">302</span>         * @param W the legal warrant to remove<a name="line.302"></a>
+<span class="sourceLineNo">303</span>         * @return true if the warrant was found to remove, false otherwise<a name="line.303"></a>
+<span class="sourceLineNo">304</span>         */<a name="line.304"></a>
+<span class="sourceLineNo">305</span>        public boolean deleteWarrant(Area myArea, LegalWarrant W);<a name="line.305"></a>
+<span class="sourceLineNo">306</span><a name="line.306"></a>
+<span class="sourceLineNo">307</span>        /**<a name="line.307"></a>
+<span class="sourceLineNo">308</span>         * Removes the first warrant for the given accused criminal, for any one of<a name="line.308"></a>
+<span class="sourceLineNo">309</span>         * the given list of official crime KEYS.  Crime KEYS are the key names of<a name="line.309"></a>
+<span class="sourceLineNo">310</span>         * crimed, such as TAXEVASION.<a name="line.310"></a>
+<span class="sourceLineNo">311</span>         * @param myArea the geographic legal area<a name="line.311"></a>
+<span class="sourceLineNo">312</span>         * @param accused the mob possible accused of one of the crimes<a name="line.312"></a>
+<span class="sourceLineNo">313</span>         * @param acquittableLaws the list of crime keys.<a name="line.313"></a>
+<span class="sourceLineNo">314</span>         * @return whether an acquittable crime was found, and removed<a name="line.314"></a>
+<span class="sourceLineNo">315</span>         */<a name="line.315"></a>
+<span class="sourceLineNo">316</span>        public boolean aquit(Area myArea, MOB accused, String[] acquittableLaws);<a name="line.316"></a>
+<span class="sourceLineNo">317</span><a name="line.317"></a>
+<span class="sourceLineNo">318</span>        /**<a name="line.318"></a>
+<span class="sourceLineNo">319</span>         * Returns whether any of the given Room objects in the jails Vector<a name="line.319"></a>
+<span class="sourceLineNo">320</span>         * is indeed an official Jail room as defined by this legal behavior.<a name="line.320"></a>
+<span class="sourceLineNo">321</span>         * @see com.planet_ink.coffee_mud.Locales.interfaces.Room<a name="line.321"></a>
+<span class="sourceLineNo">322</span>         * @param myArea the geographic legal area<a name="line.322"></a>
+<span class="sourceLineNo">323</span>         * @param jails a list of Room objects to inspect<a name="line.323"></a>
+<span class="sourceLineNo">324</span>         * @return whether any one of the room objects is, in fact, a jail<a name="line.324"></a>
+<span class="sourceLineNo">325</span>         */<a name="line.325"></a>
+<span class="sourceLineNo">326</span>        public boolean isJailRoom(Area myArea, List&lt;Room&gt; jails);<a name="line.326"></a>
+<span class="sourceLineNo">327</span><a name="line.327"></a>
+<span class="sourceLineNo">328</span>        /**<a name="line.328"></a>
+<span class="sourceLineNo">329</span>         * Issues a LegalWarrant against the accused on behalf of the given<a name="line.329"></a>
+<span class="sourceLineNo">330</span>         * victim, for a crime listed in the list of crime keys.<a name="line.330"></a>
+<span class="sourceLineNo">331</span>         * Calls fillOutWarrant after retreiving the remaining information about<a name="line.331"></a>
+<span class="sourceLineNo">332</span>         * the crime key described by the parameter accusableLaws.<a name="line.332"></a>
+<span class="sourceLineNo">333</span>         * @see com.planet_ink.coffee_mud.Behaviors.interfaces.LegalBehavior#fillOutWarrant(MOB, Law, Area, Environmental, String, String, String, String, String)<a name="line.333"></a>
+<span class="sourceLineNo">334</span>         * @param myArea the geographic legal area<a name="line.334"></a>
+<span class="sourceLineNo">335</span>         * @param accused the accused mob<a name="line.335"></a>
+<span class="sourceLineNo">336</span>         * @param victim the victim of the crime<a name="line.336"></a>
+<span class="sourceLineNo">337</span>         * @param accusableLaws a crime key, such as TAXEVASION<a name="line.337"></a>
+<span class="sourceLineNo">338</span>         * @return whether one of the laws was found, and a warrant successfully filled out<a name="line.338"></a>
+<span class="sourceLineNo">339</span>         */<a name="line.339"></a>
+<span class="sourceLineNo">340</span>        public boolean accuse(Area myArea, MOB accused, MOB victim, String[] accusableLaws);<a name="line.340"></a>
+<span class="sourceLineNo">341</span>        <a name="line.341"></a>
+<span class="sourceLineNo">342</span>        /**<a name="line.342"></a>
+<span class="sourceLineNo">343</span>         * If the warrant reflects someone in prison, it releases them.<a name="line.343"></a>
+<span class="sourceLineNo">344</span>         * If the warrant reflects someone being arrested, it releases<a name="line.344"></a>
+<span class="sourceLineNo">345</span>         * the arrest and temporarily ignores the warrant.<a name="line.345"></a>
+<span class="sourceLineNo">346</span>         * <a name="line.346"></a>
+<span class="sourceLineNo">347</span>         * @param myArea the legal area<a name="line.347"></a>
+<span class="sourceLineNo">348</span>         * @param warrant the warrant to excuse<a name="line.348"></a>
+<span class="sourceLineNo">349</span>         */<a name="line.349"></a>
+<span class="sourceLineNo">350</span>        public void release(Area myArea, LegalWarrant warrant);<a name="line.350"></a>
+<span class="sourceLineNo">351</span>}<a name="line.351"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

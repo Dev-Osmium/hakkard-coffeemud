@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.planet_ink.coffee_mud.Abilities.Properties;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import com.planet_ink.coffee_mud.core.interfaces.*;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.planet_ink.coffee_mud.core.*;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.planet_ink.coffee_mud.core.collections.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.planet_ink.coffee_mud.Abilities.Common.AnimalHusbandry;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.planet_ink.coffee_mud.Abilities.interfaces.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.planet_ink.coffee_mud.Areas.interfaces.*;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.planet_ink.coffee_mud.Behaviors.interfaces.*;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.planet_ink.coffee_mud.CharClasses.interfaces.*;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.planet_ink.coffee_mud.Commands.interfaces.*;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.planet_ink.coffee_mud.Common.interfaces.*;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.planet_ink.coffee_mud.Common.interfaces.AccountStats.PrideStat;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.planet_ink.coffee_mud.Exits.interfaces.*;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.planet_ink.coffee_mud.Items.interfaces.*;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.planet_ink.coffee_mud.Libraries.interfaces.MaskingLibrary;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.planet_ink.coffee_mud.Locales.interfaces.*;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import com.planet_ink.coffee_mud.MOBS.interfaces.*;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import com.planet_ink.coffee_mud.Races.interfaces.*;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.util.*;<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>/*<a name="line.22"></a>
+<span class="sourceLineNo">023</span>   Copyright 2002-2018 Bo Zimmerman<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>   Licensed under the Apache License, Version 2.0 (the "License");<a name="line.25"></a>
+<span class="sourceLineNo">026</span>   you may not use this file except in compliance with the License.<a name="line.26"></a>
+<span class="sourceLineNo">027</span>   You may obtain a copy of the License at<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>           http://www.apache.org/licenses/LICENSE-2.0<a name="line.29"></a>
+<span class="sourceLineNo">030</span><a name="line.30"></a>
+<span class="sourceLineNo">031</span>   Unless required by applicable law or agreed to in writing, software<a name="line.31"></a>
+<span class="sourceLineNo">032</span>   distributed under the License is distributed on an "AS IS" BASIS,<a name="line.32"></a>
+<span class="sourceLineNo">033</span>   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>   See the License for the specific language governing permissions and<a name="line.34"></a>
+<span class="sourceLineNo">035</span>   limitations under the License.<a name="line.35"></a>
+<span class="sourceLineNo">036</span>*/<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>public class Prop_EnterAdjuster extends Property implements TriggeredAffect<a name="line.38"></a>
+<span class="sourceLineNo">039</span>{<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        @Override<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        public String ID()<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        {<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                return "Prop_EnterAdjuster";<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        }<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>        @Override<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        public String name()<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        {<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                return "Room entering adjuster";<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        }<a name="line.50"></a>
+<span class="sourceLineNo">051</span><a name="line.51"></a>
+<span class="sourceLineNo">052</span>        @Override<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        protected int canAffectCode()<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        {<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                return Ability.CAN_EXITS | Ability.CAN_ROOMS;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        }<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>        protected MaskingLibrary.CompiledZMask mask=CMLib.masking().createEmptyMask();<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        protected String[] parameters=new String[]{"",""};<a name="line.59"></a>
+<span class="sourceLineNo">060</span><a name="line.60"></a>
+<span class="sourceLineNo">061</span>        @Override<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        public long flags()<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        {<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                return Ability.FLAG_ADJUSTER;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        }<a name="line.65"></a>
+<span class="sourceLineNo">066</span><a name="line.66"></a>
+<span class="sourceLineNo">067</span>        @Override<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        public int triggerMask()<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        {<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                return TriggeredAffect.TRIGGER_ENTER;<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        }<a name="line.71"></a>
+<span class="sourceLineNo">072</span><a name="line.72"></a>
+<span class="sourceLineNo">073</span>        @Override<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        public void setMiscText(String newText)<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        {<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                super.setMiscText(newText);<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                parameters=CMLib.masking().separateMaskStrs(text());<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                if(parameters[1].trim().length()==0)<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                        mask=CMLib.masking().createEmptyMask();<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                else<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                        mask=CMLib.masking().getPreCompiledMask(parameters[1]);<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        }<a name="line.82"></a>
+<span class="sourceLineNo">083</span><a name="line.83"></a>
+<span class="sourceLineNo">084</span>        @Override<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        public String accountForYourself()<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        {<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                return Prop_HaveAdjuster.fixAccoutingsWithMask("Affects those who enter: "+parameters[0],parameters[1]);<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        }<a name="line.88"></a>
+<span class="sourceLineNo">089</span><a name="line.89"></a>
+<span class="sourceLineNo">090</span>        @Override<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        public boolean okMessage(final Environmental myHost, final CMMsg msg)<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                if((affected!=null)<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                &amp;&amp;(((msg.targetMinor()==CMMsg.TYP_ENTER)&amp;&amp;((affected instanceof Room)||(affected instanceof Exit)))<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                   ||((msg.targetMinor()==CMMsg.TYP_SIT)&amp;&amp;(affected==msg.target())&amp;&amp;(affected instanceof Rideable)))<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                &amp;&amp;((mask==null)||(CMLib.masking().maskCheck(mask,msg.source(),true))))<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                {<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                        final MOB mob=msg.source();<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                        final Vector&lt;Ability&gt; theSpells=new Vector&lt;Ability&gt;();<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                        int del=parameters[0].indexOf(';');<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                        while(del&gt;=0)<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                        {<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                                final String thisOne=parameters[0].substring(0,del);<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                                if((thisOne.length()&gt;0)&amp;&amp;(!thisOne.equals(";")))<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                                {<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                                        Ability A=CMClass.getAbility(thisOne);<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                                        if((A!=null)&amp;&amp;(!CMLib.ableMapper().classOnly("Archon",A.ID())))<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                                        {<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                                                A=(Ability)A.copyOf();<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                                                theSpells.addElement(A);<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                                        }<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                                }<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                                parameters[0]=parameters[0].substring(del+1);<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                                del=parameters[0].indexOf(';');<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                        }<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                        if((parameters[0].length()&gt;0)&amp;&amp;(!parameters[0].equals(";")))<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                        {<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                                Ability A=CMClass.getAbility(parameters[0]);<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                                if(A!=null)<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                                {<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                                        A=(Ability)A.copyOf();<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                                        theSpells.addElement(A);<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                                }<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                        }<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                        for(int i=0;i&lt;theSpells.size();i++)<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                        {<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                                final Ability thisOne=(Ability)theSpells.elementAt(i).copyOf();<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                                thisOne.invoke(mob,mob,true,0);<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                        }<a name="line.129"></a>
+<span class="sourceLineNo">130</span><a name="line.130"></a>
+<span class="sourceLineNo">131</span>                        mob.basePhyStats().setAbility(mob.basePhyStats().ability()+CMParms.getParmPlus(parameters[0],"abi"));<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                        mob.basePhyStats().setArmor(mob.basePhyStats().armor()+CMParms.getParmPlus(parameters[0],"arm"));<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                        mob.basePhyStats().setAttackAdjustment(mob.basePhyStats().attackAdjustment()+CMParms.getParmPlus(parameters[0],"att"));<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                        mob.basePhyStats().setDamage(mob.basePhyStats().damage()+CMParms.getParmPlus(parameters[0],"dam"));<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                        mob.basePhyStats().setDisposition(mob.basePhyStats().disposition()|CMParms.getParmPlus(parameters[0],"dis"));<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                        mob.basePhyStats().setLevel(mob.basePhyStats().level()+CMParms.getParmPlus(parameters[0],"lev"));<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                        mob.basePhyStats().setRejuv(mob.basePhyStats().rejuv()+CMParms.getParmPlus(parameters[0],"rej"));<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                        mob.basePhyStats().setSensesMask(mob.basePhyStats().sensesMask()|CMParms.getParmPlus(parameters[0],"sen"));<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                        mob.basePhyStats().setSpeed(mob.basePhyStats().speed()+CMParms.getParmPlus(parameters[0],"spe"));<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                        mob.basePhyStats().setWeight(mob.basePhyStats().weight()+CMParms.getParmPlus(parameters[0],"wei"));<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                        mob.basePhyStats().setHeight(mob.basePhyStats().height()+CMParms.getParmPlus(parameters[0],"hei"));<a name="line.141"></a>
+<span class="sourceLineNo">142</span><a name="line.142"></a>
+<span class="sourceLineNo">143</span>                        mob.baseCharStats().setStat(CharStats.STAT_CHARISMA,mob.baseCharStats().getStat(CharStats.STAT_CHARISMA)+CMParms.getParmPlus(parameters[0],"cha"));<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                        mob.baseCharStats().setStat(CharStats.STAT_CONSTITUTION,mob.baseCharStats().getStat(CharStats.STAT_CONSTITUTION)+CMParms.getParmPlus(parameters[0],"con"));<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                        mob.baseCharStats().setStat(CharStats.STAT_DEXTERITY,mob.baseCharStats().getStat(CharStats.STAT_DEXTERITY)+CMParms.getParmPlus(parameters[0],"dex"));<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                        String val=CMParms.getParmStr(parameters[0],"gen","").toUpperCase();<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                        if((val.length()&gt;0)&amp;&amp;((val.charAt(0)=='M')||(val.charAt(0)=='F')||(val.charAt(0)=='N')))<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                                mob.baseCharStats().setStat(CharStats.STAT_GENDER,val.charAt(0));<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                        mob.baseCharStats().setStat(CharStats.STAT_INTELLIGENCE,mob.baseCharStats().getStat(CharStats.STAT_INTELLIGENCE)+CMParms.getParmPlus(parameters[0],"int"));<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                        val=CMParms.getParmStr(parameters[0],"cla","").toUpperCase();<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                        if(val.length()&gt;0)<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                        {<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                                final CharClass C=CMClass.findCharClass(val);<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                                if((C!=null)&amp;&amp;(C.availabilityCode()!=0))<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                                        mob.baseCharStats().setCurrentClass(C);<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                        }<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                        val=CMParms.getParmStr(parameters[0],"rac","").toUpperCase();<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                        if((val.length()&gt;0)&amp;&amp;(CMClass.getRace(val)!=null))<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                        {<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                                final int oldCat=mob.baseCharStats().ageCategory();<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                                mob.baseCharStats().setMyRace(CMClass.getRace(val));<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                                mob.baseCharStats().getMyRace().startRacing(mob,false);<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                                if(mob.baseCharStats().getStat(CharStats.STAT_AGE)&gt;0)<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                                        mob.baseCharStats().setStat(CharStats.STAT_AGE,mob.baseCharStats().getMyRace().getAgingChart()[oldCat]);<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                        }<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                        mob.baseCharStats().setStat(CharStats.STAT_STRENGTH,mob.baseCharStats().getStat(CharStats.STAT_STRENGTH)+CMParms.getParmPlus(parameters[0],"str"));<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                        mob.baseCharStats().setStat(CharStats.STAT_WISDOM,mob.baseCharStats().getStat(CharStats.STAT_WISDOM)+CMParms.getParmPlus(parameters[0],"wis"));<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                        if(CMParms.getParmPlus(parameters[0],"lev")!=0)<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                                mob.baseCharStats().setClassLevel(mob.baseCharStats().getCurrentClass(),mob.baseCharStats().getClassLevel(mob.baseCharStats().getCurrentClass())+CMParms.getParmPlus(parameters[0],"lev"));<a name="line.169"></a>
+<span class="sourceLineNo">170</span><a name="line.170"></a>
+<span class="sourceLineNo">171</span>                        mob.baseState().setHitPoints(mob.curState().getHitPoints()+CMParms.getParmPlus(parameters[0],"hit"));<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                        mob.curState().setHunger(mob.curState().getHunger()+CMParms.getParmPlus(parameters[0],"hun"));<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                        mob.curState().setMana(mob.curState().getMana()+CMParms.getParmPlus(parameters[0],"man"));<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                        mob.curState().setMovement(mob.curState().getMovement()+CMParms.getParmPlus(parameters[0],"mov"));<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                        mob.curState().setThirst(mob.curState().getThirst()+CMParms.getParmPlus(parameters[0],"thi"));<a name="line.175"></a>
+<span class="sourceLineNo">176</span><a name="line.176"></a>
+<span class="sourceLineNo">177</span>                        mob.setPractices(mob.getPractices()+CMParms.getParmPlus(parameters[0],"prac"));<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                        mob.setTrains(mob.getTrains()+CMParms.getParmPlus(parameters[0],"trai"));<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                        final int qp=CMParms.getParmPlus(parameters[0],"ques");<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                        if(qp!=0)<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                                mob.setQuestPoint(mob.getQuestPoint()+qp);<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                        if(qp&gt;0)<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                                CMLib.players().bumpPrideStat(mob,PrideStat.QUESTPOINTS_EARNED, qp);<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                        final int newMoney=CMParms.getParmPlus(parameters[0],"coin");<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                        if(newMoney!=0)<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                                CMLib.beanCounter().setMoney(mob,CMLib.beanCounter().getMoney(mob)+newMoney);<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                        final int exp=CMParms.getParmPlus(parameters[0],"expe");<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                        if(exp&gt;0)<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                                CMLib.leveler().postExperience(mob,null,null,exp,false);<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                        mob.recoverCharStats();<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                        mob.recoverPhyStats();<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                        mob.recoverMaxState();<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                        CMLib.utensils().confirmWearability(mob);<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                }<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                return super.okMessage(myHost,msg);<a name="line.195"></a>
+<span class="sourceLineNo">196</span>        }<a name="line.196"></a>
+<span class="sourceLineNo">197</span>}<a name="line.197"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
