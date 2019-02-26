@@ -12,5 +12,5 @@ EXPOSE 27744
 
 RUN chmod +x mudUNIX.sh
 
-CMD ["java", "-classpath", "\".:lib/*\"", "-Xms129m", "com.planet_ink.coffee_mud.application.MUD", "\"Hakkard\""]
+CMD ["./mudUNIX.sh" ]
 #ENTRYPOINT [ "./mudUNIX.sh" ]
